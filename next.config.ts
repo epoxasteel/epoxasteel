@@ -17,7 +17,12 @@ const contentSecurityPolicy = [
   "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self'" + (process.env.NODE_ENV === 'development' ? ' ws: wss:' : ''),
-  "frame-src 'self' https://www.google.com https://maps.google.com",
+  // No iframes anywhere on the site — the contact map is drawn, not embedded —
+  // so nothing needs framing. The Google Maps origins were allowed in
+  // anticipation of an embed that was never added; an unused allowance is just a
+  // hole waiting for an injected frame to find it. Add them back at the point a
+  // real embed goes in, not before.
+  "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

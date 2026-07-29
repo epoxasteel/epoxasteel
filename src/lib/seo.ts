@@ -39,8 +39,22 @@ export function buildMetadata({
   const ogImage = image ?? `${BASE}/opengraph-image`;
   const fullTitle = path === '/' ? title : `${title} | ${siteConfig.name}`;
 
+  /*
+   * The root layout appends " | EPOXA STEEL" to every page title through its
+   * template. That is right for a five-word page name and wrong for an article
+   * headline: "Embodied carbon in structural steel: what the numbers actually
+   * mean" plus the suffix comes to 82 characters, and search results show about
+   * 60 — so the brand is the part that survives and the point of the article is
+   * the part that gets cut.
+   *
+   * Past the budget the title is declared absolute, keeping the headline whole.
+   * The brand is still on the card, the canonical and the schema.
+   */
+  const TITLE_BUDGET = 60;
+  const suffixLength = ` | ${siteConfig.name}`.length;
+
   return {
-    title,
+    title: path !== '/' && title.length + suffixLength > TITLE_BUDGET ? { absolute: title } : title,
     description,
     keywords: [...defaultKeywords, ...keywords],
     alternates: { canonical: url },

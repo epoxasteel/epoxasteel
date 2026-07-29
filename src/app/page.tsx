@@ -32,7 +32,10 @@ import {
 
 export const metadata: Metadata = buildMetadata({
   title: `${siteConfig.name} — Premium Structural Steel Supply & Fabrication`,
-  description: siteConfig.description,
+  // `shortDescription`, not `description`: the long one runs to 237 characters
+  // and Google shows about 155. The full prose still sits in the footer and in
+  // the organisation schema, where length is not penalised.
+  description: siteConfig.shortDescription,
   path: '/',
   keywords: [
     'structural steel supplier',

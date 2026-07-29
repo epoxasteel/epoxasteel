@@ -12,7 +12,7 @@ import { slugify } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Steel Products',
   description:
-    'Structural sections, plate, sheet, hollow sections, bar, reinforcement, galvanized and stainless steel — supplied to ASTM and EN standards with full mill certification.',
+    'Structural sections, plate, sheet, hollow section, bar, reinforcement and stainless steel — supplied to ASTM and EN standards with full mill certification.',
   path: '/products',
   keywords: [
     'steel products catalogue',

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 export const metadata: Metadata = buildMetadata({
   title: 'Industries We Serve',
   description:
-    'Structural steel supply for construction, commercial, residential, infrastructure, warehousing, industrial, bridges, transportation, energy, manufacturing, agriculture and government projects.',
+    'Structural steel supply for commercial, residential, industrial and infrastructure work — bridges, warehousing, energy and government projects.',
   path: '/industries',
   keywords: [
     'steel for construction',

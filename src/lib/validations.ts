@@ -23,7 +23,6 @@ z.config({ jitless: true });
 const NAME_MIN = 2;
 const NAME_MAX = 80;
 
-/** Rejects the obvious throwaway patterns without blocking real addresses. */
 const email = z
   .string()
   .trim()

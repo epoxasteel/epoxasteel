@@ -135,17 +135,53 @@ function logToConsole(message: EmailMessage): SendResult {
   return { ok: true, provider: 'console', id: `console-${Date.now()}` };
 }
 
+/**
+ * Strips control characters from anything that becomes an email header.
+ *
+ * A carriage return inside a header value is how header injection works:
+ * everything after it is parsed as a new header, so a contact-form subject of
+ * `"Enquiry\r\nBcc: attacker@example.com"` becomes a blind copy to an address
+ * the sender chose. Confirmed reachable from the contact form before this
+ * existed — the schema caps the subject's length but said nothing about newlines.
+ *
+ * Fixed here rather than in the schema because this is where headers are
+ * actually constructed. Every route, and every route added later, goes through
+ * this function; a rule in one schema protects one form and has to be remembered
+ * again for the next.
+ *
+ * Nodemailer folds most subjects safely on its own. Relying on a library's
+ * encoder to contain a hostile value is the wrong place to make that decision.
+ */
+const CONTROL_CHARS = /[\u0000-\u001f\u007f]+/g;
+
+function headerSafe(value: string) {
+  return value.replace(CONTROL_CHARS, ' ').trim();
+}
+
 export async function sendEmail(message: EmailMessage): Promise<SendResult> {
   const provider = emailProvider();
+
+  // Sanitise once, here, so no transport can be handed a hostile header.
+  const safe: EmailMessage = {
+    ...message,
+    subject: headerSafe(message.subject),
+    replyTo: message.replyTo ? headerSafe(message.replyTo) : undefined,
+    attachments: message.attachments?.map((attachment) => ({
+      ...attachment,
+      // A filename crosses into a Content-Disposition header, and a path
+      // separator in one is how an attachment escapes its own directory.
+      filename: headerSafe(attachment.filename).replace(/[/\\]/g, '-'),
+    })),
+  };
 
   try {
     switch (provider) {
       case 'resend':
-        return await sendWithResend(message);
+        return await sendWithResend(safe);
       case 'smtp':
-        return await sendWithSmtp(message);
+        return await sendWithSmtp(safe);
       default:
-        return logToConsole(message);
+        return logToConsole(safe);
     }
   } catch (error) {
     const reason = error instanceof Error ? error.message : 'Unknown email error';

@@ -22,7 +22,17 @@ export type LifecycleStage = {
 
 function Frame({ children, tone = '#080b10' }: { children: React.ReactNode; tone?: string }) {
   return (
-    <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" className="size-full">
+    // Decorative: each stage's meaning is carried by the heading and caption
+    // beside it, so announcing the drawing as well would say everything twice.
+    // The wrapper in `lifecycle.tsx` is aria-hidden, but only the active one —
+    // these need it themselves to stay out of the accessibility tree.
+    <svg
+      viewBox="0 0 800 600"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden
+      focusable="false"
+      className="size-full"
+    >
       <rect width="800" height="600" fill={tone} />
       {children}
     </svg>

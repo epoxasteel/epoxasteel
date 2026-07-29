@@ -12,7 +12,7 @@ import { pad } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Services',
   description:
-    'Steel supply, fabrication, cutting, custom orders, engineering support, project consultation, logistics, delivery and technical assistance — from one accountable supplier.',
+    'Steel supply, fabrication, cutting, engineering support, logistics and delivery — from one accountable supplier, under one certificate.',
   path: '/services',
   keywords: [
     'steel fabrication services',

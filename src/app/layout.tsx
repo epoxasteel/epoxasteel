@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   ...buildMetadata({
     title: `${siteConfig.name} — Premium Structural Steel Supply & Fabrication`,
-    description: siteConfig.description,
+    description: siteConfig.shortDescription,
     path: '/',
   }),
   title: {
