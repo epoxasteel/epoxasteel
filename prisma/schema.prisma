@@ -1,0 +1,143 @@
+// EPOXA STEEL — data model
+//
+// Postgres-ready from day one, but entirely optional at runtime: when
+// DATABASE_URL is unset the application still validates and emails every
+// enquiry (see src/lib/db.ts). Attach Railway Postgres whenever you are ready
+// and run `npm run db:push` — no code changes required.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_REVIEW
+  QUOTED
+  WON
+  LOST
+  ARCHIVED
+}
+
+enum EnquirySource {
+  WEBSITE_QUOTE
+  WEBSITE_CONTACT
+  PHONE
+  EMAIL
+  REFERRAL
+}
+
+/// A request for quotation submitted through /quote.
+model QuoteRequest {
+  id        String   @id @default(cuid())
+  /// Human-readable reference shown to the customer, e.g. "EPX-7K3F9Q".
+  reference String   @unique
+
+  fullName String
+  company  String
+  email    String
+  phone    String
+  country  String
+  city     String
+
+  projectType  String
+  product      String
+  quantity     String
+  quantityUnit String
+  budget       String
+  timeline     String
+  description  String @db.Text
+
+  attachmentName String?
+  attachmentSize Int?
+  /// Object-storage key once uploads are moved off the mail attachment path.
+  attachmentKey  String?
+
+  status EnquiryStatus @default(NEW)
+  source EnquirySource @default(WEBSITE_QUOTE)
+
+  /// Retained for abuse investigation only; see the privacy policy.
+  ipHash    String?
+  userAgent String?
+  referrer  String?
+
+  newsletterOptIn Boolean @default(false)
+
+  /// Internal notes added by the commercial team.
+  notes String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([createdAt])
+}
+
+/// A general enquiry submitted through /contact.
+model ContactMessage {
+  id        String @id @default(cuid())
+  reference String @unique
+
+  name    String
+  email   String
+  phone   String?
+  company String?
+  subject String
+  message String  @db.Text
+
+  status EnquiryStatus @default(NEW)
+  source EnquirySource @default(WEBSITE_CONTACT)
+
+  ipHash    String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+}
+
+/// Newsletter subscriber.
+model Subscriber {
+  id    String @id @default(cuid())
+  email String @unique
+
+  confirmed      Boolean      @default(false)
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+
+  /// Which form or page produced the subscription.
+  source String @default("website")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([confirmed])
+}
+
+/// Job application submitted through /careers.
+model JobApplication {
+  id        String @id @default(cuid())
+  reference String @unique
+
+  name    String
+  email   String
+  phone   String
+  role    String
+  message String @db.Text
+
+  cvName String?
+  cvKey  String?
+
+  status    EnquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([role, createdAt])
+}

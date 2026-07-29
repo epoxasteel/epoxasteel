@@ -1,0 +1,6 @@
+.next
+node_modules
+public
+src/fonts
+*.woff2
+package-lock.json

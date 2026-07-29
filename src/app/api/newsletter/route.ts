@@ -1,0 +1,81 @@
+import { NextResponse } from 'next/server';
+import { newsletterSchema, MIN_FORM_ELAPSED_MS } from '@/lib/validations';
+import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
+import { sendEmail, internalRecipients } from '@/lib/email';
+import { newsletterConfirmationEmail, newsletterInternalEmail } from '@/lib/email/templates';
+import { getPrisma } from '@/lib/db';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: Request) {
+  const identifier = clientIdentifier(request);
+  const limited = rateLimit(`newsletter:${identifier}`, { limit: 4, windowMs: 60_000 });
+
+  if (!limited.success) {
+    return NextResponse.json(
+      { message: 'Too many attempts. Please try again in a minute.' },
+      { status: 429, headers: { 'Retry-After': String(limited.retryAfter) } },
+    );
+  }
+
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ message: 'Invalid request body.' }, { status: 400 });
+  }
+
+  const parsed = newsletterSchema.safeParse(payload);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: 'Please enter a valid email address.',
+        errors: parsed.error.flatten().fieldErrors,
+      },
+      { status: 422 },
+    );
+  }
+
+  const { email, website, elapsedMs } = parsed.data;
+
+  // Silent spam rejections: return success so a bot learns nothing.
+  if (website || (typeof elapsedMs === 'number' && elapsedMs < MIN_FORM_ELAPSED_MS)) {
+    return NextResponse.json({ message: 'You are subscribed.' });
+  }
+
+  const prisma = getPrisma();
+  if (prisma) {
+    try {
+      await prisma.subscriber.upsert({
+        where: { email },
+        // Re-subscribing clears a previous unsubscribe.
+        update: { unsubscribedAt: null, source: 'website' },
+        create: { email, source: 'website' },
+      });
+    } catch (error) {
+      console.error('[newsletter] persistence failed', error);
+    }
+  }
+
+  const confirmation = newsletterConfirmationEmail(email);
+  const internal = newsletterInternalEmail(email);
+
+  await Promise.allSettled([
+    sendEmail({
+      to: email,
+      subject: confirmation.subject,
+      html: confirmation.html,
+      text: confirmation.text,
+    }),
+    sendEmail({
+      to: internalRecipients(),
+      subject: internal.subject,
+      html: internal.html,
+      text: internal.text,
+    }),
+  ]);
+
+  return NextResponse.json({ message: 'You are subscribed. Check your inbox for a welcome note.' });
+}
