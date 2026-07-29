@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         {post.author.name}
                       </p>
                       <p className="text-arc-glow/80 mt-1 text-[0.875rem]">{post.author.role}</p>
-                      <p className="text-ash mt-4 text-[0.9375rem] leading-relaxed">
+                      <p className="text-ash measure mt-4 text-[0.9375rem] leading-relaxed">
                         Part of the team that writes, checks and stands behind the technical
                         guidance we publish. Questions on this article reach the author directly.
                       </p>

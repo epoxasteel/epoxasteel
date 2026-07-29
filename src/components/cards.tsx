@@ -91,7 +91,9 @@ export function IndustryCard({ industry, className }: { industry: Industry; clas
         {industry.name}
       </h3>
       <p className="text-arc-glow/80 mt-2 text-[0.875rem]">{industry.tagline}</p>
-      <p className="text-ash mt-4 flex-1 text-[0.9375rem] leading-relaxed">{industry.summary}</p>
+      <p className="text-ash measure-wide mt-4 flex-1 text-[0.9375rem] leading-relaxed">
+        {industry.summary}
+      </p>
 
       <dl className="border-hairline mt-6 flex flex-wrap gap-x-7 gap-y-3 border-t pt-5">
         {industry.stats.slice(0, 2).map((stat) => (
@@ -137,7 +139,9 @@ export function ServiceCard({
         {service.name}
       </h3>
       <p className="text-arc-glow/80 mt-2 text-[0.875rem]">{service.tagline}</p>
-      <p className="text-ash mt-4 flex-1 text-[0.9375rem] leading-relaxed">{service.summary}</p>
+      <p className="text-ash measure-wide mt-4 flex-1 text-[0.9375rem] leading-relaxed">
+        {service.summary}
+      </p>
 
       <ul className="border-hairline mt-6 space-y-2 border-t pt-5">
         {service.capabilities.slice(0, 3).map((capability) => (
@@ -205,7 +209,9 @@ export function ProjectCard({
           {project.location}
         </p>
 
-        <p className="text-ash mt-4 flex-1 text-[0.9375rem] leading-relaxed">{project.summary}</p>
+        <p className="text-ash measure-wide mt-4 flex-1 text-[0.9375rem] leading-relaxed">
+          {project.summary}
+        </p>
 
         <dl className="border-hairline mt-6 grid grid-cols-2 gap-4 border-t pt-5">
           {project.metrics.slice(0, 2).map((metric) => (
@@ -275,7 +281,9 @@ export function PostCard({
           {post.title}
         </h3>
 
-        <p className="text-ash mt-3 flex-1 text-[0.9375rem] leading-relaxed">{post.excerpt}</p>
+        <p className="text-ash measure-wide mt-3 flex-1 text-[0.9375rem] leading-relaxed">
+          {post.excerpt}
+        </p>
 
         <div className="border-hairline mt-6 flex items-center gap-3 border-t pt-5">
           <span className="border-hairline bg-graphite text-mist grid size-9 shrink-0 place-items-center rounded-full border text-[0.6875rem] font-medium">
@@ -320,7 +328,9 @@ export function JobCard({ job, className }: { job: Job; className?: string }) {
         {job.location}
       </p>
 
-      <p className="text-ash mt-4 flex-1 text-[0.9375rem] leading-relaxed">{job.summary}</p>
+      <p className="text-ash measure-wide mt-4 flex-1 text-[0.9375rem] leading-relaxed">
+        {job.summary}
+      </p>
 
       <span className="border-hairline text-steel mt-6 flex items-center justify-between border-t pt-5 text-[0.8125rem]">
         Posted {formatDateShort(job.posted)}

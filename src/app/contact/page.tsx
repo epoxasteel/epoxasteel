@@ -139,7 +139,7 @@ export default function ContactPage() {
                 </h2>
               </Reveal>
               <Reveal delay={0.12}>
-                <p className="text-ash mt-5 max-w-2xl text-[1.0625rem] leading-relaxed">
+                <p className="text-ash measure mt-5 text-[1.0625rem] leading-relaxed">
                   For a formal quotation, the{' '}
                   <a href="/quote" className="text-arc-glow underline underline-offset-4">
                     quote request form

@@ -78,7 +78,9 @@ export default function AboutPage() {
                 <p className="text-lead text-mist mt-7">{mission.statement}</p>
               </Reveal>
               <Reveal delay={0.22}>
-                <p className="text-ash mt-5 text-[1.0625rem] leading-relaxed">{mission.body}</p>
+                <p className="text-ash measure mt-5 text-[1.0625rem] leading-relaxed">
+                  {mission.body}
+                </p>
               </Reveal>
             </div>
 
@@ -95,7 +97,9 @@ export default function AboutPage() {
                 <p className="text-lead text-mist mt-7">{vision.statement}</p>
               </Reveal>
               <Reveal delay={0.22}>
-                <p className="text-ash mt-5 text-[1.0625rem] leading-relaxed">{vision.body}</p>
+                <p className="text-ash measure mt-5 text-[1.0625rem] leading-relaxed">
+                  {vision.body}
+                </p>
               </Reveal>
             </div>
           </div>
@@ -122,7 +126,9 @@ export default function AboutPage() {
                 <h3 className="font-display text-title text-bright mt-5 font-semibold">
                   {value.title}
                 </h3>
-                <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">{value.body}</p>
+                <p className="text-ash measure mt-3 text-[0.9375rem] leading-relaxed">
+                  {value.body}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>
@@ -161,7 +167,7 @@ export default function AboutPage() {
                     <h3 className="font-display text-title text-bright font-semibold">
                       {entry.title}
                     </h3>
-                    <p className="text-ash mt-2.5 max-w-2xl text-[1.0625rem] leading-relaxed">
+                    <p className="text-ash measure mt-2.5 text-[1.0625rem] leading-relaxed">
                       {entry.body}
                     </p>
                   </div>
@@ -231,7 +237,9 @@ export default function AboutPage() {
                 <h3 className="font-display text-title text-bright mt-5 font-semibold">
                   {standard.title}
                 </h3>
-                <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">{standard.body}</p>
+                <p className="text-ash measure mt-3 text-[0.9375rem] leading-relaxed">
+                  {standard.body}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>
@@ -299,7 +307,7 @@ export default function AboutPage() {
                   <Reveal key={index} delay={0.12 + index * 0.05}>
                     <p
                       className={cn(
-                        'leading-relaxed',
+                        'measure leading-relaxed',
                         index === 0 ? 'text-lead text-mist' : 'text-ash text-[1.0625rem]',
                       )}
                     >
@@ -354,7 +362,9 @@ export default function AboutPage() {
                 <h3 className="font-display text-title text-bright mt-5 font-semibold">
                   {initiative.title}
                 </h3>
-                <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">{initiative.body}</p>
+                <p className="text-ash measure mt-3 text-[0.9375rem] leading-relaxed">
+                  {initiative.body}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>
@@ -379,7 +389,9 @@ export default function AboutPage() {
                   <h3 className="font-display text-title text-bright font-semibold">
                     {goal.title}
                   </h3>
-                  <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">{goal.body}</p>
+                  <p className="text-ash measure mt-3 text-[0.9375rem] leading-relaxed">
+                    {goal.body}
+                  </p>
                 </Card>
               </RevealItem>
             ))}

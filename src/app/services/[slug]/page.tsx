@@ -100,7 +100,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                   <Reveal key={index} delay={index * 0.06}>
                     <p
                       className={cn(
-                        'leading-relaxed',
+                        'measure leading-relaxed',
                         index === 0 ? 'text-lead text-mist' : 'text-ash text-[1.0625rem]',
                       )}
                     >
@@ -113,7 +113,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
             <Reveal direction="left" className="lg:sticky lg:top-32 lg:self-start">
               <div className="border-hairline bg-charcoal rounded-lg border p-7">
-                <h2 className="text-eyebrow text-steel uppercase">Capabilities</h2>
+                {/* An h2 set at 11px in dim grey reads as decoration, not as a
+                    heading — and it heads a real list of content. Sized like
+                    every other card heading on the site. */}
+                <h2 className="font-display text-title text-bright font-semibold">Capabilities</h2>
                 <Checklist items={service.capabilities} className="mt-6" />
               </div>
             </Reveal>
@@ -156,7 +159,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     <h3 className="font-display text-title text-bright font-semibold">
                       {step.title}
                     </h3>
-                    <p className="text-ash mt-2.5 max-w-2xl text-[1.0625rem] leading-relaxed">
+                    <p className="text-ash measure mt-2.5 text-[1.0625rem] leading-relaxed">
                       {step.body}
                     </p>
                   </div>

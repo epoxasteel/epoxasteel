@@ -118,7 +118,7 @@ export default function QuotePage() {
                       WhatsApp us
                     </a>
                   </div>
-                  <p className="border-hairline text-steel mt-6 border-t pt-5 text-[0.8125rem] leading-relaxed">
+                  <p className="border-hairline text-steel measure mt-6 border-t pt-5 text-[0.8125rem] leading-relaxed">
                     {siteConfig.contact.hours[0].days}: {siteConfig.contact.hours[0].time}
                     <br />
                     {siteConfig.contact.hours[1].days}: {siteConfig.contact.hours[1].time}

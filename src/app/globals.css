@@ -106,7 +106,9 @@
 
   /* --- Layout ------------------------------------------------------------ */
   --container-page: 84rem;
-  --container-prose: 44rem;
+  /* The article column. 44rem at a 17px body ran to about 83 characters a line;
+     this lands at 68, which is where long-form reading is comfortable. */
+  --container-prose: 36rem;
 }
 
 /* ==========================================================================
@@ -362,17 +364,58 @@
   }
 
   /* Standard vertical rhythm for a full-width section. */
+  /* Section rhythm.
+     Two steps, and they relate: the smaller is about 60% of the larger at every
+     width, so a "sm" section reads as a deliberate half-beat rather than an
+     arbitrary number.
+
+     Trimmed about 12% from the previous values. At 149px of padding plus the
+     64px gap the headings already carry, there were 215px of void between one
+     section's last line and the next section's first — a quarter of a laptop
+     viewport. Generous space reads as confidence; that much reads as thin
+     content. */
   .section-y {
-    padding-block: clamp(4.5rem, 3rem + 7vw, 9.5rem);
+    padding-block: clamp(4rem, 2.75rem + 6vw, 8.5rem);
   }
 
   .section-y-sm {
-    padding-block: clamp(3rem, 2rem + 4vw, 6rem);
+    padding-block: clamp(2.75rem, 2rem + 3.4vw, 5.25rem);
+  }
+
+  /* ------------------------------------------------------------------------
+     Reading measure
+
+     Capped in characters, not pixels. A body paragraph that simply fills its
+     grid column was running to 95–110 characters a line on the product, service,
+     about and article pages — past about 75 the eye starts losing its place on
+     the return sweep, and the page reads as unconsidered however good the type
+     is. Measured, not guessed: see the audit in the Phase 3 notes.
+
+     `ch` resolves against the element's own font size, so a 21px lead and a 17px
+     body both land on the same character count without a second class.
+
+     The numbers look small because `1ch` is the width of the "0" glyph, which in
+     Inter is noticeably wider than the average character once spaces and
+     lowercase are counted. 54ch measures out at roughly 68 real characters a
+     line, which is the target — calibrated against rendered text, not assumed.
+     ------------------------------------------------------------------------ */
+
+  .measure {
+    max-width: 54ch;
+  }
+
+  /* For copy that sits beside something — a sidebar, a figure — where a hard
+     measure would leave an awkward gap rather than a column. About 78
+     characters. */
+  .measure-wide {
+    max-width: 62ch;
   }
 
   /* Long-form article typography, applied to the blog and legal pages. */
   .prose-steel {
-    max-width: var(--container-prose);
+    /* `ch` rather than the rem token, so the column tracks the body size if it
+       is ever changed. The token remains for layout that has to align to it. */
+    max-width: 54ch;
     color: var(--color-mist);
     font-size: 1.0625rem;
     line-height: 1.75;

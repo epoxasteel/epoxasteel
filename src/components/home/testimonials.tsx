@@ -10,6 +10,19 @@ import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 
 /**
+ * The quote and caption styling lives here rather than inline, because the
+ * invisible height reservation below has to be byte-identical to the visible
+ * quote. Two copies of a class list would drift, and the failure mode is a
+ * caption covering the controls again.
+ */
+const QUOTE_CLASS =
+  'font-display text-bright text-[clamp(1.25rem,1rem+1.3vw,1.9rem)] leading-[1.45] font-medium text-balance';
+const CAPTION_CLASS = 'mt-9 flex flex-col items-center';
+
+/** The tallest testimonial, used to reserve space for all of them. */
+const longest = testimonials.reduce((a, b) => (b.quote.length > a.quote.length ? b : a));
+
+/**
  * Testimonial carousel.
  *
  * One quote at a time, at a size that says the company stands behind it.
@@ -78,7 +91,36 @@ export function Testimonials() {
             <Quote aria-hidden className="text-arc/45 mx-auto mt-10 size-9" strokeWidth={1.5} />
           </Reveal>
 
-          <div className="relative mt-8 min-h-72 sm:min-h-64" aria-live="polite" aria-atomic="true">
+          {/*
+            The quotes cross-fade, so one has to be able to sit on top of
+            another — which means the container cannot simply size to whichever
+            is showing, or the page would jump every eight seconds.
+
+            It used to be a hand-set `min-h-72`. That is a number that is wrong
+            the moment the copy changes, and it was: the longest quote overflowed
+            it and the caption ended up sitting on top of the carousel dots,
+            swallowing their clicks entirely on a phone.
+
+            So the height is reserved by the longest testimonial itself, rendered
+            invisibly in the same grid cell with a caption of maximum depth.
+            Always exactly tall enough, at every width, with no magic number and
+            no layout shift.
+          */}
+          <div className="mt-8 grid" aria-live="polite" aria-atomic="true">
+            <div aria-hidden className="invisible text-center [grid-area:1/1]">
+              <p className={QUOTE_CLASS}>“{longest.quote}”</p>
+              <div className={CAPTION_CLASS}>
+                <span className="h-px w-14" />
+                <p className="font-display mt-6 text-[1.0625rem] font-semibold">{longest.name}</p>
+                <p className="mt-1.5 text-[0.875rem]">
+                  {longest.role}, {longest.company}
+                </p>
+                <p className="mt-3 text-[0.6875rem] tracking-[0.18em] uppercase">
+                  {longest.project ?? 'Project reference'}
+                </p>
+              </div>
+            </div>
+
             <AnimatePresence mode="wait" custom={direction}>
               <motion.figure
                 key={index}
@@ -88,19 +130,27 @@ export function Testimonials() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
-                className="absolute inset-0 flex flex-col items-center text-center"
+                className="flex flex-col items-center text-center [grid-area:1/1]"
               >
-                <blockquote className="font-display text-bright text-[clamp(1.25rem,1rem+1.3vw,1.9rem)] leading-[1.45] font-medium text-balance">
-                  “{current.quote}”
-                </blockquote>
+                <blockquote className={QUOTE_CLASS}>“{current.quote}”</blockquote>
 
-                <figcaption className="mt-8">
-                  <p className="text-chalk text-[0.9375rem] font-medium">{current.name}</p>
-                  <p className="text-ash mt-1 text-[0.875rem]">
+                {/* The name carried barely more weight than the role beneath it,
+                    so the whole attribution read as one grey block. A hairline
+                    plus a step up in size and brightness makes the person the
+                    thing you read, and their title the footnote it should be. */}
+                <figcaption className={CAPTION_CLASS}>
+                  <span
+                    aria-hidden
+                    className="via-hairline-strong h-px w-14 bg-linear-to-r from-transparent to-transparent"
+                  />
+                  <p className="font-display text-bright mt-6 text-[1.0625rem] font-semibold">
+                    {current.name}
+                  </p>
+                  <p className="text-ash mt-1.5 text-[0.875rem]">
                     {current.role}, {current.company}
                   </p>
                   {current.project ? (
-                    <p className="text-steel mt-2 text-[0.75rem] tracking-[0.14em] uppercase">
+                    <p className="text-steel mt-3 text-[0.6875rem] tracking-[0.18em] uppercase">
                       {current.project}
                     </p>
                   ) : null}

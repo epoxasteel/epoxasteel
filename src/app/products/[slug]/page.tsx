@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <Reveal key={index} delay={index * 0.06}>
                     <p
                       className={cn(
-                        'leading-relaxed',
+                        'measure leading-relaxed',
                         index === 0 ? 'text-lead text-mist' : 'text-ash text-[1.0625rem]',
                       )}
                     >

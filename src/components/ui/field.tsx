@@ -221,7 +221,9 @@ export function Field({
       {children({ id, 'aria-describedby': describedBy, invalid: Boolean(error) })}
 
       {hint && !error ? (
-        <p id={hintId} className="text-steel text-[0.8125rem] leading-relaxed">
+        // Capped: a full-width field's hint was running to nearly 150 characters
+        // a line, which is unreadable at 13px.
+        <p id={hintId} className="text-steel measure text-[0.8125rem] leading-relaxed">
           {hint}
         </p>
       ) : null}
