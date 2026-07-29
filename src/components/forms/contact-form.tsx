@@ -12,19 +12,14 @@ import { Alert } from '@/components/ui/misc';
 import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
+import { useFormDraft } from '@/lib/use-form-draft';
 
 export function ContactForm({ className }: { className?: string }) {
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [reference, setReference] = React.useState<string | null>(null);
   const elapsedSinceMount = useElapsedSinceMount();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactInput>({
+  const form = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -38,6 +33,17 @@ export function ContactForm({ className }: { className?: string }) {
       website: '',
     },
   });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  // Nobody should lose a half-written message to a stray click.
+  const clearDraft = useFormDraft('epoxa:draft:contact', form);
 
   const consent = watch('consent');
 
@@ -58,6 +64,7 @@ export function ContactForm({ className }: { className?: string }) {
         return;
       }
 
+      clearDraft();
       setReference(data.reference ?? 'received');
     } catch {
       setServerError('Network error. Please check your connection and try again.');

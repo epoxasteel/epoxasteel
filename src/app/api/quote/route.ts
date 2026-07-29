@@ -5,6 +5,7 @@ import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
 import { quoteInternalEmail, quoteConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
+import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -76,7 +77,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Request received.', reference: 'received' });
   }
 
+  /* A repeat of the same enquiry inside ten minutes is answered with the
+     original reference and not sent again — the visitor sees success either way,
+     and the desk sees one project rather than two. */
+  const print = fingerprint(identifier, 'quote', [
+    data.email,
+    data.fullName,
+    data.product,
+    data.quantity,
+    data.description,
+  ]);
+
+  const already = findDuplicate(print);
+  if (already) {
+    return NextResponse.json({ message: 'Request received.', reference: already });
+  }
+
   const reference = generateReference('EPX-Q');
+  remember(print, reference);
   const emailData = { reference, ...data };
 
   const prisma = getPrisma();

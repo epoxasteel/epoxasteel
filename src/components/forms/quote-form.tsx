@@ -25,6 +25,7 @@ import { Alert } from '@/components/ui/misc';
 import { cn, formatBytes } from '@/lib/utils';
 import { EASE_OUT_EXPO, EASE_SPRING } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
+import { useFormDraft } from '@/lib/use-form-draft';
 
 /**
  * The enterprise RFQ form.
@@ -48,13 +49,7 @@ export function QuoteForm({
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const elapsedSinceMount = useElapsedSinceMount();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<QuoteInput>({
+  const form = useForm<QuoteInput>({
     resolver: zodResolver(quoteSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -72,6 +67,18 @@ export function QuoteForm({
       website: '',
     },
   });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  /* A quote request asks for a project description, tonnages and a programme.
+     People write that over several minutes with a drawing open beside them. */
+  const clearDraft = useFormDraft('epoxa:draft:quote', form);
 
   const consent = watch('consent');
   const newsletter = watch('newsletter');
@@ -150,6 +157,7 @@ export function QuoteForm({
         return;
       }
 
+      clearDraft();
       setReference(data.reference ?? 'received');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch {

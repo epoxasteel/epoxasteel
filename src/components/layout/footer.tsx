@@ -24,7 +24,9 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-hairline bg-graphite relative border-t">
+    // `data-footer` is watched by the floating dock, which stands down when the
+    // footer arrives rather than sitting on top of its links.
+    <footer data-footer className="border-hairline bg-graphite relative border-t">
       <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.35]" aria-hidden />
       <div
         className="via-arc/45 pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
@@ -112,8 +114,11 @@ export function Footer() {
             </p>
             <NewsletterForm className="mt-6" />
 
-            <dl className="bg-hairline mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-md">
-              {siteConfig.contact.hours.slice(0, 2).map((entry) => (
+            {/* All of them. `slice(0, 2)` quietly dropped Sunday — and Sunday is
+                the one that says emergency dispatch is available, which is
+                exactly the line a site manager needs to see. */}
+            <dl className="bg-hairline mt-10 grid gap-px overflow-hidden rounded-md sm:grid-cols-3">
+              {siteConfig.contact.hours.map((entry) => (
                 <div key={entry.days} className="bg-graphite p-4">
                   <dt className="text-steel text-[0.6875rem] tracking-[0.14em] uppercase">
                     {entry.days}
@@ -125,8 +130,11 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Link columns */}
-        <div className="container-page border-hairline grid gap-10 border-b py-12 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Link columns.
+            Two abreast from the narrowest width rather than one: stacked, the
+            four lists ran the footer to 2,374px on a phone — longer than most of
+            the pages it sits under. */}
+        <div className="container-page border-hairline grid grid-cols-2 gap-x-6 gap-y-10 border-b py-12 lg:grid-cols-4 lg:gap-10">
           {footerNav.map((column) => (
             <nav key={column.title} aria-labelledby={`footer-${column.title}`}>
               <h2

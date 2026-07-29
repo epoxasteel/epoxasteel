@@ -31,6 +31,7 @@ export function FloatingContact({ assistant }: { assistant: boolean }) {
   const { open, openAssistant } = useAssistant();
   const [past, setPast] = React.useState(false);
   const [deep, setDeep] = React.useState(false);
+  const [atFooter, setAtFooter] = React.useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
@@ -38,9 +39,33 @@ export function FloatingContact({ assistant }: { assistant: boolean }) {
     setDeep(latest > SHOW_TOP_AFTER);
   });
 
+  /*
+   * Stand down when the footer arrives.
+   *
+   * The dock is fixed, so at the bottom of any page it was sitting directly on
+   * top of the legal row — "Terms & Conditions" was half-covered by the
+   * back-to-top button and unclickable. The footer already carries the phone,
+   * the email, the quote link and the sitemap, so there is nothing the dock is
+   * offering that the visitor cannot see anyway.
+   */
+  React.useEffect(() => {
+    const footer = document.querySelector('[data-footer]');
+    if (!footer || !('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setAtFooter(entry.isIntersecting),
+      // Start retreating a little before the footer's own top edge, so the dock
+      // is gone by the time the links are readable rather than as they arrive.
+      { rootMargin: '0px 0px -96px 0px' },
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   // With no model configured the dock still earns its place as back-to-top, so
   // it appears at the depth where that is the only thing it would offer.
-  const visible = (assistant ? past : deep) && !open;
+  const visible = (assistant ? past : deep) && !open && !atFooter;
 
   return (
     <AnimatePresence>

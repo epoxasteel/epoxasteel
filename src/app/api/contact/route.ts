@@ -5,6 +5,7 @@ import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
 import { contactInternalEmail, contactConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
+import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -54,7 +55,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Message received.', reference: 'received' });
   }
 
+  // See the quote route: a reload on a slow connection should not become two
+  // messages on the desk.
+  const print = fingerprint(identifier, 'contact', [
+    data.email,
+    data.name,
+    data.subject,
+    data.message,
+  ]);
+
+  const already = findDuplicate(print);
+  if (already) {
+    return NextResponse.json({ message: 'Message received.', reference: already });
+  }
+
   const reference = generateReference('EPX-C');
+  remember(print, reference);
   const emailData = { reference, ...data };
 
   const prisma = getPrisma();
