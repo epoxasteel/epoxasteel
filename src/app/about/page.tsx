@@ -311,14 +311,22 @@ export default function AboutPage() {
             </div>
 
             <Reveal direction="left">
+              {/*
+                Term before definition, and the hint lives inside the <dd>: a
+                <p> as a direct child of the grouping <div> is invalid markup
+                inside a <dl>. `flex-col-reverse` keeps the figure visually
+                above its label while the DOM order stays correct.
+              */}
               <dl className="bg-hairline grid gap-px overflow-hidden rounded-lg">
                 {safetyCommitment.metrics.map((metric) => (
-                  <div key={metric.label} className="bg-charcoal p-7">
+                  <div key={metric.label} className="bg-charcoal flex flex-col-reverse p-7">
+                    <dt className="text-chalk mt-2 text-[0.9375rem]">{metric.label}</dt>
                     <dd className="font-display text-metal text-3xl font-semibold">
                       <SmartCounter display={metric.value} />
+                      <span className="text-steel mt-1 block text-[0.8125rem] font-normal">
+                        {metric.hint}
+                      </span>
                     </dd>
-                    <dt className="text-chalk mt-2 text-[0.9375rem]">{metric.label}</dt>
-                    <p className="text-steel mt-1 text-[0.8125rem]">{metric.hint}</p>
                   </div>
                 ))}
               </dl>

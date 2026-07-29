@@ -51,11 +51,28 @@ export function Header() {
           'fixed inset-x-0 top-0 z-50',
           'transition-[background-color,border-color,backdrop-filter] duration-500',
           '[transition-timing-function:var(--ease-out-quint)]',
+          /*
+           * Real glass, not a tinted panel. Three things do the work:
+           * a translucent surface light enough to read the page through,
+           * a saturation boost so colour passing underneath stays alive rather
+           * than turning to grey mush, and the hairline highlight below that
+           * gives the pane a lit top edge.
+           */
           solid
-            ? 'border-hairline bg-void/85 border-b backdrop-blur-xl'
+            ? 'border-hairline bg-void/70 border-b backdrop-blur-2xl backdrop-saturate-150'
             : 'border-b border-transparent bg-transparent',
         )}
       >
+        {/* The lit edge of the glass. */}
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-x-0 top-0 h-px',
+            'bg-linear-to-r from-transparent via-white/12 to-transparent',
+            'transition-opacity duration-500',
+            solid ? 'opacity-100' : 'opacity-0',
+          )}
+        />
         {/* Utility bar — collapses away as soon as the page scrolls. */}
         <motion.div
           initial={false}
@@ -214,7 +231,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
         <NavigationMenu.Viewport
           className={cn(
             'relative h-(--radix-navigation-menu-viewport-height) w-full origin-top overflow-hidden',
-            'border-hairline bg-graphite/95 shadow-raised rounded-lg border backdrop-blur-2xl',
+            'border-hairline bg-graphite/85 shadow-raised rounded-lg border backdrop-blur-2xl backdrop-saturate-150',
             'transition-[width,height] duration-350 [transition-timing-function:var(--ease-out-quint)]',
             'data-[state=closed]:animate-[nav-scale-out_200ms_ease-in]',
             'data-[state=open]:animate-[nav-scale-in_260ms_var(--ease-out-quint)]',

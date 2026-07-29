@@ -23,8 +23,12 @@
   --color-hairline-strong: #323a45;
 
   /* --- Text & metal ---------------------------------------------------- */
-  --color-steel: #495260;
-  --color-ash: #78828f;
+  /* The two dimmest text tiers are pinned to WCAG AA (4.5:1) against every
+     surface they are used on — void, graphite and charcoal. The previous
+     --color-steel sat at 2.4:1, which failed on captions, metadata, form
+     placeholders and every eyebrow label on the site. */
+  --color-steel: #767f8d;
+  --color-ash: #8d97a4;
   --color-mist: #a8b2be;
   --color-chalk: #d7dde5;
   --color-bright: #f2f5f9;
@@ -468,6 +472,116 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+  }
+
+  /* ------------------------------------------------------------------------
+     The hero overture's opening plate
+
+     Server-rendered so the blackout is on screen from the first frame, but only
+     shown when the inline bootstrap in the head has confirmed the intro is
+     actually due — see `overture-script.tsx`. React's overture takes over the
+     same area at hydration and clears the attribute when the sequence ends, at
+     which point this fades out on the same curve as the overture above it.
+     ------------------------------------------------------------------------ */
+
+  [data-overture-cover] {
+    opacity: 0;
+    transition: opacity 900ms var(--ease-out-expo);
+  }
+
+  html[data-overture] [data-overture-cover] {
+    opacity: 1;
+  }
+
+  /* ------------------------------------------------------------------------
+     Scroll reveal
+
+     Drives every `<Reveal>`, `<RevealGroup>` and `<MaskedLines>` on the site.
+     This used to be Framer Motion; at 220+ instances the runtime cost of an
+     animation library — a VisualElement and an IntersectionObserver per element
+     — dwarfed the animation itself. Two properties on the compositor do the
+     same job for nothing.
+
+     Everything is gated on `[data-reveal-engine]`, which the inline bootstrap in
+     the document head sets only once it knows IntersectionObserver exists. If
+     that script never runs, no element is ever hidden, so the page degrades to
+     plain static content instead of a blank screen.
+
+     Specificity is load-bearing: these live in the same cascade layer as the
+     Tailwind utilities and win on the descendant selector, so a stray
+     `opacity-*` or `translate-*` class on a revealed element cannot strand it.
+     ------------------------------------------------------------------------ */
+
+  [data-reveal-engine] [data-reveal] {
+    opacity: 0;
+    transition:
+      opacity var(--reveal-duration, 0.75s) var(--ease-out-expo) var(--reveal-delay, 0s),
+      transform var(--reveal-duration, 0.75s) var(--ease-out-expo) var(--reveal-delay, 0s);
+  }
+
+  [data-reveal-engine] [data-reveal='up'] {
+    transform: translate3d(0, 26px, 0);
+  }
+  [data-reveal-engine] [data-reveal='down'] {
+    transform: translate3d(0, -26px, 0);
+  }
+  [data-reveal-engine] [data-reveal='left'] {
+    transform: translate3d(26px, 0, 0);
+  }
+  [data-reveal-engine] [data-reveal='right'] {
+    transform: translate3d(-26px, 0, 0);
+  }
+
+  /* A horizontal reveal is a two-column idea. Below the breakpoint where
+     side-by-side layouts collapse it slides a full-width block sideways for no
+     compositional reason — and because that block already spans gutter to
+     gutter, its 26px offset pokes past the viewport edge and creates horizontal
+     scroll. So on narrow screens they rise instead. */
+  @media (width < 64rem) {
+    [data-reveal-engine] [data-reveal='left'],
+    [data-reveal-engine] [data-reveal='right'] {
+      transform: translate3d(0, 26px, 0);
+    }
+  }
+
+  [data-reveal-engine] [data-reveal][data-shown] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Masked lines: the trigger sits on the unclipped wrapper, because each line
+     starts fully outside its own `overflow-hidden` parent and would report an
+     intersection ratio of zero forever. */
+  [data-reveal-engine] [data-reveal-line] {
+    display: block;
+    transform: translate3d(0, 110%, 0);
+    transition: transform 1s var(--ease-out-expo) var(--reveal-delay, 0s);
+  }
+
+  [data-reveal-engine] [data-reveal-lines][data-shown] [data-reveal-line] {
+    transform: none;
+  }
+
+  /* The global reduced-motion rule collapses every transition to 0.01ms, which
+     would make reveals pop. A cross-fade with no travel is not the kind of
+     motion that setting is asking us to remove, so reveals opt back in to a
+     short fade — and only that. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal-engine] [data-reveal] {
+      transform: none !important;
+      transition-duration: 300ms !important;
+      transition-delay: 0s !important;
+    }
+
+    [data-reveal-engine] [data-reveal-line] {
+      transform: none !important;
+      opacity: 0;
+      transition: opacity 300ms linear !important;
+    }
+
+    [data-reveal-engine] [data-reveal-lines][data-shown] [data-reveal-line] {
+      opacity: 1;
+    }
   }
 }
 

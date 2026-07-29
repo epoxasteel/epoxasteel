@@ -58,13 +58,12 @@ export function Wordmark({
       {showMark ? <BeamMark className={cn(sizes.mark, 'text-arc-bright')} /> : null}
       <span
         className={cn(
-          'font-display leading-none font-extrabold tracking-[0.16em] uppercase',
+          'font-display leading-none font-extrabold tracking-[0.16em] whitespace-nowrap uppercase',
           sizes.text,
           metal ? 'text-metal' : 'text-bright',
         )}
       >
-        Epoxa
-        <span className={cn('font-light', metal ? '' : 'text-mist')}>&nbsp;Steel</span>
+        Epoxa <span className={cn('font-light', metal ? '' : 'text-mist')}>Steel</span>
       </span>
     </span>
   );

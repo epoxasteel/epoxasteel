@@ -4,10 +4,20 @@ import { Wordmark } from '@/components/visual/wordmark';
  * Route-level loading state.
  *
  * A single scanning hairline over the wordmark: enough to say "working" without
- * a spinner that implies something is wrong. Almost every route on this site is
- * statically rendered, so most visitors will never see it.
+ * a spinner that implies something is wrong.
+ *
+ * Deliberately **not** exported as a root `app/loading.tsx`. Doing that wraps
+ * every page in the app in a Suspense boundary, which changes what the server
+ * sends: the fallback goes into `<main>` and the real page follows in a later
+ * stream chunk that only React can swap in. Every route then painted this
+ * screen first and could not show a word of actual content until the framework
+ * had downloaded, parsed and hydrated — it cost roughly four seconds of largest
+ * contentful paint on a page that is otherwise fully static.
+ *
+ * So it is opted into per route, and only where a route genuinely renders on
+ * demand. Everything statically rendered ships its real markup instead.
  */
-export default function Loading() {
+export function RouteLoading() {
   return (
     <div className="bg-void grid min-h-dvh place-items-center" role="status" aria-label="Loading">
       <div className="relative flex flex-col items-center gap-7">

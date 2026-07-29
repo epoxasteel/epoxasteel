@@ -117,31 +117,40 @@ function Windows({ tower, baseline, seed }: { tower: Tower; baseline: number; se
 
   if (columns === 0 || rows === 0) return null;
 
-  const cells: React.ReactElement[] = [];
+  /*
+   * Windows are accumulated into two path strings — one cool, one warm —
+   * rather than one <rect> per window.
+   *
+   * A lit tower can carry forty or more windows, and across three skyline
+   * layers that ran to well over a thousand DOM nodes that exist purely to be
+   * small bright squares. Two <path> elements per tower render identically and
+   * cost the browser almost nothing to parse, style and lay out.
+   */
+  let cool = '';
+  let warm = '';
 
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
       if (random() > tower.litRatio) continue;
 
-      const x = tower.x + padding + column * cellW;
-      const y = baseline - tower.height + tower.height * 0.12 + row * cellH;
-      // A handful of windows glow warmer, which stops the grid looking printed.
-      const warm = random() > 0.86;
+      const x = (tower.x + padding + column * cellW).toFixed(1);
+      const y = (baseline - tower.height + tower.height * 0.12 + row * cellH).toFixed(1);
+      const rect = `M${x} ${y}h2.4v3.4h-2.4z`;
 
-      cells.push(
-        <rect
-          key={`${row}-${column}`}
-          x={x}
-          y={y}
-          width={2.4}
-          height={3.4}
-          fill={warm ? 'rgba(255,214,164,0.85)' : 'rgba(174,204,240,0.6)'}
-        />,
-      );
+      // A handful of windows glow warmer, which stops the grid looking printed.
+      if (random() > 0.86) warm += rect;
+      else cool += rect;
     }
   }
 
-  return <g>{cells}</g>;
+  if (!cool && !warm) return null;
+
+  return (
+    <g>
+      {cool ? <path d={cool} fill="rgba(174,204,240,0.6)" /> : null}
+      {warm ? <path d={warm} fill="rgba(255,214,164,0.85)" /> : null}
+    </g>
+  );
 }
 
 /** A tower crane — the detail that makes a skyline read as "under construction". */

@@ -9,6 +9,8 @@ import { JsonLd } from '@/components/layout/section';
 import { SearchProvider } from '@/components/search/search-provider';
 import { SearchDialog } from '@/components/search/search-dialog';
 import { FloatingContact } from '@/components/layout/floating-contact';
+import { RevealEngineScript } from '@/components/motion/reveal';
+import { OvertureScript } from '@/components/home/overture-script';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -46,6 +48,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Site-wide structured data. Page-level schema is added per route. */}
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
+        {/* Both must run before the body paints: one owns the
+            hidden-until-revealed state for every scroll reveal, the other the
+            hero's opening blackout. Each is a few hundred bytes and each
+            degrades to "show everything" if it never runs. */}
+        <RevealEngineScript />
+        <OvertureScript />
       </head>
       <body className="bg-void min-h-dvh antialiased">
         <SearchProvider>

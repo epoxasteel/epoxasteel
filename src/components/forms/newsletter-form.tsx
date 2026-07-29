@@ -1,30 +1,50 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Check, Loader2 } from 'lucide-react';
-import { newsletterSchema, type NewsletterInput } from '@/lib/validations';
 import { cn } from '@/lib/utils';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
+
+/**
+ * Newsletter subscription.
+ *
+ * Deliberately does **not** use Zod or React Hook Form. This form lives in the
+ * footer, so it renders on every page — and importing the shared schema module
+ * pulled the whole Zod runtime, plus the quote and contact schemas, into the
+ * bundle for the entire site. That was the single largest JavaScript chunk we
+ * shipped, in service of validating one email field.
+ *
+ * The server still validates with `newsletterSchema`; that is where the security
+ * boundary actually is. Here, a native `type="email"` field plus a shape check
+ * is enough to catch a typo before a round trip.
+ */
+
+/** Deliberately permissive — the server owns the authoritative check. */
+function looksLikeEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
+}
 
 export function NewsletterForm({ className }: { className?: string }) {
   const [status, setStatus] = React.useState<'idle' | 'success' | 'error'>('idle');
   const [message, setMessage] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [website, setWebsite] = React.useState('');
+  const [fieldError, setFieldError] = React.useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const elapsedSinceMount = useElapsedSinceMount();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<NewsletterInput>({
-    resolver: zodResolver(newsletterSchema),
-    defaultValues: { email: '', website: '' },
-  });
-
-  async function onSubmit(values: NewsletterInput) {
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setStatus('idle');
+
+    if (!looksLikeEmail(email)) {
+      setFieldError('Enter a valid email address');
+      return;
+    }
+
+    setFieldError(null);
+    setIsSubmitting(true);
+    const values = { email: email.trim(), website };
 
     try {
       const response = await fetch('/api/newsletter', {
@@ -43,10 +63,12 @@ export function NewsletterForm({ className }: { className?: string }) {
 
       setStatus('success');
       setMessage(data.message ?? 'You are subscribed.');
-      reset();
+      setEmail('');
     } catch {
       setStatus('error');
       setMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -66,7 +88,7 @@ export function NewsletterForm({ className }: { className?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-2.5', className)} noValidate>
+    <form onSubmit={onSubmit} className={cn('space-y-2.5', className)} noValidate>
       <div className="flex flex-col gap-2.5 sm:flex-row">
         <div className="flex-1">
           <label htmlFor="newsletter-email" className="sr-only">
@@ -77,15 +99,19 @@ export function NewsletterForm({ className }: { className?: string }) {
             type="email"
             autoComplete="email"
             placeholder="you@company.com"
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? 'newsletter-email-error' : undefined}
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              if (fieldError) setFieldError(null);
+            }}
+            aria-invalid={Boolean(fieldError)}
+            aria-describedby={fieldError ? 'newsletter-email-error' : undefined}
             className={cn(
               'bg-graphite text-bright h-12 w-full rounded-sm border px-4 text-[0.9375rem]',
               'placeholder:text-steel transition-[border-color,box-shadow] duration-200',
               'focus:border-arc-bright focus:shadow-[0_0_0_3px_rgba(58,138,224,0.16)] focus:outline-none',
-              errors.email ? 'border-danger' : 'border-hairline hover:border-hairline-strong',
+              fieldError ? 'border-danger' : 'border-hairline hover:border-hairline-strong',
             )}
-            {...register('email')}
           />
         </div>
 
@@ -121,13 +147,14 @@ export function NewsletterForm({ className }: { className?: string }) {
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          {...register('website')}
+          value={website}
+          onChange={(event) => setWebsite(event.target.value)}
         />
       </div>
 
-      {errors.email ? (
+      {fieldError ? (
         <p id="newsletter-email-error" role="alert" className="text-danger text-[0.8125rem]">
-          {errors.email.message}
+          {fieldError}
         </p>
       ) : null}
 

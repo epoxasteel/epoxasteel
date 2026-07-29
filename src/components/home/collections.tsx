@@ -146,7 +146,7 @@ export function ProjectShowcase() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Projects"
-          index={6}
+          index={7}
           title="Work that had to be right the first time."
           description="Fracture-critical bridge welds. A frame erected above live platforms. A grid connection that could not slip. The projects where the margin for error was zero."
           action={{ label: 'All projects', href: '/projects' }}

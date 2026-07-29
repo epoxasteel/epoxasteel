@@ -8,14 +8,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Magnetic } from '@/components/motion/magnetic';
 import { WordmarkStacked } from '@/components/visual/wordmark';
-import {
-  Atmosphere,
-  SkylineFar,
-  SkylineMid,
-  SkylineNear,
-  SteelFrameForeground,
-} from '@/components/visual/city-scene';
 import { EASE_OUT_EXPO } from '@/lib/motion';
+import { OVERTURE_KEY } from '@/components/home/overture-script';
 
 /**
  * The hero.
@@ -30,8 +24,6 @@ import { EASE_OUT_EXPO } from '@/lib/motion';
  * browsing session, is skippable at any moment, and is bypassed entirely for
  * reduced-motion users — who go straight to the settled hero.
  */
-
-const OVERTURE_KEY = 'epoxa:overture-played';
 
 /**
  * Reads "has the overture already played this session?" from sessionStorage.
@@ -56,7 +48,26 @@ function readOverturePlayed() {
   }
 }
 
-export function Hero() {
+/**
+ * The parallax layers, rendered on the server and handed in as nodes.
+ *
+ * The city scene builds hundreds of SVG elements from a seeded PRNG. Doing that
+ * inside this client component meant the whole generator shipped as JavaScript
+ * and ran on the main thread before the hero could paint. Rendering it upstream
+ * puts the finished markup in the initial HTML and keeps the generator out of
+ * the browser bundle entirely — this component only animates what it is given.
+ */
+export type HeroVideoSource = { src: string; type: string };
+
+export type HeroLayers = {
+  atmosphere: React.ReactNode;
+  far: React.ReactNode;
+  mid: React.ReactNode;
+  near: React.ReactNode;
+  frame: React.ReactNode;
+};
+
+export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroVideoSource[] }) {
   const reduce = useReducedMotion();
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -72,8 +83,19 @@ export function Hero() {
   const phase: 'overture' | 'settled' =
     !reduce && !alreadyPlayed && !finished ? 'overture' : 'settled';
 
+  /*
+   * Is the overture part of *this* page view?
+   *
+   * False on the server and for anyone returning within the session, and that
+   * is the point: when there is no intro to hand over from, the hero content is
+   * rendered as plain, fully-visible markup rather than a Framer tree waiting at
+   * `opacity: 0`. The headline is in the HTML, so it paints with the document.
+   */
+  const entrance = !reduce && !alreadyPlayed;
+
   const finishOverture = React.useCallback(() => {
     setFinished(true);
+    document.documentElement.removeAttribute('data-overture');
     try {
       window.sessionStorage.setItem(OVERTURE_KEY, '1');
     } catch {
@@ -95,7 +117,7 @@ export function Hero() {
       aria-label="EPOXA STEEL — Reinforce Your Dream"
       className="bg-void relative h-dvh min-h-[38rem] w-full overflow-hidden"
     >
-      <HeroBackdrop scrollYProgress={scrollYProgress} />
+      <HeroBackdrop scrollYProgress={scrollYProgress} layers={layers} video={video} />
 
       {/* Legibility scrim — a single gradient rather than a flat overlay, so
           the sky stays clean while the text sits on enough contrast. */}
@@ -113,6 +135,15 @@ export function Hero() {
       />
       <div aria-hidden className="bg-grain pointer-events-none absolute inset-0" />
 
+      {/* The blackout the overture opens from. Server-rendered so it is already
+          on screen at first paint; styled in `globals.css` and shown only while
+          `data-overture` is set on the root element. */}
+      <div
+        data-overture-cover
+        aria-hidden
+        className="bg-void pointer-events-none absolute inset-0 z-30"
+      />
+
       <AnimatePresence mode="wait">
         {phase === 'overture' ? <Overture key="overture" onDone={finishOverture} /> : null}
       </AnimatePresence>
@@ -122,7 +153,7 @@ export function Hero() {
         className="relative flex h-full items-center"
       >
         <div className="container-page w-full pt-(--header-h)">
-          <HeroContent active={phase === 'settled'} />
+          <HeroContent entrance={entrance} active={phase === 'settled'} />
         </div>
       </motion.div>
 
@@ -137,8 +168,12 @@ export function Hero() {
 
 function HeroBackdrop({
   scrollYProgress,
+  layers,
+  video,
 }: {
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress'];
+  layers: HeroLayers;
+  video: HeroVideoSource[];
 }) {
   const reduce = useReducedMotion();
 
@@ -154,19 +189,19 @@ function HeroBackdrop({
   return (
     <div className="absolute inset-0" aria-hidden>
       <motion.div style={reduce ? undefined : { scale: skyScale }} className="absolute inset-0">
-        <Atmosphere />
+        {layers.atmosphere}
       </motion.div>
 
       <motion.div style={style(farY)} className="absolute inset-x-0 bottom-0 h-[62%] opacity-90">
-        <SkylineFar />
+        {layers.far}
       </motion.div>
 
       <motion.div style={style(midY)} className="absolute inset-x-0 bottom-0 h-[54%]">
-        <SkylineMid />
+        {layers.mid}
       </motion.div>
 
       <motion.div style={style(nearY)} className="absolute inset-x-0 bottom-0 h-[44%]">
-        <SkylineNear />
+        {layers.near}
       </motion.div>
 
       {/* Haze between the skyline and the foreground frame gives the scene air. */}
@@ -179,10 +214,10 @@ function HeroBackdrop({
       />
 
       <motion.div style={style(frontY)} className="absolute inset-x-0 -bottom-8 h-[34%] opacity-95">
-        <SteelFrameForeground />
+        {layers.frame}
       </motion.div>
 
-      <HeroVideo />
+      <HeroVideo sources={video} />
     </div>
   );
 }
@@ -195,12 +230,10 @@ function HeroBackdrop({
  * a slow connection or a codec the browser dislikes all degrade to the vector
  * scene with no flash of empty space.
  */
-function HeroVideo() {
+function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
   const [ready, setReady] = React.useState(false);
   const reduce = useReducedMotion();
   const videoRef = React.useRef<HTMLVideoElement>(null);
-
-  const externalSource = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
 
   React.useEffect(() => {
     const video = videoRef.current;
@@ -214,7 +247,10 @@ function HeroVideo() {
     }
   }, [reduce]);
 
-  if (reduce) return null;
+  // No footage available: render nothing rather than a <video> whose sources
+  // 404 on every visit. The vector scene is the intended default, not a
+  // fallback for a failed request.
+  if (reduce || sources.length === 0) return null;
 
   return (
     <motion.div
@@ -236,9 +272,9 @@ function HeroVideo() {
         onError={() => setReady(false)}
         className="size-full object-cover"
       >
-        {externalSource ? <source src={externalSource} /> : null}
-        <source src="/media/hero.webm" type="video/webm" />
-        <source src="/media/hero.mp4" type="video/mp4" />
+        {sources.map((source) => (
+          <source key={source.src} src={source.src} type={source.type} />
+        ))}
       </video>
       {/* Grade the footage into the palette so any source material matches. */}
       <div
@@ -260,8 +296,8 @@ function Overture({ onDone }: { onDone: () => void }) {
   const [beat, setBeat] = React.useState<0 | 1>(0);
 
   React.useEffect(() => {
-    const toWordmark = window.setTimeout(() => setBeat(1), 2400);
-    const toHero = window.setTimeout(onDone, 5200);
+    const toWordmark = window.setTimeout(() => setBeat(1), 2000);
+    const toHero = window.setTimeout(onDone, 4400);
 
     function skip(event: KeyboardEvent) {
       if (event.key === 'Escape' || event.key === ' ' || event.key === 'Enter') onDone();
@@ -284,7 +320,10 @@ function Overture({ onDone }: { onDone: () => void }) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.9, ease: EASE_OUT_EXPO }}
-      className="bg-void/55 absolute inset-0 z-30 flex items-center justify-center backdrop-blur-[2px]"
+      // Fully opaque, not a scrim: the settled hero is now painted underneath
+      // from the very first frame, and the intro should read as a proper cut to
+      // black rather than a blur over content the visitor has already glimpsed.
+      className="bg-void absolute inset-0 z-40 flex items-center justify-center"
       onClick={onDone}
     >
       <AnimatePresence mode="wait">
@@ -328,9 +367,9 @@ function Overture({ onDone }: { onDone: () => void }) {
           onDone();
         }}
         className={cn(
-          'border-hairline bg-void/60 absolute right-6 bottom-8 rounded-sm border px-4 py-2',
-          'text-steel text-[0.75rem] tracking-[0.16em] uppercase backdrop-blur-sm',
-          'hover:border-hairline-strong hover:text-mist transition-colors duration-300',
+          'border-hairline-strong bg-void/75 absolute right-6 bottom-8 rounded-sm border px-4 py-2.5',
+          'text-mist text-[0.75rem] tracking-[0.16em] uppercase backdrop-blur-md',
+          'hover:border-arc-bright hover:text-bright transition-colors duration-300',
         )}
       >
         Skip intro
@@ -343,7 +382,17 @@ function Overture({ onDone }: { onDone: () => void }) {
 /* Hero content                                                               */
 /* -------------------------------------------------------------------------- */
 
-function HeroContent({ active }: { active: boolean }) {
+/**
+ * `entrance` decides whether this is animated at all.
+ *
+ * When the overture is not part of this page view there is nothing to hand over
+ * from, so the content renders as ordinary markup with no motion styles — which
+ * is what lets the headline appear in the server HTML and be counted as the
+ * largest contentful paint immediately. When the overture *is* running, the
+ * same tree becomes a staggered entrance, played out of sight behind the plate
+ * and revealed as it lifts.
+ */
+function HeroContent({ entrance, active }: { entrance: boolean; active: boolean }) {
   const reduce = useReducedMotion();
 
   const container = {
@@ -358,37 +407,33 @@ function HeroContent({ active }: { active: boolean }) {
         visible: { opacity: 1, y: 0, transition: { duration: 0.95, ease: EASE_OUT_EXPO } },
       };
 
+  // `initial={false}` tells Framer to render the resting state and skip the
+  // entrance outright, leaving the markup free of inline opacity.
+  const group = entrance
+    ? ({ variants: container, initial: 'hidden', animate: active ? 'visible' : 'hidden' } as const)
+    : ({ initial: false } as const);
+  const line = entrance ? { variants: item } : { initial: false as const };
+
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate={active ? 'visible' : 'hidden'}
-      className="max-w-3xl"
-    >
-      <motion.p
-        variants={item}
-        className="text-eyebrow text-arc-glow flex items-center gap-3 uppercase"
-      >
+    <motion.div {...group} className="max-w-3xl">
+      <motion.p {...line} className="text-eyebrow text-arc-glow flex items-center gap-3 uppercase">
         <span aria-hidden className="bg-arc h-px w-10" />
         Structural steel · Since {siteConfig.founded}
       </motion.p>
 
-      <motion.h1
-        variants={item}
-        className="font-display text-display-xl text-bright mt-7 font-extrabold"
-      >
+      <motion.h1 {...line} className="font-display text-display-xl text-bright mt-7 font-extrabold">
         Reinforce
         <br />
         <span className="text-metal">Your Dream.</span>
       </motion.h1>
 
-      <motion.p variants={item} className="text-lead text-mist mt-8 max-w-xl">
-        EPOXA STEEL supplies certified structural steel, plate, tube and reinforcement to
-        commercial, residential and industrial construction — backed by in-house fabrication,
-        mill-traceable documentation and delivery sequenced to your erection programme.
+      <motion.p {...line} className="text-lead text-mist mt-8 max-w-xl">
+        Premium structural steel for commercial, industrial and residential construction — supplied
+        with mill-traceable certification, in-house fabrication, and delivery sequenced to your
+        erection programme.
       </motion.p>
 
-      <motion.div variants={item} className="mt-11 flex flex-wrap items-center gap-4">
+      <motion.div {...line} className="mt-11 flex flex-wrap items-center gap-4">
         <Magnetic>
           <Button href="/quote" size="lg" sheen>
             Request a Quote
@@ -403,7 +448,7 @@ function HeroContent({ active }: { active: boolean }) {
       </motion.div>
 
       <motion.dl
-        variants={item}
+        {...line}
         className="border-hairline/70 mt-14 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 border-t pt-8 sm:grid-cols-4"
       >
         {[

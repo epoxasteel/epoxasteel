@@ -109,8 +109,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       );
     }
 
+    /*
+     * `prefetch={false}` turns off *viewport* prefetching only — App Router
+     * still prefetches on hover and touch, so a deliberate click still lands on
+     * a warm route.
+     *
+     * It matters because the two biggest buttons on the site point at /quote,
+     * and that route's chunk is the largest we build: the form, its resolver
+     * and its schema come to 326 KB. Prefetching it in the viewport meant every
+     * visitor downloaded the quote form during the homepage's initial load,
+     * competing for bandwidth with the page they were actually looking at.
+     */
     return (
-      <Link className={classes} href={href}>
+      <Link className={classes} href={href} prefetch={false}>
         {content}
       </Link>
     );

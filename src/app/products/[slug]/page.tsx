@@ -12,6 +12,7 @@ import { SpecTable, DefinitionGrid, TagList, Checklist, Badge, Alert } from '@/c
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/cards';
 import { CallToAction } from '@/components/home/sections';
+import { RecentlyViewed } from '@/components/products/recently-viewed';
 import { cn } from '@/lib/utils';
 
 export function generateStaticParams() {
@@ -328,6 +329,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
         </Section>
       ) : null}
+
+      <RecentlyViewed currentSlug={product.slug} />
 
       <CallToAction
         title={`Need ${product.name.toLowerCase()} on a schedule?`}
