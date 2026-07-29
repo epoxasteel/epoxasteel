@@ -11,6 +11,9 @@ import { SearchDialog } from '@/components/search/search-dialog';
 import { FloatingContact } from '@/components/layout/floating-contact';
 import { RevealEngineScript } from '@/components/motion/reveal';
 import { OvertureScript } from '@/components/home/overture-script';
+import { AssistantProvider } from '@/components/assistant/assistant-context';
+import { AssistantPanel } from '@/components/assistant/assistant-panel';
+import { assistantConfigured } from '@/lib/assistant/config';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -43,6 +46,8 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const assistantEnabled = assistantConfigured();
+
   return (
     <html lang="en" className={fontVariables} suppressHydrationWarning>
       <head>
@@ -57,13 +62,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-void min-h-dvh antialiased">
         <SearchProvider>
-          <Header />
-          <main id="main" className="relative">
-            {children}
-          </main>
-          <Footer />
-          <FloatingContact />
-          <SearchDialog />
+          <AssistantProvider>
+            <Header />
+            <main id="main" className="relative">
+              {children}
+            </main>
+            <Footer />
+            {/*
+              The panel only mounts when there is a model behind it, and the dock
+              only offers the enquiry desk when the same is true. Offering to
+              answer questions and then apologising is worse than not offering —
+              and it keeps the transcript UI out of the bundle entirely on a
+              deployment with no key.
+            */}
+            <FloatingContact assistant={assistantEnabled} />
+            {assistantEnabled ? <AssistantPanel /> : null}
+            <SearchDialog />
+          </AssistantProvider>
         </SearchProvider>
       </body>
     </html>

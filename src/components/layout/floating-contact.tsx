@@ -2,126 +2,98 @@
 
 import * as React from 'react';
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { MessageCircle, Phone, ArrowUp, X, Plus } from 'lucide-react';
-import { siteConfig } from '@/lib/site';
-import { whatsappHref } from '@/components/ui/misc';
+import { ArrowUp, Sparkle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
+import { useAssistant } from '@/components/assistant/assistant-context';
 
 /**
- * A small floating cluster: WhatsApp, phone and back-to-top.
+ * The dock.
  *
- * It stays collapsed to a single button until the user asks for it, and only
- * appears once the page has scrolled past the hero — so it never competes with
- * the opening impression or covers content on a short page.
+ * This was a white circular "+" that expanded into WhatsApp, phone and
+ * back-to-top. Three problems with that: a bare plus sign asks the visitor to
+ * guess, a solid white disc was the brightest thing on a very dark page and
+ * pulled the eye away from whatever they were reading, and it took two taps to
+ * reach anything.
+ *
+ * Now it is one labelled action — the enquiry desk — with the phone, WhatsApp
+ * and quote routes living inside the panel it opens. Back to top sits beside it
+ * and only appears once there is enough page behind you to want it.
+ *
+ * It stays out of the way until the hero is behind you, and hides entirely while
+ * the panel is open so it never sits on top of its own content.
  */
-export function FloatingContact() {
-  const [visible, setVisible] = React.useState(false);
-  const [expanded, setExpanded] = React.useState(false);
+
+const SHOW_DOCK_AFTER = 700;
+const SHOW_TOP_AFTER = 2400;
+
+export function FloatingContact({ assistant }: { assistant: boolean }) {
+  const { open, openAssistant } = useAssistant();
+  const [past, setPast] = React.useState(false);
+  const [deep, setDeep] = React.useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
-    const next = latest > 700;
-    setVisible(next);
-    if (!next) setExpanded(false);
+    setPast(latest > SHOW_DOCK_AFTER);
+    setDeep(latest > SHOW_TOP_AFTER);
   });
 
-  const actions = [
-    {
-      label: 'WhatsApp',
-      href: whatsappHref(),
-      icon: MessageCircle,
-      external: true,
-      tone: 'bg-success/12 border-success/35 text-success hover:bg-success/20',
-    },
-    {
-      label: `Call ${siteConfig.contact.phone}`,
-      href: `tel:${siteConfig.contact.phoneHref}`,
-      icon: Phone,
-      external: false,
-      tone: 'bg-arc/12 border-arc/35 text-arc-glow hover:bg-arc/20',
-    },
-  ];
+  // With no model configured the dock still earns its place as back-to-top, so
+  // it appears at the depth where that is the only thing it would offer.
+  const visible = (assistant ? past : deep) && !open;
 
   return (
     <AnimatePresence>
       {visible ? (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
-          className="fixed right-4 bottom-4 z-40 flex flex-col items-end gap-2.5 sm:right-6 sm:bottom-6"
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.38, ease: EASE_OUT_EXPO }}
+          className="fixed right-4 bottom-4 z-40 flex items-center gap-2 sm:right-6 sm:bottom-6"
         >
           <AnimatePresence>
-            {expanded
-              ? actions.map((action, index) => (
-                  <motion.a
-                    key={action.label}
-                    href={action.href}
-                    {...(action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    initial={{ opacity: 0, y: 12, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 12, scale: 0.9 }}
-                    transition={{
-                      duration: 0.28,
-                      delay: index * 0.05,
-                      ease: EASE_OUT_EXPO,
-                    }}
-                    aria-label={action.label}
-                    className={cn(
-                      'grid size-12 place-items-center rounded-full border backdrop-blur-md',
-                      'shadow-lift transition-colors duration-300',
-                      action.tone,
-                    )}
-                  >
-                    <action.icon aria-hidden className="size-5" />
-                  </motion.a>
-                ))
-              : null}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {expanded ? (
+            {deep ? (
               <motion.button
                 key="top"
                 type="button"
-                initial={{ opacity: 0, y: 12, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 12, scale: 0.9 }}
-                transition={{ duration: 0.28, delay: 0.1, ease: EASE_OUT_EXPO }}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.26, ease: EASE_OUT_EXPO }}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 aria-label="Back to top"
                 className={cn(
-                  'border-hairline-strong grid size-12 place-items-center rounded-full border',
-                  'bg-charcoal/90 text-mist shadow-lift backdrop-blur-md',
-                  'hover:text-bright transition-colors duration-300',
+                  'border-hairline-strong bg-graphite/90 text-mist grid size-11 place-items-center rounded-full border',
+                  'shadow-lift backdrop-blur-md backdrop-saturate-150',
+                  'hover:text-bright hover:border-steel transition-colors duration-300',
                 )}
               >
-                <ArrowUp aria-hidden className="size-5" />
+                <ArrowUp aria-hidden className="size-4" />
               </motion.button>
             ) : null}
           </AnimatePresence>
 
-          <button
-            type="button"
-            onClick={() => setExpanded((current) => !current)}
-            aria-expanded={expanded}
-            aria-label={expanded ? 'Close quick contact menu' : 'Open quick contact menu'}
-            className={cn(
-              'border-hairline-strong grid size-13 place-items-center rounded-full border',
-              'bg-bright text-void shadow-raised transition-all duration-400',
-              '[transition-timing-function:var(--ease-out-quint)] hover:scale-105',
-            )}
-          >
-            <motion.span animate={{ rotate: expanded ? 135 : 0 }} transition={{ duration: 0.35 }}>
-              {expanded ? (
-                <X aria-hidden className="size-5" />
-              ) : (
-                <Plus aria-hidden className="size-5" />
+          {assistant ? (
+            <button
+              type="button"
+              onClick={() => openAssistant()}
+              className={cn(
+                'group border-arc-bright/45 bg-graphite/92 relative inline-flex h-11 items-center gap-2.5 overflow-hidden rounded-full border pr-5 pl-4',
+                'text-chalk shadow-raised text-[0.875rem] font-medium backdrop-blur-xl backdrop-saturate-150',
+                'transition-[border-color,color,transform] duration-400 [transition-timing-function:var(--ease-out-quint)]',
+                'hover:border-arc-bright hover:text-bright hover:-translate-y-px',
               )}
-            </motion.span>
-          </button>
+            >
+              {/* A slow arc wash rather than a colour change — reads as lit metal. */}
+              <span
+                aria-hidden
+                className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"
+              />
+              <Sparkle aria-hidden className="text-arc-glow relative size-4" />
+              <span className="relative">Ask EPOXA</span>
+            </button>
+          ) : null}
         </motion.div>
       ) : null}
     </AnimatePresence>

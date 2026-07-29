@@ -305,6 +305,81 @@ export function newsletterConfirmationEmail(email: string) {
   };
 }
 
+/* -------------------------------------------------------------------------- */
+/* Assistant lead                                                             */
+/* -------------------------------------------------------------------------- */
+
+export type AssistantLeadEmailData = {
+  reference: string;
+  name: string;
+  email: string;
+  company?: string;
+  phone?: string;
+  product?: string;
+  quantity?: string;
+  timeline?: string;
+  location?: string;
+  summary?: string;
+  callback?: string;
+  transcript: string;
+};
+
+/**
+ * Sent to the desk when the assistant qualifies an enquiry.
+ *
+ * The transcript is included in full and deliberately last. Whoever picks this
+ * up needs to know what was already said before they call back — a lead that
+ * arrives without its conversation makes the customer repeat themselves, which
+ * undoes the point of having answered them quickly in the first place.
+ */
+export function assistantLeadEmail(data: AssistantLeadEmailData) {
+  const content = `
+    ${heading('Enquiry from the site assistant')}
+    ${paragraph(`${data.name} was talking to the assistant on the website and left contact details. Reference ${data.reference}.`)}
+    ${detailTable([
+      ['Name', data.name],
+      ['Email', data.email],
+      ['Company', data.company ?? ''],
+      ['Phone', data.phone ?? ''],
+      ['Product', data.product ?? ''],
+      ['Quantity', data.quantity ?? ''],
+      ['Timeline', data.timeline ?? ''],
+      ['Location', data.location ?? ''],
+      ['Preferred callback', data.callback ?? ''],
+      ['What they need', data.summary ?? ''],
+    ])}
+    ${button('Reply to the enquiry', `mailto:${data.email}`)}
+    <div style="margin-top:26px;padding-top:20px;border-top:1px solid ${BRAND.line};">
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};margin-bottom:10px;">Conversation</div>
+      <pre style="margin:0;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.7;color:${BRAND.text};">${escapeHtml(data.transcript)}</pre>
+    </div>
+  `;
+
+  return {
+    subject: `Assistant enquiry ${data.reference} — ${data.name}${data.company ? ` (${data.company})` : ''}`,
+    html: shell('Assistant enquiry', data.summary ?? `${data.name} left contact details.`, content),
+    text: [
+      `Enquiry from the site assistant — ${data.reference}`,
+      '',
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      data.company ? `Company: ${data.company}` : '',
+      data.phone ? `Phone: ${data.phone}` : '',
+      data.product ? `Product: ${data.product}` : '',
+      data.quantity ? `Quantity: ${data.quantity}` : '',
+      data.timeline ? `Timeline: ${data.timeline}` : '',
+      data.location ? `Location: ${data.location}` : '',
+      data.callback ? `Preferred callback: ${data.callback}` : '',
+      data.summary ? `\nWhat they need: ${data.summary}` : '',
+      '',
+      '--- Conversation ---',
+      data.transcript,
+    ]
+      .filter(Boolean)
+      .join('\n'),
+  };
+}
+
 export function newsletterInternalEmail(email: string) {
   return {
     subject: `New newsletter subscriber: ${email}`,

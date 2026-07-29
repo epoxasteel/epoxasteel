@@ -13,6 +13,9 @@ import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/cards';
 import { CallToAction } from '@/components/home/sections';
 import { RecentlyViewed } from '@/components/products/recently-viewed';
+import { AskAbout } from '@/components/assistant/ask-about';
+import { assistantConfigured } from '@/lib/assistant/config';
+import { fileSizeLabel } from '@/lib/downloads';
 import { cn } from '@/lib/utils';
 
 export function generateStaticParams() {
@@ -44,6 +47,7 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const assistantEnabled = assistantConfigured();
   const { slug } = await params;
   const product = getProduct(slug);
 
@@ -146,6 +150,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 >
                   Quote {product.name}
                 </Button>
+
+                {/* A specification raises questions before it raises a purchase
+                    order. This puts the answer next to the spec instead of
+                    asking the buyer to go and find it. */}
+                {assistantEnabled ? (
+                  <div className="border-hairline mt-5 border-t pt-5">
+                    <AskAbout
+                      seed={`I am looking at ${product.name}. `}
+                      label="Ask about grades and sizes"
+                    />
+                  </div>
+                ) : null}
               </div>
             </Reveal>
           </div>
@@ -290,8 +306,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <span className="text-ash mt-1 block text-[0.8125rem] leading-relaxed">
                       {download.description}
                     </span>
+                    {/* Measured on disk rather than declared by hand — the
+                        hand-written hints had drifted by three orders of
+                        magnitude. */}
                     <span className="text-steel mt-2 block text-[0.75rem] tracking-[0.1em] uppercase">
-                      {download.format} · {download.size}
+                      {download.format} · {fileSizeLabel(download.href) ?? download.size}
                     </span>
                   </span>
                   <Download

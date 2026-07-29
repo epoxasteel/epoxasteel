@@ -61,3 +61,4 @@ public/media/*.mov
 # misc
 .vercel
 .turbo
+public/downloads/*.pdf
