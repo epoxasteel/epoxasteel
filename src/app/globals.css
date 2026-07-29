@@ -269,17 +269,28 @@
     }
   }
 
-  /* Brushed-metal text fill, reserved for the wordmark and hero numerals. */
+  /* Brushed-metal text fill, used on the wordmark, display headings and figures.
+
+     The stops used to run down to #6d7885. On a long, wide wordmark that reads
+     as a highlight travelling across the letters; on anything short it is a
+     defect. The dark bands landed mid-word — the "a" of "Dream." all but
+     disappeared at phone widths, and every statistic on the site had its
+     trailing digits fade out, which looks like a rendering fault rather than a
+     finish.
+
+     The range is now bright-on-brighter. The banding still reads as rolled
+     metal at display sizes, but the darkest stop sits around 9:1 on every
+     surface it is used on, so nothing is ever hard to read. */
   .text-metal {
     background-image: linear-gradient(
       104deg,
-      #6d7885 0%,
-      #cfd7e0 18%,
-      #f4f7fa 30%,
-      #9aa5b2 46%,
-      #e6ecf3 62%,
-      #7d8794 82%,
-      #c3ccd6 100%
+      #bcc5d0 0%,
+      #eef2f7 16%,
+      #ffffff 32%,
+      #ccd5df 50%,
+      #f7fafd 66%,
+      #c2cbd6 84%,
+      #e9eef4 100%
     );
     -webkit-background-clip: text;
     background-clip: text;

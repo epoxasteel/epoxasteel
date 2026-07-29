@@ -355,8 +355,13 @@ export function RelatedLink({
           <span className="text-chalk group-hover/card:text-bright block truncate text-[0.9375rem] font-medium transition-colors">
             {title}
           </span>
+          {/* Two lines, not one with an ellipsis. At every width we tested,
+              single-line truncation cut these taglines mid-word — so the copy
+              was written, shipped and never once read to the end. */}
           {meta ? (
-            <span className="text-steel mt-0.5 block truncate text-[0.8125rem]">{meta}</span>
+            <span className="text-steel mt-0.5 line-clamp-2 block text-[0.8125rem] leading-snug">
+              {meta}
+            </span>
           ) : null}
         </span>
         <ArrowUpRight

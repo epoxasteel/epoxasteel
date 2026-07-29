@@ -19,18 +19,26 @@ export function Introduction() {
   return (
     <Section id="introduction" tone="void" className="overflow-hidden">
       <div className="container-page">
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-24">
+        <Reveal direction="none">
+          <Eyebrow index={1}>Who we are</Eyebrow>
+        </Reveal>
+
+        {/*
+          The thesis runs the full measure rather than sitting in a half-width
+          column. At display scale "Steel is a commodity" needs roughly 660px and
+          the column gave it 560, so it broke after "a" — the site's own argument,
+          in three ragged lines. Full width it sets as the two lines it was
+          written as, and what follows reads in a cleaner order: label, claim,
+          then the evidence for it.
+        */}
+        <h2 className="font-display text-display text-bright mt-7 max-w-4xl font-semibold">
+          <MaskedLines lines={['Steel is a commodity', 'until it is late.']} />
+        </h2>
+
+        <div className="mt-14 grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-start lg:gap-24">
           <div>
-            <Reveal direction="none">
-              <Eyebrow index={1}>Who we are</Eyebrow>
-            </Reveal>
-
-            <h2 className="font-display text-display text-bright mt-7 font-semibold">
-              <MaskedLines lines={['Steel is a commodity', 'until it is late.']} />
-            </h2>
-
             <Reveal delay={0.18}>
-              <p className="text-lead text-mist mt-8">{mission.body}</p>
+              <p className="text-lead text-mist">{mission.body}</p>
             </Reveal>
 
             <Reveal delay={0.24}>
@@ -66,7 +74,11 @@ export function Introduction() {
                   <div className="relative">
                     <p className="font-display text-metal text-[clamp(1.9rem,1.2rem+2.2vw,3rem)] leading-none font-semibold">
                       <SmartCounter
-                        display={`${stat.value.toLocaleString('en-US')}${stat.suffix}`}
+                        display={
+                          'display' in stat
+                            ? stat.display
+                            : `${stat.value.toLocaleString('en-US')}${stat.suffix}`
+                        }
                       />
                     </p>
                     <p className="text-chalk mt-4 text-[0.9375rem] font-medium">{stat.label}</p>
@@ -113,7 +125,11 @@ export function WhyChooseUs() {
               <span className="text-arc-bright font-mono text-[0.8125rem] tabular-nums">
                 {pad(index + 1)}
               </span>
-              <h3 className="font-display text-title text-bright mt-5 font-semibold">
+              {/* Two lines of headroom so a title that wraps does not push its
+                  own body copy out of line with its neighbours' — three cards
+                  sit side by side and the ragged baselines were the first thing
+                  the eye caught. */}
+              <h3 className="font-display text-title text-bright mt-5 font-semibold lg:min-h-[2.48em]">
                 {reason.title}
               </h3>
               <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">{reason.body}</p>

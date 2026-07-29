@@ -47,7 +47,15 @@ const buttonVariants = cva(
       },
       full: {
         true: 'w-full',
-        false: '',
+        /*
+         * Buttons carry `whitespace-nowrap` and `overflow-hidden` — the latter
+         * so the sheen has something to sweep inside. Together that means a
+         * button squeezed by a flex row does not wrap or push back: it silently
+         * cuts its own label off. "Submit request" lost its last 18px on the
+         * quote form at 1024px. A button is sized by its label; it should never
+         * be the thing that gives.
+         */
+        false: 'shrink-0',
       },
     },
     defaultVariants: { variant: 'primary', size: 'md', full: false },

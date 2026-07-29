@@ -55,8 +55,14 @@ export const siteConfig = {
   },
 
   /** Headline numbers used by the animated statistics blocks. */
+  /**
+   * `display` overrides the formatted figure where the full number is too long
+   * to be a headline. "1,400,000+" ran past the edge of its own tile and had
+   * the plus sign clipped off; a headline figure has to be readable at a
+   * glance, and the precise number is stated in the copy beside it anyway.
+   */
   stats: [
-    { value: 1400000, suffix: '+', label: 'Tonnes supplied', hint: 'Since 2009' },
+    { value: 1400000, suffix: '+', display: '1.4M+', label: 'Tonnes supplied', hint: 'Since 2009' },
     { value: 2600, suffix: '+', label: 'Projects delivered', hint: 'Across 34 countries' },
     { value: 99.4, suffix: '%', label: 'On-time delivery', hint: 'Rolling 24 months', decimals: 1 },
     { value: 48, suffix: 'h', label: 'Quote turnaround', hint: 'Standard enquiries' },

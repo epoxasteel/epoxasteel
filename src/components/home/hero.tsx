@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { AnimatePresence, motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowDown, Play } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -115,7 +115,14 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
     <section
       ref={containerRef}
       aria-label="EPOXA STEEL — Reinforce Your Dream"
-      className="bg-void relative h-dvh min-h-[38rem] w-full overflow-hidden"
+      /*
+       * `min-h-dvh`, not `h-dvh`. A fixed viewport height clipped the proof bar
+       * on a 667px phone — the hero simply cut two of the four figures off,
+       * silently, because it also carries `overflow-hidden` for the parallax.
+       * A minimum lets the section grow on the rare screen too short to hold it
+       * and behave identically everywhere else.
+       */
+      className="bg-void relative min-h-dvh w-full overflow-hidden"
     >
       <HeroBackdrop scrollYProgress={scrollYProgress} layers={layers} video={video} />
 
@@ -148,16 +155,18 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         {phase === 'overture' ? <Overture key="overture" onDone={finishOverture} /> : null}
       </AnimatePresence>
 
+      {/* `my-auto` rather than `items-center`: auto margins centre the content
+          when there is room and collapse to zero when there is not, so tall
+          content pushes the section open instead of overflowing past both
+          edges of it. */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative flex h-full items-center"
+        className="relative flex min-h-dvh w-full"
       >
-        <div className="container-page w-full pt-(--header-h)">
+        <div className="container-page my-auto w-full pt-(--header-h) pb-12 sm:pb-0">
           <HeroContent entrance={entrance} active={phase === 'settled'} />
         </div>
       </motion.div>
-
-      {phase === 'settled' ? <ScrollCue /> : null}
     </section>
   );
 }
@@ -421,35 +430,50 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
         Structural steel · Since {siteConfig.founded}
       </motion.p>
 
-      <motion.h1 {...line} className="font-display text-display-xl text-bright mt-7 font-extrabold">
+      <motion.h1
+        {...line}
+        className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7"
+      >
         Reinforce
         <br />
         <span className="text-metal">Your Dream.</span>
       </motion.h1>
 
-      <motion.p {...line} className="text-lead text-mist mt-8 max-w-xl">
+      <motion.p {...line} className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
         Premium structural steel for commercial, industrial and residential construction — supplied
         with mill-traceable certification, in-house fabrication, and delivery sequenced to your
         erection programme.
       </motion.p>
 
-      <motion.div {...line} className="mt-11 flex flex-wrap items-center gap-4">
-        <Magnetic>
-          <Button href="/quote" size="lg" sheen>
+      {/* Full width on a phone. Side by side they are within three pixels of
+          each other's width, which reads as a mistake rather than a rhythm —
+          and edge-to-edge targets are easier to hit anyway. */}
+      <motion.div
+        {...line}
+        className="mt-8 flex flex-col items-stretch gap-3 sm:mt-11 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
+      >
+        <Magnetic className="max-sm:w-full">
+          <Button href="/quote" size="lg" sheen className="max-sm:w-full">
             Request a Quote
             <ArrowRight aria-hidden />
           </Button>
         </Magnetic>
 
-        <Button href="/products" size="lg" variant="outline">
+        <Button href="/products" size="lg" variant="outline" className="max-sm:w-full">
           <Play aria-hidden className="size-3.5" />
           Explore Products
         </Button>
       </motion.div>
 
+      {/*
+        The proof bar has to survive a 667px-tall phone as well as a 27-inch
+        display. At the tight end the margins close up and it runs as two
+        columns; anything below that and it was being clipped by the hero's own
+        `h-dvh` bound, which quietly cost two of the four figures.
+      */}
       <motion.dl
         {...line}
-        className="border-hairline/70 mt-14 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 border-t pt-8 sm:grid-cols-4"
+        className="border-hairline/70 mt-9 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 sm:mt-12 sm:grid-cols-4 sm:gap-y-6 sm:pt-8"
       >
         {[
           { value: '1.4M+', label: 'Tonnes supplied' },
@@ -474,32 +498,16 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
   );
 }
 
-function ScrollCue() {
-  return (
-    <motion.a
-      href="#introduction"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.2, duration: 0.8 }}
-      className={cn(
-        'group absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2.5',
-        'text-steel text-[0.6875rem] tracking-[0.2em] uppercase',
-        'hover:text-mist transition-colors duration-300 lg:flex',
-      )}
-    >
-      Scroll
-      <span className="border-hairline-strong relative grid h-9 w-5 place-items-start overflow-hidden rounded-full border pt-1.5">
-        <motion.span
-          aria-hidden
-          className="bg-arc-bright size-1 rounded-full"
-          animate={{ y: [0, 14, 0], opacity: [1, 0.2, 1] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </span>
-      <ArrowDown
-        aria-hidden
-        className="size-3 transition-transform duration-300 group-hover:translate-y-0.5"
-      />
-    </motion.a>
-  );
-}
+/*
+ * There is no scroll cue.
+ *
+ * There was: a centred "Scroll" label with a mouse graphic and a dot looping
+ * forever. It sat at 50% of the hero, which is inside the proof bar's own
+ * width, so on 1280x800 and 1440x900 — the two commonest laptops — the two
+ * overlapped. Moving it right would have put it under the floating contact
+ * button instead.
+ *
+ * Rather than find somewhere for it to hide, it is gone. The proof bar resting
+ * on the fold already says there is more below, and removing it also retires an
+ * animation that ran on every frame for as long as the hero was on screen.
+ */

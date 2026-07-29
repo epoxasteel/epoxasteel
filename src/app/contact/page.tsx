@@ -246,11 +246,14 @@ export default function ContactPage() {
               the CSP here is deliberately strict. Swapping in a real embed is a
               one-line change — see docs/DEPLOYMENT.md.
             */}
-            <div className="border-hairline bg-void relative mt-10 aspect-21/9 overflow-hidden rounded-lg border">
+            {/* The letterbox ratio only works once there is width to spend on
+                it. At 390px a 21:9 box is 167px tall and the address card
+                inside is 232px — it was being cut off at "Get directions". */}
+            <div className="border-hairline bg-void relative mt-10 aspect-4/3 overflow-hidden rounded-lg border sm:aspect-16/9 lg:aspect-21/9">
               <MapArtwork />
 
-              <div className="absolute inset-0 grid place-items-center">
-                <div className="border-hairline bg-graphite/90 rounded-lg border p-7 text-center backdrop-blur-md">
+              <div className="absolute inset-0 grid place-items-center p-4">
+                <div className="border-hairline bg-graphite/90 rounded-lg border p-6 text-center backdrop-blur-md sm:p-7">
                   <MapPin aria-hidden className="text-arc-bright mx-auto size-6" />
                   <p className="font-display text-title text-bright mt-4 font-semibold">
                     {siteConfig.address.line1}

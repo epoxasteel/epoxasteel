@@ -86,7 +86,9 @@ export function IndustriesServed() {
                   <span className="text-chalk group-hover/card:text-bright block truncate text-[0.9375rem] font-medium transition-colors">
                     {industry.name}
                   </span>
-                  <span className="text-steel mt-0.5 block truncate text-[0.8125rem]">
+                  {/* See RelatedLink: one truncated line cut every one of
+                      these taglines mid-word. */}
+                  <span className="text-steel mt-0.5 line-clamp-2 block text-[0.8125rem] leading-snug">
                     {industry.tagline}
                   </span>
                 </span>
