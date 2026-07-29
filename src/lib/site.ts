@@ -155,6 +155,19 @@ export const mainNav: NavGroup[] = [
         ],
       },
     ],
+    /*
+     * Every mega panel carries a featured card. Without one the columns
+     * stretched across the full panel width and left a third of it empty, so
+     * the menu looked different depending on which item you hovered. It is also
+     * the one place in the navigation where we get to make an argument rather
+     * than just list destinations.
+     */
+    featured: {
+      title: 'Bridges & infrastructure',
+      body: 'Fracture-critical fabrication under third-party inspection, with full traceability from mill to span.',
+      href: '/industries/bridges',
+      cta: 'See the work',
+    },
   },
   {
     label: 'Services',
@@ -185,6 +198,12 @@ export const mainNav: NavGroup[] = [
         ],
       },
     ],
+    featured: {
+      title: 'Engineering support',
+      body: 'Chartered engineers who review buildability and cost before the package is frozen — calculations attached.',
+      href: '/services/engineering-support',
+      cta: 'Talk to an engineer',
+    },
   },
   { label: 'Projects', href: '/projects' },
   { label: 'About', href: '/about' },
@@ -202,6 +221,12 @@ export const mainNav: NavGroup[] = [
         ],
       },
     ],
+    featured: {
+      title: 'Working at EPOXA',
+      body: 'Detailers, coded welders, CNC operators and project engineers — we are hiring across the shop and the office.',
+      href: '/careers',
+      cta: 'See open roles',
+    },
   },
 ];
 

@@ -7,6 +7,19 @@ import { z } from 'zod';
  * the server would not also produce.
  */
 
+/**
+ * Zod compiles validators with `new Function` when it can, and works out
+ * whether it can by calling `Function("")` inside a try/catch. Our CSP has no
+ * `'unsafe-eval'`, so that probe threw on every form page: Zod caught it and
+ * fell back correctly, but the browser had already logged a CSP violation, and
+ * a security header quietly failing a check is exactly the kind of noise that
+ * hides a real one later.
+ *
+ * Telling it up front that there is no JIT available skips the probe. The
+ * interpreted path is what these schemas were running on anyway.
+ */
+z.config({ jitless: true });
+
 const NAME_MIN = 2;
 const NAME_MAX = 80;
 

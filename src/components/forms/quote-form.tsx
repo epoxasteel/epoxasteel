@@ -216,7 +216,12 @@ export function QuoteForm({
 
           <Field id="quote-country" label="Country" error={errors.country?.message} required>
             {(props) => (
-              <Select placeholder="Select a country" {...props} {...register('country')}>
+              <Select
+                placeholder="Select a country"
+                autoComplete="country-name"
+                {...props}
+                {...register('country')}
+              >
                 {countries.map((country) => (
                   <option key={country} value={country}>
                     {country}
@@ -431,6 +436,7 @@ export function QuoteForm({
         <div className="flex items-start gap-3">
           <Checkbox
             id="quote-consent"
+            name="consent"
             checked={Boolean(consent)}
             onCheckedChange={(checked) =>
               setValue('consent', checked === true ? true : (false as unknown as true), {
@@ -467,6 +473,7 @@ export function QuoteForm({
         <div className="flex items-start gap-3">
           <Checkbox
             id="quote-newsletter"
+            name="newsletter"
             checked={Boolean(newsletter)}
             onCheckedChange={(checked) => setValue('newsletter', checked === true)}
           />

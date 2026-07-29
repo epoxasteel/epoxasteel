@@ -182,6 +182,7 @@ export function ContactForm({ className }: { className?: string }) {
       <div className="flex items-start gap-3">
         <Checkbox
           id="contact-consent"
+          name="consent"
           checked={Boolean(consent)}
           onCheckedChange={(checked) =>
             setValue('consent', checked === true ? true : (false as unknown as true), {

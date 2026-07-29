@@ -226,12 +226,26 @@ function DesktopNav({ pathname }: { pathname: string }) {
         })}
       </NavigationMenu.List>
 
-      {/* The viewport is the animated container the panels render into. */}
+      {/*
+        The viewport is the animated container the panels render into.
+
+        Opaque, not glass — and that is a decision, not an oversight. The panel
+        used to be `bg-graphite/85` with a `backdrop-blur`, which rendered as a
+        dimmed sheet with the page's display headings legible straight through
+        the menu items. The blur never applied: an element carrying a
+        `backdrop-filter` establishes a backdrop root for everything inside it,
+        and this panel lives inside the header, which is itself glass. Its
+        backdrop was empty, so there was nothing to blur.
+
+        Rather than fight that, the hierarchy is the honest one: the bar is
+        glass and belongs to the page, the panel sits above the page and is
+        solid. A menu has to be readable before it is atmospheric.
+      */}
       <div className="absolute top-full left-1/2 flex w-screen max-w-6xl -translate-x-1/2 justify-center pt-3">
         <NavigationMenu.Viewport
           className={cn(
             'relative h-(--radix-navigation-menu-viewport-height) w-full origin-top overflow-hidden',
-            'border-hairline bg-graphite/85 shadow-raised rounded-lg border backdrop-blur-2xl backdrop-saturate-150',
+            'border-hairline-strong bg-graphite shadow-raised rounded-lg border',
             'transition-[width,height] duration-350 [transition-timing-function:var(--ease-out-quint)]',
             'data-[state=closed]:animate-[nav-scale-out_200ms_ease-in]',
             'data-[state=open]:animate-[nav-scale-in_260ms_var(--ease-out-quint)]',
