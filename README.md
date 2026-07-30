@@ -111,22 +111,25 @@ Full documentation lives in [`.env.example`](./.env.example). Summary:
 Full documentation — every variable, with the reason it exists — lives in
 [`.env.example`](./.env.example). The ones that matter most:
 
-| Variable                                                                  | Required    | Purpose                                          |
-| ------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
-| `NEXT_PUBLIC_SITE_URL`                                                    | Production  | Canonical origin for URLs, OG images, sitemap    |
-| `NEXT_PUBLIC_SITE_ENV`                                                    | Production  | `production` enables search indexing             |
-| `RESEND_API_KEY`                                                          | —           | Send email via Resend                            |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` / `SMTP_SECURE` | —           | Send email via SMTP                              |
-| `EMAIL_FROM`                                                              | —           | Envelope sender address                          |
-| `EMAIL_TO`                                                                | —           | Where enquiry notifications go (comma-separated) |
-| `FORM_TOKEN_SECRET`                                                       | Recommended | Signs the token every form fetches before submit |
-| `IP_HASH_SALT`                                                            | Recommended | Salt for hashing submitter IPs                   |
-| `EMAIL_SPOOL_DIR`                                                         | —           | Where undeliverable email waits for a retry      |
-| `UPLOAD_MAX_MB`                                                           | —           | Per-file upload limit (default 10)               |
-| `TIMEZONE`                                                                | —           | IANA zone for timestamps in your notifications   |
-| `DATABASE_URL`                                                            | —           | Postgres connection string (backup copy only)    |
-| `AI_ENABLED` / `OPENAI_API_KEY`                                           | —           | Both required to bring the assistant live        |
-| `NEXT_PUBLIC_HERO_VIDEO_URL`                                              | —           | CDN-hosted hero video                            |
+| Variable                                                                  | Required    | Purpose                                            |
+| ------------------------------------------------------------------------- | ----------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                                                    | Production  | Canonical origin for URLs, OG images, sitemap      |
+| `NEXT_PUBLIC_SITE_ENV`                                                    | Production  | `production` enables search indexing               |
+| `RESEND_API_KEY`                                                          | —           | Send email via Resend                              |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` / `SMTP_SECURE` | —           | Send email via SMTP                                |
+| `FROM_EMAIL`                                                              | Production  | Envelope sender — must be a verified Resend domain |
+| `OWNER_EMAIL`                                                             | Production  | Where enquiry notifications go (comma-separated)   |
+| `REPLY_TO_EMAIL`                                                          | —           | Where a reply to a customer email lands            |
+| `EMAIL_INCLUDE_IP`                                                        | —           | Put the submitter's IP in your notification        |
+| `TRUSTED_PROXY_HOPS`                                                      | —           | Proxies in front of the app (default 1)            |
+| `FORM_TOKEN_SECRET`                                                       | Recommended | Signs the token every form fetches before submit   |
+| `IP_HASH_SALT`                                                            | Recommended | Salt for hashing submitter IPs                     |
+| `EMAIL_SPOOL_DIR`                                                         | —           | Where undeliverable email waits for a retry        |
+| `UPLOAD_MAX_MB`                                                           | —           | Per-file upload limit (default 10)                 |
+| `TIMEZONE`                                                                | —           | IANA zone for timestamps in your notifications     |
+| `DATABASE_URL`                                                            | —           | Postgres connection string (backup copy only)      |
+| `AI_ENABLED` / `OPENAI_API_KEY`                                           | —           | Both required to bring the assistant live          |
+| `NEXT_PUBLIC_HERO_VIDEO_URL`                                              | —           | CDN-hosted hero video                              |
 
 Plus roughly thirty `NEXT_PUBLIC_*` variables covering every business fact —
 company name, all four email addresses, phone, opening hours, the whole postal
@@ -442,8 +445,27 @@ redeploy; Railway reclaims the container filesystem otherwise.
 
 ### Configuring email
 
-**Resend** (simplest): verify `epoxasteel.com` at [resend.com](https://resend.com),
-create an API key, set `RESEND_API_KEY`, `EMAIL_FROM` and `EMAIL_TO`.
+**Resend** (the production path): verify `epoxasteel.com` at
+[resend.com](https://resend.com), create an API key, and set `RESEND_API_KEY`,
+`FROM_EMAIL` and `OWNER_EMAIL`.
+
+Three things the integration handles that a naive one does not:
+
+- **Resend allows two requests per second.** Every enquiry sends two emails, and a
+  successful send also drains any spooled backlog — fired in parallel that is
+  already at the ceiling. All calls go through a queue that spaces them 620ms
+  apart, so the limit is never reached. Measured under three concurrent
+  submissions: six emails, never more than two in any one-second window.
+- **A request that times out has an unknown outcome.** Every message carries an
+  idempotency key built from its reference and recipient, so a retry after an
+  ambiguous failure is collapsed by Resend rather than delivered twice.
+- **Some failures are permanent.** An invalid key, an unverified sending domain or
+  a malformed payload will fail identically forever. Those skip the retries and
+  the spool, and log the operator fix by name — retrying them cost the visitor six
+  seconds and then filled the queue with mail that could never be sent.
+
+`EMAIL_FROM` and `EMAIL_TO` still work as aliases for `FROM_EMAIL` and
+`OWNER_EMAIL`.
 
 **SMTP** (works with Namecheap Private Email, Google Workspace, Microsoft 365):
 set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` and `EMAIL_FROM`.
@@ -562,6 +584,12 @@ a keyboard user can reach the right-hand columns.
   `X-Frame-Options: DENY`, a restrictive `Permissions-Policy`
 - Signed short-lived form tokens (invisible CAPTCHA + CSRF), origin checks, rate
   limiting, honeypots, timing checks, idempotency fingerprints
+- Client IP resolved from `cf-connecting-ip`, then `x-real-ip`, then
+  `X-Forwarded-For` **counted from the right**. The left-most XFF entry is
+  whatever the client claimed before any proxy touched it; reading it — which this
+  did until the Phase 5 audit — made every rate limit bypassable with a forged
+  header. A global per-endpoint ceiling backs it up, because per-IP limiting
+  assumes the identity is real
 - Upload allowlist plus magic-byte verification; nothing written to disk
 - Every value interpolated into an email is escaped, and anything reaching a mail
   header has control characters stripped at the transport — header injection was

@@ -72,27 +72,10 @@ export function useConsent(): Consent {
   );
 }
 
-/** Never subscribes to anything; the empty unsubscribe satisfies the contract. */
-const noop = () => () => {};
-
-/**
- * True once hydration is done.
- *
- * The consent value is unknowable on the server, so anything that depends on it
- * has to wait — otherwise a visitor who already answered gets a flash of the
- * banner while React catches up.
- *
- * `useSyncExternalStore` rather than the obvious `useState` plus an effect. The
- * effect version sets state during the commit that follows hydration, which is a
- * second render pass and which the React compiler's lint correctly objects to.
- * This gets the same answer from the mechanism designed for it: React compares the
- * client snapshot against the hydrated one and re-renders if they differ, which
- * here they always do, exactly once.
+/*
+ * `useHydrated` used to live here. It moved to `lib/use-hydrated.ts` when the
+ * Phase 5 audit found two components with the same hydration problem for a
+ * different reason — reduced motion rather than stored consent. Re-exported so
+ * the consent components keep one import.
  */
-export function useHydrated() {
-  return React.useSyncExternalStore(
-    noop,
-    () => true,
-    () => false,
-  );
-}
+export { useHydrated } from '@/lib/use-hydrated';

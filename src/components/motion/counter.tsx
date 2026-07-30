@@ -7,10 +7,23 @@ import { cn } from '@/lib/utils';
 /**
  * Counts up to a target the first time it scrolls into view.
  *
- * The span is rendered with the final value in the DOM for screen readers and
- * for anyone with reduced motion enabled; only the visual text node is
- * animated, via a subscription rather than React state, so a four-second count
- * does not trigger two hundred re-renders.
+ * ## The final value is always what renders
+ *
+ * The markup contains the real number from the very first render — server and
+ * client, motion or not. The animation is then applied *to the DOM node* by an
+ * effect, via a spring subscription rather than React state, so a four-second
+ * count does not trigger two hundred re-renders.
+ *
+ * That ordering is deliberate and it used to be the other way round. The initial
+ * render was `format(reduce ? value : 0)`, which looks reasonable and is a
+ * hydration bug: `useReducedMotion` cannot know the media query on the server, so
+ * a visitor with reduced motion enabled got `0` in the server HTML and `1.4M+`
+ * from the client, and React threw a text-content mismatch on every page carrying
+ * a statistic. It only appeared with reduced motion switched on, which is exactly
+ * the configuration least likely to be tested.
+ *
+ * Rendering the true value first also means the number is correct for a screen
+ * reader, correct before hydration, and correct if the JavaScript never arrives.
  */
 export function Counter({
   value,
@@ -46,9 +59,19 @@ export function Counter({
     [decimals, prefix, suffix],
   );
 
+  /*
+   * Drop to zero and start climbing in the same tick.
+   *
+   * Both halves have to be here rather than in the render: the markup must carry
+   * the final value so the server and the hydrated client agree, and the reset is
+   * only correct once we know motion is allowed — which is a client-only fact.
+   */
   React.useEffect(() => {
-    if (inView && !reduce) motionValue.set(value);
-  }, [inView, motionValue, reduce, value]);
+    if (reduce || !inView) return;
+    const node = ref.current;
+    if (node) node.textContent = format(0);
+    motionValue.set(value);
+  }, [format, inView, motionValue, reduce, value]);
 
   React.useEffect(() => {
     if (reduce) return;
@@ -60,7 +83,7 @@ export function Counter({
 
   return (
     <span ref={ref} className={cn('tabular-nums', className)}>
-      {format(reduce ? value : 0)}
+      {format(value)}
     </span>
   );
 }

@@ -6,6 +6,7 @@ import { cn, pad } from '@/lib/utils';
 import { Eyebrow } from '@/components/layout/section';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import type { LifecycleStage } from '@/components/home/lifecycle-art';
+import { useSettledReducedMotion } from '@/lib/use-hydrated';
 
 /**
  * The lifecycle sequence — the site's second signature moment.
@@ -16,11 +17,21 @@ import type { LifecycleStage } from '@/components/home/lifecycle-art';
  * photographed, so the sequence weighs almost nothing and stays sharp.
  *
  * With reduced motion the whole thing degrades to a plain vertical list — same
- * content, no pinning, no cross-fades.
+ * content, no pinning, no cross-fades. That swap happens after hydration; see the
+ * note on `reduce` below for why it cannot happen during it.
  */
 
 export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
-  const reduce = useReducedMotion();
+  /*
+   * Settled, not raw. This component returns two entirely different trees, and
+   * the server cannot see a media query — so branching on the raw value rendered
+   * the pinned version on the server and hydrated the static one over it for
+   * every reduced-motion visitor, throwing away and rebuilding the whole
+   * homepage below the hero. `useSettledReducedMotion` reports false until
+   * hydration finishes, so the swap happens after React has matched the markup
+   * rather than instead of it.
+   */
+  const reduce = useSettledReducedMotion(useReducedMotion());
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({

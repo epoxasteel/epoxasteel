@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, useSpring } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useSettledReducedMotion } from '@/lib/use-hydrated';
 
 /**
  * Scroll-linked vertical drift.
@@ -24,7 +25,7 @@ export function Parallax({
   as?: 'div' | 'span' | 'section';
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = useSettledReducedMotion(useReducedMotion());
 
   const { scrollYProgress } = useScroll({
     target: ref,
