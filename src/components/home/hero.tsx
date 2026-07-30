@@ -297,12 +297,31 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
           <source key={source.src} src={source.src} type={source.type} />
         ))}
       </video>
-      {/* Grade the footage into the palette so any source material matches. */}
+      {/*
+        Grade the footage into the palette so any source material matches.
+
+        Weighted towards the top of the frame rather than even across it. The
+        band above the headline is where a generator watermark tends to sit, and
+        it is also the emptiest part of the composition — darkening it costs the
+        least and hides the most. The middle stays the lightest point so the
+        footage still reads as footage behind the copy, and the foot of the
+        gradient carries on into the statistics strip.
+      */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(6,10,18,0.5) 0%, rgba(8,14,24,0.3) 45%, rgba(6,7,9,0.72) 100%)',
+            'linear-gradient(to bottom, rgba(6,10,18,0.82) 0%, rgba(7,11,20,0.66) 22%, rgba(8,14,24,0.54) 48%, rgba(6,7,9,0.8) 100%)',
+        }}
+      />
+      {/* A second wash from the left, under the headline and the buttons. Text
+          contrast should never depend on which frame happens to be on screen. */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(to right, rgba(6,7,9,0.72) 0%, rgba(6,7,9,0.4) 42%, rgba(6,7,9,0.12) 72%, rgba(6,7,9,0) 100%)',
         }}
       />
     </motion.div>
