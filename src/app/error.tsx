@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/layout/section';
 import { siteConfig } from '@/lib/site';
 
-export default function GlobalError({
+/**
+ * Catches a render error inside any route, with the header, footer and nav still
+ * around it. For a failure in the root layout itself — where none of that exists —
+ * see `global-error.tsx`.
+ */
+export default function RouteError({
   error,
   reset,
 }: {

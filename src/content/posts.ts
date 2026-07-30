@@ -491,10 +491,6 @@ export function getSortedPosts() {
   return [...posts].sort((a, b) => b.published.localeCompare(a.published));
 }
 
-export function getFeaturedPosts() {
-  return getSortedPosts().filter((post) => post.featured);
-}
-
 export function getPostsByCategory(category: string) {
   return getSortedPosts().filter((post) => post.category === category);
 }

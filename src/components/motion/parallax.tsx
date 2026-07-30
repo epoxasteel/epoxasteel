@@ -54,48 +54,6 @@ export function Parallax({
 }
 
 /**
- * Scales an element slightly as it passes through the viewport. Used behind
- * large imagery so a static background still breathes.
- */
-export function ParallaxScale({
-  children,
-  className,
-  from = 1.12,
-  to = 1,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  from?: number;
-  to?: number;
-}) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'center center'],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [from, to]);
-
-  if (reduce) {
-    return (
-      <div ref={ref} className={className}>
-        {children}
-      </div>
-    );
-  }
-
-  return (
-    <div ref={ref} className={cn('overflow-hidden', className)}>
-      <motion.div style={{ scale }} className="h-full w-full">
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
-/**
  * A thin progress bar bound to page scroll, fixed under the header.
  * Purely decorative and hidden from assistive technology.
  */

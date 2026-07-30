@@ -9,39 +9,75 @@ easing curve, and no bubble avatar.
 
 ---
 
+## It ships switched off
+
+The assistant is complete and deliberately dark. The dock button in the corner
+still appears; opening it shows a panel that says the assistant is being prepared
+and hands over the quote form and the contact page.
+
+That is a deliberate choice about the _button_, not just the panel. Hiding the
+entrance entirely until the model exists was the original behaviour, on the
+reasoning that offering to answer questions and then apologising is worse than not
+offering. That was right about the apology and wrong about the button — somebody
+who reaches for a floating button on a steel supplier's site has a question, and
+the two things that will actually answer it exist today.
+
+While it is off, the live transcript UI is not downloaded at all. Verified: the
+chunk containing it is never requested.
+
 ## Turning it on
 
-Set one variable and redeploy:
+Three steps, no code change:
 
 ```
-OPENAI_API_KEY="sk-..."
+OPENAI_API_KEY="sk-..."     # 1. a real key
+AI_ENABLED="true"           # 2. the flag
+                            # 3. redeploy
 ```
 
-That is the whole setup. Without it, the assistant is not offered at all — no
-dock, no panel, and the transcript UI is left out of the browser bundle. The rest
-of the site is unaffected.
+**Both conditions are required**, and they answer different questions. `AI_ENABLED`
+is the business decision — is this something we are offering customers yet.
+`OPENAI_API_KEY` is the technical fact — can it answer. A key staged ahead of
+launch must not switch the assistant on, and the flag on with no key would offer
+to answer and then fail; the boot check refuses to start production in that state
+rather than letting it reach a customer.
 
 Optional:
 
-| Variable | Default | Why you would set it |
-| --- | --- | --- |
-| `OPENAI_MODEL` | `gpt-4.1-mini` | A larger model for harder questions, or a cheaper one. |
-| `OPENAI_BASE_URL` | `https://api.openai.com/v1` | Azure OpenAI, a gateway, or a proxy. |
-| `OPENAI_ORG_ID` | — | Only if your key belongs to several organisations. |
-| `NEXT_PUBLIC_ASSISTANT_ENABLED` | — | See the build-time note below. |
+| Variable                        | Default                     | Why you would set it                                   |
+| ------------------------------- | --------------------------- | ------------------------------------------------------ |
+| `OPENAI_MODEL`                  | `gpt-4.1-mini`              | A larger model for harder questions, or a cheaper one. |
+| `OPENAI_BASE_URL`               | `https://api.openai.com/v1` | Azure OpenAI, a gateway, or a proxy.                   |
+| `OPENAI_ORG_ID`                 | —                           | Only if your key belongs to several organisations.     |
+| `NEXT_PUBLIC_ASSISTANT_ENABLED` | —                           | See the build-time note below.                         |
 
-### One thing that will catch you out
+### Why step 3 is a redeploy
 
-The root layout is statically prerendered, so whether the dock offers the enquiry
-desk is decided **when `next build` runs**, not per request.
+The root layout is statically prerendered, so which panel the dock opens is
+decided **when `next build` runs**, not per request.
 
-Railway exposes service variables to builds, so setting `OPENAI_API_KEY` in the
-Railway dashboard is enough — nothing else to do. On a platform that only injects
-secrets at runtime, the build would decide "no assistant" and the dock would
-never appear even though the key is present. Set
-`NEXT_PUBLIC_ASSISTANT_ENABLED=1` there as well. It is a boolean, it is inlined
-at build, and the API route still refuses to answer without a real key on the
-server — so it cannot leak anything or fake a working assistant.
+Railway exposes service variables to builds, so setting both variables in the
+Railway dashboard and redeploying is enough — nothing else to do. On a platform
+that only injects secrets at runtime, the build would decide "Coming Soon" and the
+live desk would never appear even though the key is present. Set
+`NEXT_PUBLIC_ASSISTANT_ENABLED=1` there as well. It is a boolean, it is inlined at
+build, and the API route still refuses to answer without a real key on the server
+— so it cannot leak anything or fake a working assistant.
+
+### What you get when it is on
+
+Conversation memory across pages (session storage, so it ends with the tab),
+markdown rendering, token-by-token streaming with a typing indicator, auto-scroll
+that never fights a visitor who has scrolled up to re-read, a reset button, and
+graceful degradation to the phone number and the quote form on any error.
+
+### An honest limitation
+
+The streaming implementation was tested end to end against a local stub speaking
+the same SSE protocol as the OpenAI API, not against the real service — there was
+no key available while it was built. The protocol handling, error paths, abort
+behaviour and UI are verified; the first conversation with a real model is still
+the first conversation with a real model. Try a few questions after enabling it.
 
 ---
 
@@ -129,18 +165,18 @@ conversation produces a lead.
 
 ## Files
 
-| File | What it does |
-| --- | --- |
-| `src/lib/assistant/config.ts` | Is a model configured? |
-| `src/lib/assistant/knowledge.ts` | Compiles the knowledge digest from site content. |
-| `src/lib/assistant/prompt.ts` | The system prompt and the lead sentinel. |
-| `src/lib/assistant/provider.ts` | The streaming model call. The entire provider surface. |
-| `src/lib/assistant/lead.ts` | Sentinel extraction and lead validation. |
-| `src/app/api/assistant/route.ts` | The endpoint: validation, limits, streaming, lead handoff. |
-| `src/components/assistant/assistant-panel.tsx` | The panel. |
-| `src/components/assistant/rich-text.tsx` | Renders replies; turns bare paths into links. |
-| `src/components/assistant/assistant-context.tsx` | Open state, so any page can start a conversation. |
-| `src/components/layout/floating-contact.tsx` | The dock. |
+| File                                             | What it does                                               |
+| ------------------------------------------------ | ---------------------------------------------------------- |
+| `src/lib/assistant/config.ts`                    | Is a model configured?                                     |
+| `src/lib/assistant/knowledge.ts`                 | Compiles the knowledge digest from site content.           |
+| `src/lib/assistant/prompt.ts`                    | The system prompt and the lead sentinel.                   |
+| `src/lib/assistant/provider.ts`                  | The streaming model call. The entire provider surface.     |
+| `src/lib/assistant/lead.ts`                      | Sentinel extraction and lead validation.                   |
+| `src/app/api/assistant/route.ts`                 | The endpoint: validation, limits, streaming, lead handoff. |
+| `src/components/assistant/assistant-panel.tsx`   | The panel.                                                 |
+| `src/components/assistant/rich-text.tsx`         | Renders replies; turns bare paths into links.              |
+| `src/components/assistant/assistant-context.tsx` | Open state, so any page can start a conversation.          |
+| `src/components/layout/floating-contact.tsx`     | The dock.                                                  |
 
 ### Moving to a different provider
 
@@ -160,7 +196,7 @@ const { openAssistant } = useAssistant();
 // Pre-fills the composer without sending, so the visitor stays in control.
 <button onClick={() => openAssistant('Can you cut steel beams to my drawings?')}>
   Ask about this product
-</button>
+</button>;
 ```
 
 ---

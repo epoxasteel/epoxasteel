@@ -58,46 +58,15 @@ export function LinkCard({
   );
 }
 
-export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-6 pb-0 sm:p-7 sm:pb-0', className)} {...props} />;
-}
-
-export function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-6 sm:p-7', className)} {...props} />;
-}
-
-export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('border-hairline mt-auto border-t px-6 py-4 sm:px-7', className)}
-      {...props}
-    />
-  );
-}
-
-export function CardTitle({
-  className,
-  as: Component = 'h3',
-  ...props
-}: React.HTMLAttributes<HTMLHeadingElement> & { as?: 'h2' | 'h3' | 'h4' }) {
-  return (
-    <Component
-      className={cn(
-        'font-display text-title text-bright font-semibold',
-        'transition-colors duration-300 group-hover/card:text-white',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-
-export function CardDescription({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-ash text-[0.9375rem] leading-relaxed', className)} {...props} />;
-}
+/*
+ * There were CardHeader / CardBody / CardFooter / CardTitle / CardDescription
+ * here — a full compound-component API that nothing in the site ever used.
+ * Every card in this codebase composes its own contents, which for a design this
+ * specific turned out to be the right shape: the padding and type were different
+ * enough each time that the "shared" primitives were always overridden. Kept as
+ * a note rather than resurrected, so nobody adds them back on the assumption
+ * they were missed.
+ */
 
 /**
  * A hairline that sweeps across the top edge of a card on hover — the detail

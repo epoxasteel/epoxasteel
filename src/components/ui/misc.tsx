@@ -207,6 +207,14 @@ export function Pagination({
 /**
  * Wide technical tables scroll inside their own container so the page body
  * never scrolls horizontally on a phone.
+ *
+ * The scroll container is focusable, which is the part that is easy to miss. At
+ * 390px a section table is wider than the screen and the only way to read the
+ * right-hand columns is to scroll this box — and a box that can only be scrolled
+ * by dragging it is unreachable for anyone navigating by keyboard. `tabIndex={0}`
+ * plus a labelled region makes it a tab stop that responds to arrow keys. axe
+ * caught this at the mobile breakpoint only, because that is the only width where
+ * the overflow actually exists.
  */
 export function SpecTable({
   columns,
@@ -221,7 +229,12 @@ export function SpecTable({
 }) {
   return (
     <div className={cn('border-hairline overflow-hidden rounded-md border', className)}>
-      <div className="overflow-x-auto">
+      <div
+        role="region"
+        aria-label={caption ?? 'Specifications table'}
+        tabIndex={0}
+        className="focus-visible:ring-arc-bright/60 overflow-x-auto focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
+      >
         <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
           {caption ? <caption className="sr-only">{caption}</caption> : null}
           <thead>

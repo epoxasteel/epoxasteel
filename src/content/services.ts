@@ -450,8 +450,4 @@ export function getService(slug: string) {
   return services.find((service) => service.slug === slug);
 }
 
-export function getFeaturedServices() {
-  return services.filter((service) => service.featured);
-}
-
 export const serviceSlugs = services.map((service) => service.slug);

@@ -731,10 +731,6 @@ export function getFeaturedProducts() {
   return products.filter((product) => product.featured);
 }
 
-export function getProductsByCategory(category: string) {
-  return products.filter((product) => product.category === category);
-}
-
 export function getRelatedProducts(slug: string) {
   const product = getProduct(slug);
   if (!product) return [];

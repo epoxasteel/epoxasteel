@@ -68,7 +68,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SearchProvider>
           <AssistantProvider>
             <Header />
-            <main id="main" className="relative">
+            {/*
+              `tabIndex={-1}` so the skip link actually moves focus here.
+              Without it the browser scrolls to this element and leaves focus on
+              the body, which means the next Tab press goes back to the top of the
+              header navigation — the exact thing the visitor just skipped. The
+              link looked like it worked, and for a sighted mouse user it did.
+              Negative index: programmatically focusable, never a tab stop of its
+              own, and `outline-none` because this is a landmark receiving focus
+              rather than a control, so a ring around the whole page would be noise.
+            */}
+            <main id="main" tabIndex={-1} className="relative outline-none">
               {children}
             </main>
             <Footer />

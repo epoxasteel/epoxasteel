@@ -15,6 +15,7 @@ Designed to be deployed on Railway and served from **epoxasteel.com**.
 - [Development workflow](#development-workflow)
 - [Environment variables](#environment-variables)
 - [Project architecture](#project-architecture)
+- [Configuration without code](#configuration-without-code)
 - [Editing content](#editing-content)
 - [Design system](#design-system)
 - [Forms and email](#forms-and-email)
@@ -107,6 +108,9 @@ npm run typecheck && npm run lint && npm run build
 
 Full documentation lives in [`.env.example`](./.env.example). Summary:
 
+Full documentation — every variable, with the reason it exists — lives in
+[`.env.example`](./.env.example). The ones that matter most:
+
 | Variable                                                                  | Required    | Purpose                                          |
 | ------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
 | `NEXT_PUBLIC_SITE_URL`                                                    | Production  | Canonical origin for URLs, OG images, sitemap    |
@@ -115,11 +119,45 @@ Full documentation lives in [`.env.example`](./.env.example). Summary:
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` / `SMTP_SECURE` | —           | Send email via SMTP                              |
 | `EMAIL_FROM`                                                              | —           | Envelope sender address                          |
 | `EMAIL_TO`                                                                | —           | Where enquiry notifications go (comma-separated) |
-| `DATABASE_URL`                                                            | —           | Postgres connection string                       |
+| `FORM_TOKEN_SECRET`                                                       | Recommended | Signs the token every form fetches before submit |
 | `IP_HASH_SALT`                                                            | Recommended | Salt for hashing submitter IPs                   |
+| `EMAIL_SPOOL_DIR`                                                         | —           | Where undeliverable email waits for a retry      |
+| `UPLOAD_MAX_MB`                                                           | —           | Per-file upload limit (default 10)               |
+| `TIMEZONE`                                                                | —           | IANA zone for timestamps in your notifications   |
+| `DATABASE_URL`                                                            | —           | Postgres connection string (backup copy only)    |
+| `AI_ENABLED` / `OPENAI_API_KEY`                                           | —           | Both required to bring the assistant live        |
 | `NEXT_PUBLIC_HERO_VIDEO_URL`                                              | —           | CDN-hosted hero video                            |
 
-Check what is actually configured at any time:
+Plus roughly thirty `NEXT_PUBLIC_*` variables covering every business fact —
+company name, all four email addresses, phone, opening hours, the whole postal
+address, the Google Maps link and five social URLs — and four analytics IDs, all
+unset by default. See [Configuration without code](#configuration-without-code).
+
+### The boot report
+
+The server checks its configuration before it accepts the first request and
+prints what it found. Nothing here is required to start, which is what makes a
+first deploy succeed before email exists — and the failure mode that creates is
+silence, so this is the antidote:
+
+```
+────────────────────────────────────────────────────────────────────────
+  EPOXA STEEL — environment
+────────────────────────────────────────────────────────────────────────
+  · email: Resend
+  · database: connected (enquiries backed up)
+  · assistant: Coming Soon — set OPENAI_API_KEY and AI_ENABLED=true to go live
+  · analytics: none — no cookies set, no consent banner
+  ! IP_HASH_SALT is not set — stored submitter hashes use a default salt
+────────────────────────────────────────────────────────────────────────
+```
+
+`·` is a note, `!` a warning, `✗` an error. **Errors abort the boot in
+production**, because starting with a broken configuration is worse than not
+starting — a malformed URL, a Resend key without its `re_` prefix, an
+unrecognised timezone, `AI_ENABLED=true` with no key behind it.
+
+You can also ask at any time:
 
 ```bash
 curl https://epoxasteel.com/api/health
@@ -228,6 +266,62 @@ documented in [`docs/CONTENT.md`](./docs/CONTENT.md).
 
 ---
 
+## Configuration without code
+
+Every business fact on the site reads from an environment variable, with the
+current value as a fallback. Change one, redeploy, done — no code edit, no
+rebuild of anything but the app.
+
+| Group         | Covers                                                             |
+| ------------- | ------------------------------------------------------------------ |
+| Company       | Name, legal name, tagline, founding year, domain, locale           |
+| Contact       | Four email addresses, phone, WhatsApp, opening hours               |
+| Address       | Both lines, city, region, postcode, country, coordinates           |
+| Maps          | The link the contact map opens — point it at your Business Profile |
+| Social        | Five URLs; set one to `""` and its icon disappears entirely        |
+| Feature flags | `AI_ENABLED`, analytics IDs, upload limits, timezone               |
+
+Two details worth knowing:
+
+- The `tel:` link is **derived** from the display number, so there is only one
+  value to keep correct. Two variables that had to agree would eventually not,
+  and a corrected display number with a stale dial link is a bug nobody notices
+  until a customer reaches the wrong company.
+- Opening hours are one variable of `Days|Time` pairs separated by semicolons,
+  because a business with different opening days should not need a code change to
+  say so. Malformed entries are dropped; if nothing survives, the default stands.
+
+These are `NEXT_PUBLIC_` because the footer, the dock and the assistant panel are
+client components, and a variable without that prefix is simply undefined in the
+browser — which would render an empty phone number rather than a wrong one. None
+of it is secret; it is all printed on the page already.
+
+### Analytics and the cookie notice
+
+Four providers are wired and dormant: Google Analytics 4, Google Tag Manager,
+Meta Pixel and LinkedIn Insight. **There are no measurement IDs anywhere in this
+repository.** Set one and three things happen by the same switch:
+
+1. The script loads — but only after a visitor accepts.
+2. The Content Security Policy widens by exactly the hosts that provider needs.
+3. The cookie notice starts appearing, and `/cookies` lists the provider by name.
+
+With none set — the shipping default — the site sets no cookies at all, shows no
+banner, and contacts no third party. There is nothing to consent to, and a banner
+that exists to look compliant while that is true only teaches people to dismiss
+the ones that matter.
+
+When a provider _is_ configured, nothing loads until Accept. Not the common
+"load and behave" consent mode: no script tag is inserted and no request is made.
+Accept and decline are the same size in the same place, and a decision is
+remembered permanently and never re-asked — changeable on `/cookies`.
+
+The privacy policy's cookie paragraphs and the whole `/cookies` page are
+generated from the same configuration the scripts read, so neither page can
+describe tracking the site does not do, or omit tracking it does.
+
+---
+
 ## Editing content
 
 Most changes need no code.
@@ -291,18 +385,60 @@ rather than an omission — a half-committed light mode would weaken it.
 Three forms ship: **quote request** (with attachment upload), **contact** and
 **newsletter**.
 
-Every one of them:
+### How an enquiry actually reaches you
+
+There is no admin dashboard and no login, by design. The whole workflow is a
+mailbox:
+
+1. A customer submits the form.
+2. The server validates it against the same schema the browser used.
+3. Attachments are checked — size, extension, declared type and file signature.
+4. The customer gets a confirmation with a reference number and a realistic
+   response time.
+5. You get one email containing every field, the attachments themselves, the
+   date and time in your own timezone, and which browser, operating system and
+   device it came from.
+6. You press Reply. It goes to the customer, because `Reply-To` is set to their
+   address.
+
+That is the entire system. Nothing to log into, nothing to check, nothing to
+maintain.
+
+### Every form
 
 - Validates with a Zod schema shared between browser and server, so the server
   never trusts the client and the client never shows an error the server would
   not also produce
+- Never shows a technical error. Every message is written for a customer, and
+  `safeFieldErrors()` catches anything that slipped through with a library's own
+  phrasing before it reaches a response body
+- Fetches a signed, short-lived token before it can submit — the invisible
+  CAPTCHA and the CSRF check in one mechanism (`src/lib/form-token.ts`). A
+  missing or expired token is logged, never refused: losing a written-out
+  enquiry because somebody left a tab open over lunch would be the worse bug
+- Refuses a cross-origin POST outright
 - Carries a honeypot field plus a minimum-elapsed-time check; both failures are
   accepted silently so a bot learns nothing
 - Is rate limited per IP (`src/lib/rate-limit.ts`)
-- Emails EPOXA STEEL **and** sends the customer a confirmation with a reference
-- Persists to Postgres when configured, and still works when it is not
-- Reports an honest error if neither persistence nor delivery succeeded, rather
-  than showing a success screen for an enquiry that went nowhere
+- Deduplicates: the same enquiry resubmitted within ten minutes returns the
+  original reference instead of putting two of it on your desk
+- Keeps a draft in session storage, so a stray click does not lose a
+  half-written message
+- Persists to Postgres when configured, as a disaster-recovery copy only
+
+### Delivery that does not lose enquiries
+
+`sendEmail` retries three times with growing gaps. If all three fail the message
+is written to a JSONL spool on disk and retried on the back of the next
+successful send — traffic is the clock, so there is no scheduler to keep alive.
+
+The response to the customer distinguishes three outcomes: **delivered**, **held
+for retry** (success, plus a note that the confirmation may be slow) and
+**genuinely lost** (an honest error with the phone number). A transport hiccup no
+longer tells somebody to call instead when their enquiry is safely queued.
+
+Set `EMAIL_SPOOL_DIR` to a mounted volume if you want the spool to survive a
+redeploy; Railway reclaims the container filesystem otherwise.
 
 ### Configuring email
 
@@ -317,9 +453,27 @@ will land in spam.
 
 ### Attachments
 
-Quote attachments (10 MB limit) travel with the internal notification email.
-Nothing is written to disk — Railway's filesystem is ephemeral. For higher
-volumes, move uploads to object storage; the swap is described in
+Up to five files per quote request, `UPLOAD_MAX_MB` each (default 10). PDF, DWG,
+DXF, XLSX, XLS, DOC, DOCX, ZIP, PNG, JPG and WEBP.
+
+They travel with the internal notification email and are **never written to
+disk** — which is most of why an upload field on a public form is safe here.
+There is no URL that returns them, no directory to escape into, and no path
+derived from a name the sender chose.
+
+Validation is an allowlist checked twice (extension and declared MIME type) plus
+a magic-byte check on the formats that have a signature, so an executable renamed
+`drawing.pdf` is refused. `src/lib/uploads.ts` also states plainly what this is
+**not**: an antivirus. A malicious PDF is a well-formed PDF, and finding one needs
+a scanning service — a paid dependency and a business decision, not a default.
+What the design buys is that nothing can execute here; the file goes to a mailbox,
+where the mail provider's own scanner is the layer that inspects its contents.
+
+Upload progress is real, measured from `XMLHttpRequest` upload events, because
+`fetch` cannot report it — and without a number moving, a minute-long upload on a
+site connection reads as hung.
+
+For higher volumes, move uploads to object storage; the swap is described in
 [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md).
 
 ---
@@ -370,20 +524,51 @@ After launch: verify the domain in Google Search Console and submit
 
 ## Performance and accessibility
 
+Measured with Lighthouse against a production build, median of several runs:
+
+| Profile                     | Performance | Accessibility | Best practices | SEO | CLS   |
+| --------------------------- | ----------- | ------------- | -------------- | --- | ----- |
+| Desktop                     | 99          | 100           | 100            | 100 | 0.000 |
+| Mobile (Moto G, 4× CPU, 4G) | ~79         | 100           | 100            | 100 | 0.000 |
+
+The mobile performance figure is the honest one and it is short of the 95 the
+original brief named. The remaining cost is the homepage's own markup — a
+fourteen-section page is roughly 96 KB of Tailwind class strings plus the
+serialized React tree, not artwork or scripts. Getting past it means shipping
+fewer sections, which is a content decision rather than an engineering one.
+Everything cheaper than that has already been done:
+
 - **84 pages pre-rendered** at build time; only form endpoints and search are
   dynamic
-- **Self-hosted fonts** with size-adjusted fallbacks, so CLS stays at zero
-- **No third-party scripts, fonts or trackers** — a strict CSP is enforced in
-  `next.config.ts`
+- **Zero JavaScript for scroll reveals** — 223 reveal instances are one shared
+  `IntersectionObserver` bootstrapped by an inline script, not 223 components
+- **Self-hosted fonts**, latin subset only, with size-adjusted fallbacks
+- **No third-party scripts, fonts or trackers by default** — strict CSP, widened
+  only for analytics providers actually configured
 - **Vector artwork** instead of photography, so the hero costs kilobytes
-- Semantic HTML, one visible focus treatment site-wide, ARIA-labelled controls,
-  keyboard-accessible menus and dialogs (via Radix), and a skip link
-- Every wide table scrolls inside its own container — the page body never
-  scrolls horizontally
+- The assistant's transcript UI is a separate chunk, not downloaded until the
+  panel opens and never at all while `AI_ENABLED` is off
 
-Security headers include a strict `Content-Security-Policy`, HSTS,
-`X-Content-Type-Options`, `X-Frame-Options: DENY` and a restrictive
-`Permissions-Policy`.
+**Accessibility is verified, not asserted.** axe-core reports zero violations
+across seventeen routes at both 390px and 1440px, against WCAG 2.0 A/AA, 2.1
+A/AA and 2.2 AA. Semantic HTML, one visible focus treatment site-wide,
+keyboard-accessible menus and dialogs, 24px minimum target sizes, a skip link
+that genuinely moves focus, and wide tables that scroll in a focusable region so
+a keyboard user can reach the right-hand columns.
+
+### Security
+
+- Strict `Content-Security-Policy`, HSTS with preload, `X-Content-Type-Options`,
+  `X-Frame-Options: DENY`, a restrictive `Permissions-Policy`
+- Signed short-lived form tokens (invisible CAPTCHA + CSRF), origin checks, rate
+  limiting, honeypots, timing checks, idempotency fingerprints
+- Upload allowlist plus magic-byte verification; nothing written to disk
+- Every value interpolated into an email is escaped, and anything reaching a mail
+  header has control characters stripped at the transport — header injection was
+  confirmed reachable from the contact form before that existed
+- IP addresses are hashed before storage, never kept in the clear
+- No secrets in the client bundle, no debug output in production, and a boot
+  check that refuses to start on a broken configuration
 
 ---
 
@@ -512,9 +697,19 @@ canonical URLs, the sitemap and OG images all point at the real domain.
 
 Content marked as illustrative must be replaced. In priority order:
 
-- [ ] **Contact details** in `src/lib/site.ts` — the phone number, address and
-      coordinates are placeholders. The phone number uses the reserved `555-01xx`
-      fictional range, so it is obviously not real, but it must be changed.
+- [ ] **Contact details** — the phone number, address and coordinates are
+      placeholders. The phone number uses the reserved `555-01xx` fictional range,
+      so it is obviously not real, but it must be changed. Set the
+      `NEXT_PUBLIC_CONTACT_*` and `NEXT_PUBLIC_ADDRESS_*` variables rather than
+      editing `src/lib/site.ts`; see
+      [Configuration without code](#configuration-without-code).
+- [ ] **Social accounts** — the five handles in the footer are plausible guesses,
+      not verified accounts. Set each `NEXT_PUBLIC_*_URL` to the real one, or to
+      `""` to remove the icon. A link to somebody else's abandoned handle is worse
+      than one fewer icon.
+- [ ] **`FORM_TOKEN_SECRET`** — set it to a long random string
+      (`openssl rand -hex 32`). Without one the site still rejects forged tokens,
+      but they stop validating across a restart or a second replica.
 - [ ] **Case studies** in `src/content/projects.ts` — illustrative examples.
       Replace with real projects, and get written permission before naming a
       client.
@@ -540,6 +735,20 @@ Content marked as illustrative must be replaced. In priority order:
       an invention; add them back when the real files exist.
 - [ ] **Hero video** — optional. See `public/media/README.md`.
 - [ ] **Logo** — swap the placeholder wordmark. See [`docs/BRANDING.md`](./docs/BRANDING.md).
+
+Optional, and genuinely optional:
+
+- [ ] **The AI assistant** ships switched off and shows a Coming Soon panel. Set
+      `OPENAI_API_KEY`, set `AI_ENABLED=true`, redeploy. Nothing else.
+- [ ] **Analytics** ships switched off with no IDs anywhere. Set one and the
+      cookie notice appears with it.
+- [ ] **Virus scanning on uploads.** Files are allowlisted, signature-checked and
+      never written to disk, so nothing can execute on the server — but a
+      malicious PDF is a well-formed PDF, and only a scanning service finds one.
+      Your mail provider scans attachments on delivery, which for this volume is
+      the right layer. Add a service if the volume changes.
+- [ ] **A volume at `EMAIL_SPOOL_DIR`** if you want undeliverable email to
+      survive a redeploy as well as an outage.
 
 ---
 

@@ -93,19 +93,6 @@ export function pad(n: number, width = 2) {
   return String(n).padStart(width, '0');
 }
 
-/** Highlight-safe plain text extraction from a simple markdown-ish string. */
-export function stripMarkdown(text: string) {
-  return text
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/[#>*_~-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-/** Escape a string for safe interpolation into HTML (used by e-mail bodies). */
 export function escapeHtml(value: string) {
   return value
     .replace(/&/g, '&amp;')
