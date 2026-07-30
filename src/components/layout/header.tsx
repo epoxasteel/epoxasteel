@@ -4,8 +4,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { ChevronDown, Search, Phone, ArrowUpRight } from 'lucide-react';
+import { useScroll, useMotionValueEvent } from 'framer-motion';
+import { ChevronDown, Search, ArrowUpRight } from 'lucide-react';
 import { mainNav, siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Wordmark } from '@/components/visual/wordmark';
@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { useSearchDialog } from '@/components/search/search-provider';
 import { ScrollProgress } from '@/components/motion/parallax';
-import { EASE_OUT_EXPO } from '@/lib/motion';
 
 /**
  * The header sits over the hero as a transparent bar and condenses into a
@@ -73,36 +72,6 @@ export function Header() {
             solid ? 'opacity-100' : 'opacity-0',
           )}
         />
-        {/* Utility bar — collapses away as soon as the page scrolls. */}
-        <motion.div
-          initial={false}
-          animate={{ height: scrolled ? 0 : 'auto', opacity: scrolled ? 0 : 1 }}
-          transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-          className="border-hairline/60 hidden overflow-hidden border-b lg:block"
-        >
-          <div className="container-page text-steel flex h-9 items-center justify-between text-[0.75rem]">
-            <p className="tracking-[0.14em] uppercase">
-              Certified structural steel · Supply · Fabrication · Delivery
-            </p>
-            <div className="flex items-center gap-5">
-              <a
-                href={`tel:${siteConfig.contact.phoneHref}`}
-                className="hover:text-chalk inline-flex min-h-6 items-center gap-1.5 transition-colors"
-              >
-                <Phone aria-hidden className="size-3" />
-                {siteConfig.contact.phone}
-              </a>
-              <span className="bg-hairline h-3 w-px" aria-hidden />
-              <a
-                href={`mailto:${siteConfig.contact.email}`}
-                className="hover:text-chalk inline-flex min-h-6 items-center transition-colors"
-              >
-                {siteConfig.contact.email}
-              </a>
-            </div>
-          </div>
-        </motion.div>
-
         <div className="container-page">
           <div
             className={cn(
