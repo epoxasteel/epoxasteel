@@ -53,25 +53,23 @@ export default async function OpengraphImage() {
         }}
       />
 
-      {/* Wordmark */}
+      {/*
+        Wordmark, matching <Wordmark /> exactly: one blue beam, EPOXA in `bright`
+        and STEEL in `mist` at a light weight.
+
+        It used to draw a white web between blue flanges and set both words in
+        the same colour — a third version of the logo, different from both the
+        header and the favicon.
+      */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-          <div style={{ display: 'flex', width: 54, height: 11, background: '#3a8ae0' }} />
-          <div style={{ display: 'flex', width: 54, justifyContent: 'center' }}>
-            <div style={{ display: 'flex', width: 11, height: 30, background: '#e8edf4' }} />
-          </div>
-          <div style={{ display: 'flex', width: 54, height: 11, background: '#3a8ae0' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', width: 54, height: 10, background: '#3a8ae0' }} />
+          <div style={{ display: 'flex', width: 10, height: 30, background: '#3a8ae0' }} />
+          <div style={{ display: 'flex', width: 54, height: 10, background: '#3a8ae0' }} />
         </div>
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 34,
-            fontWeight: 800,
-            letterSpacing: 10,
-            color: '#f2f5f9',
-          }}
-        >
-          EPOXA STEEL
+        <div style={{ display: 'flex', fontSize: 34, letterSpacing: 10 }}>
+          <div style={{ display: 'flex', fontWeight: 800, color: '#f2f5f9' }}>EPOXA</div>
+          <div style={{ display: 'flex', fontWeight: 300, color: '#a8b2be' }}>&nbsp;STEEL</div>
         </div>
       </div>
 

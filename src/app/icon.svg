@@ -1,6 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="6" fill="#0a0c0f"/>
-  <rect x="5" y="6" width="22" height="4" fill="#3a8ae0"/>
-  <rect x="13.9" y="10" width="4.2" height="12" fill="#e8edf4"/>
-  <rect x="5" y="22" width="22" height="4" fill="#3a8ae0"/>
+  <!--
+    The same mark as <BeamMark /> in src/components/visual/wordmark.tsx, drawn to
+    the identical geometry and in one colour.
+
+    It used to have blue flanges and a white web, which made the favicon a
+    different logo from the one in the header. The beam is a single piece of
+    rolled steel; splitting it into two colours reads as two shapes.
+
+    Background is `void` (#060709) — the page background itself, so the tab icon
+    matches what opens when you click it.
+  -->
+  <rect width="32" height="32" rx="6" fill="#060709"/>
+  <g fill="#3a8ae0">
+    <rect x="4" y="5" width="24" height="4.4"/>
+    <rect x="13.8" y="9.4" width="4.4" height="13.2"/>
+    <rect x="4" y="22.6" width="24" height="4.4"/>
+    <!-- Fillets: the detail that makes it read as rolled steel, not a letter H. -->
+    <path d="M13.8 9.4h-1.6c0 .9.7 1.6 1.6 1.6V9.4Z" opacity="0.55"/>
+    <path d="M18.2 9.4h1.6c0 .9-.7 1.6-1.6 1.6V9.4Z" opacity="0.55"/>
+    <path d="M13.8 22.6h-1.6c0-.9.7-1.6 1.6-1.6v1.6Z" opacity="0.55"/>
+    <path d="M18.2 22.6h1.6c0-.9-.7-1.6-1.6-1.6v1.6Z" opacity="0.55"/>
+  </g>
 </svg>

@@ -35,13 +35,6 @@ const channels = [
     href: `mailto:${siteConfig.contact.email}`,
     hint: 'Answered within one business day.',
   },
-  {
-    icon: Mail,
-    label: 'Quotations',
-    value: siteConfig.contact.quotesEmail,
-    href: `mailto:${siteConfig.contact.quotesEmail}`,
-    hint: 'Send drawings, schedules or a bill of quantities.',
-  },
 ];
 
 export default function ContactPage() {
@@ -61,18 +54,11 @@ export default function ContactPage() {
       {/* Channels */}
       <Section tone="void" size="sm">
         <div className="container-page">
-          {/*
-            Three channels across a hairline grid, so the column counts have to
-            divide into three or a cell with no card in it shows as a lighter
-            block. Two columns would leave that hole, so the last card spans the
-            full width at `sm` and returns to a third of it at `lg`.
-          */}
-          <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2 lg:grid-cols-3">
-            {channels.map((channel, index) => (
-              <RevealItem
-                key={channel.label}
-                className={cn(index === channels.length - 1 && 'sm:col-span-2 lg:col-span-1')}
-              >
+          {/* Two channels, two columns — the grid is a hairline panel, so any
+              cell without a card in it shows as a lighter block. */}
+          <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2">
+            {channels.map((channel) => (
+              <RevealItem key={channel.label}>
                 <a
                   href={channel.href}
                   className={cn(

@@ -20,15 +20,66 @@ export type SubmissionContext = {
   userAgent?: string;
 };
 
+/**
+ * The site's own colour tokens, copied out of `globals.css` because an email
+ * cannot read a stylesheet, let alone a CSS variable.
+ *
+ * Every value here is one of those tokens exactly — `void` for the page,
+ * `charcoal` for the panel sitting on it, `hairline` for the rules, and so on —
+ * so a notification looks like a piece of the website rather than something that
+ * merely refers to it. `muted` was #78828f, which is not a colour the site uses
+ * anywhere; it is `steel` now.
+ */
 const BRAND = {
-  bg: '#0a0c0f',
-  panel: '#101317',
-  line: '#232a33',
-  text: '#a8b2be',
-  bright: '#f2f5f9',
-  accent: '#3a8ae0',
-  muted: '#78828f',
+  bg: '#060709', // void — the page background
+  panel: '#101317', // charcoal — cards and panels
+  line: '#232a33', // hairline
+  text: '#a8b2be', // mist — body copy
+  bright: '#f2f5f9', // bright — headings and the EPOXA half of the wordmark
+  accent: '#3a8ae0', // arc-bright — the mark, links, buttons
+  muted: '#767f8d', // steel — captions and metadata
 };
+
+/**
+ * The wordmark, rebuilt out of table cells.
+ *
+ * The header used to be type only, with "STEEL" set in the accent blue — so the
+ * logo in an email was a different logo from the one on the site, where the beam
+ * is blue and STEEL is grey. Emails now carry the same lockup as the header:
+ * one blue I-beam, EPOXA in `bright`, STEEL lighter and in `mist`.
+ *
+ * Drawn with nested tables and background colours rather than an SVG or an
+ * image, because Gmail strips inline SVG and Outlook's rendering engine is Word.
+ * Coloured table cells are the one drawing primitive every client agrees on, and
+ * no external image means nothing to block, cache or fail to load.
+ *
+ * Proportions follow `<BeamMark />`: a 24-wide flange, a web a fifth of that
+ * centred beneath it. `font-size:0;line-height:0` keeps the `&nbsp;` spacers
+ * from adding height of their own.
+ */
+function wordmark() {
+  const flange = `<td colspan="3" height="5" style="height:5px;line-height:5px;font-size:0;background:${BRAND.accent};">&nbsp;</td>`;
+  const spacer = '<td width="10" style="width:10px;line-height:0;font-size:0;">&nbsp;</td>';
+
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+  <tr>
+    <td style="padding-right:14px;vertical-align:middle;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="24" style="border-collapse:collapse;width:24px;">
+        <tr>${flange}</tr>
+        <tr>
+          ${spacer}
+          <td width="4" height="13" style="width:4px;height:13px;line-height:13px;font-size:0;background:${BRAND.accent};">&nbsp;</td>
+          ${spacer}
+        </tr>
+        <tr>${flange}</tr>
+      </table>
+    </td>
+    <td style="vertical-align:middle;font-size:19px;letter-spacing:0.16em;text-transform:uppercase;white-space:nowrap;">
+      <span style="font-weight:800;color:${BRAND.bright};">Epoxa</span><span style="font-weight:300;color:${BRAND.text};"> Steel</span>
+    </td>
+  </tr>
+</table>`;
+}
 
 function shell(title: string, preheader: string, content: string) {
   return `<!doctype html>
@@ -47,8 +98,8 @@ function shell(title: string, preheader: string, content: string) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:${BRAND.panel};border:1px solid ${BRAND.line};border-radius:10px;overflow:hidden;">
         <tr>
           <td style="padding:28px 32px;border-bottom:1px solid ${BRAND.line};">
-            <div style="font-size:19px;font-weight:700;letter-spacing:0.18em;color:${BRAND.bright};text-transform:uppercase;">EPOXA<span style="color:${BRAND.accent};"> STEEL</span></div>
-            <div style="font-size:11px;letter-spacing:0.24em;color:${BRAND.muted};text-transform:uppercase;margin-top:6px;">Reinforce Your Dream</div>
+            ${wordmark()}
+            <div style="font-size:11px;letter-spacing:0.24em;color:${BRAND.muted};text-transform:uppercase;margin-top:10px;">${escapeHtml(siteConfig.tagline.replace(/\.$/, ''))}</div>
           </td>
         </tr>
         <tr>

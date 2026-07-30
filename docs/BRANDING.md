@@ -82,24 +82,36 @@ Add `priority` — the header logo is above the fold on every page.
 
 ## Favicons and app icons
 
-Three files, all generated from the mark:
+Three files, all drawing the same mark:
 
 | File                          | Output                                           |
 | ----------------------------- | ------------------------------------------------ |
-| `src/app/icon.svg`            | Browser tab icon                                 |
+| `src/app/icon.svg`            | Browser tab icon, and `/icon.svg` for the manifest and the schema.org logo |
 | `src/app/apple-icon.tsx`      | 180×180 home-screen icon, rendered at build time |
 | `src/app/opengraph-image.tsx` | 1200×630 social card, rendered at build time     |
-| `public/icon.svg`             | Referenced by the web manifest                   |
 
 Next.js picks up `icon.svg` and `apple-icon.tsx` automatically through
 file-based metadata — there is no `icons` entry in `layout.tsx` to update.
+
+There used to be a fourth, `public/icon.svg`, and this page told you to keep it
+in step with `src/app/icon.svg` by hand. They drifted, as a pair of files kept in
+sync by instruction always will: the copy in `public/` shadowed the app one at
+`/icon.svg`, so the icon every browser actually fetched was the stale one — with
+a white web where the site's mark is solid blue. It is deleted. Edit
+`src/app/icon.svg` and there is nothing else to remember.
 
 `apple-icon.tsx` and `opengraph-image.tsx` draw with layout primitives only (no
 external fonts or images), so they never fail a build because an asset could not
 be fetched. If you replace them with real artwork, keep that property.
 
-Update `public/icon.svg` **and** `src/app/icon.svg` together — they are separate
-files serving different consumers.
+### One mark, four surfaces
+
+The header, the favicon, the home-screen icon, the social card and every email
+render the same lockup: the beam entirely in `arc-bright`, EPOXA in `bright` at
+extrabold, STEEL in `mist` at light. Emails cannot use SVG — Gmail strips it and
+Outlook renders through Word — so `src/lib/email/templates.ts` rebuilds the beam
+from coloured table cells at the same proportions. If the mark changes, those
+five places change together.
 
 ---
 
