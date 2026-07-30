@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
 import { contactSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
-import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
-import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
+import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
+import { sendEmail, ownerRecipients, replyToAddress, generateReference } from '@/lib/email';
 import { contactInternalEmail, contactConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
@@ -28,6 +28,23 @@ export async function POST(request: Request) {
    */
   if (!sameOrigin(request)) {
     return NextResponse.json({ message: 'Request rejected.' }, { status: 403 });
+  }
+
+  /*
+   * Two ceilings. Per-IP is the primary control and assumes the identity is
+   * real; a distributed attempt has a different address per request by
+   * definition. The global window is the backstop that bounds what any
+   * campaign can spend of the Resend quota, set well above plausible traffic.
+   */
+  const flood = globalLimit('contact', { limit: 80 });
+  if (!flood.success) {
+    return NextResponse.json(
+      {
+        message:
+          'We are receiving an unusual number of requests right now. Please call us and we will take the details over the phone.',
+      },
+      { status: 429, headers: { 'Retry-After': String(flood.retryAfter) } },
+    );
   }
 
   const identifier = clientIdentifier(request);
@@ -59,7 +76,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { website, elapsedMs, formToken, ...data } = parsed.data;
+  const { website, elapsedMs, formToken, sourcePage, ...data } = parsed.data;
 
   /*
    * The invisible CAPTCHA. To get here a client had to fetch a signed token from
@@ -100,7 +117,11 @@ export async function POST(request: Request) {
   remember(print, reference);
   // Browser, OS, device and the local time it arrived — read from the request we
   // already have, written into one email, never stored. See request-context.ts.
-  const emailData = { reference, context: describeRequest(request), ...data };
+  const emailData = {
+    reference,
+    context: describeRequest(request, { sourcePage, ip: identifier }),
+    ...data,
+  };
 
   const prisma = getPrisma();
   if (prisma) {
@@ -130,7 +151,7 @@ export async function POST(request: Request) {
 
   const [internalResult] = await Promise.all([
     sendEmail({
-      to: internalRecipients(),
+      to: ownerRecipients(),
       reference,
       subject: internal.subject,
       html: internal.html,
@@ -143,6 +164,10 @@ export async function POST(request: Request) {
       subject: confirmation.subject,
       html: confirmation.html,
       text: confirmation.text,
+      // Not no-reply@. Some people answer a confirmation with the thing they
+      // forgot to mention, and a reply that bounces off an unattended mailbox is
+      // a lost enquiry both sides believe was delivered.
+      replyTo: replyToAddress(),
     }),
   ]);
 

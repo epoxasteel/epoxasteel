@@ -1,6 +1,6 @@
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import type { EmailMessage } from '@/lib/email';
+import type { EmailMessage } from '@/lib/email/types';
 
 /**
  * The place an enquiry goes when email delivery fails.

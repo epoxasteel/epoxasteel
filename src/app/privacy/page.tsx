@@ -22,6 +22,26 @@ const trail = [
 ];
 
 /**
+ * What we collect automatically, which depends on one variable.
+ *
+ * `EMAIL_INCLUDE_IP` decides whether a submitter's address is put in the owner's
+ * notification email. That is a materially different disclosure from hashing it
+ * for abuse detection, so the policy is generated rather than written once — the
+ * page cannot describe a practice the deployment does not have, or omit one it does.
+ */
+function ipParagraph() {
+  const shared =
+    '- Your **browser, operating system and device type**, worked out from the user-agent string your browser sends, and the **page you submitted the form from**. This is included in the notification our team receives so we can respond usefully; it is not stored and not used to identify you.';
+
+  return process.env.EMAIL_INCLUDE_IP === 'true'
+    ? `- A **hashed form of your IP address** when you submit a form, used only to detect and limit automated abuse. We cannot recover the original address from the hash.
+- Your **IP address**, included in the internal notification email our team receives about your enquiry. It is not stored in our systems and is not used to track you across the site; it exists so we can identify and block abuse of our forms. It stays in that mailbox for as long as the enquiry itself is retained.
+${shared}`
+    : `- A **hashed form of your IP address** when you submit a form. We hash it, so we cannot recover the original address; it exists only to detect and limit automated abuse of our forms. Your actual IP address is never stored and never included in the notifications our team receives.
+${shared}`;
+}
+
+/**
  * The two paragraphs that must not lie.
  *
  * A privacy policy that says "no analytics run on this site" is true of the default
@@ -62,8 +82,7 @@ We only collect information you choose to give us, plus a minimal amount of tech
 
 **Information collected automatically**
 
-- A **hashed form of your IP address** when you submit a form. We hash it, so we cannot recover the original address; it exists only to detect and limit automated abuse of our forms.
-- Your **browser user-agent string** and the **referring page** on form submissions, for the same purpose.
+${ipParagraph()}
 
 ${trackingParagraph()}
 

@@ -117,9 +117,9 @@ export function AssistantComingSoonPanel() {
               </h2>
 
               <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
-                Our intelligent assistant is currently being prepared to provide instant answers
-                regarding products, fabrication services, custom steel solutions, and project
-                guidance.
+                Our intelligent assistant is currently being prepared to provide instant guidance
+                regarding fabrication services, structural steel, custom projects, and engineering
+                solutions.
               </p>
 
               <p className="text-eyebrow text-arc-glow border-arc-bright/30 bg-arc/8 mt-6 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 uppercase">
@@ -139,7 +139,7 @@ export function AssistantComingSoonPanel() {
                   )}
                 >
                   <FileText aria-hidden className="text-arc-glow size-4 shrink-0" />
-                  Request a Quote
+                  Request Quote
                 </Link>
 
                 <Link

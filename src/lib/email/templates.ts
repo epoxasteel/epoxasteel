@@ -7,6 +7,19 @@ import { escapeHtml } from '@/lib/utils';
  * the layout features the website uses. Every interpolated value is escaped.
  */
 
+export type SubmissionContext = {
+  submittedAt: string;
+  timezone: string;
+  browser: string;
+  os: string;
+  device: string;
+  /** Which page the form was submitted from, e.g. `/products/steel-beams`. */
+  sourcePage?: string;
+  /** Present only when `EMAIL_INCLUDE_IP=true`. */
+  ip?: string;
+  userAgent?: string;
+};
+
 const BRAND = {
   bg: '#0a0c0f',
   panel: '#101317',
@@ -93,38 +106,46 @@ function detailTable(rows: [string, string][]) {
  * Rendered at the foot of an owner notification, below the enquiry itself,
  * because it is context rather than content: useful before you call someone back,
  * never the thing you read first.
+ *
+ * The source page is here rather than in the main table for the same reason — it
+ * tells you what the visitor had just been reading, which shapes the conversation
+ * without being part of what they said.
+ *
+ * IP and user agent appear only when `EMAIL_INCLUDE_IP=true`. See
+ * `lib/request-context.ts` for why that is a deliberate opt-in.
  */
-function submissionContext(context?: {
-  submittedAt: string;
-  timezone: string;
-  browser: string;
-  os: string;
-  device: string;
-}) {
+function submissionContext(context?: SubmissionContext) {
   if (!context) return '';
+
+  const rows = [
+    `${escapeHtml(context.submittedAt)} <span style="color:${BRAND.muted};">(${escapeHtml(context.timezone)})</span>`,
+    `<span style="color:${BRAND.muted};">${escapeHtml(context.device)} · ${escapeHtml(context.browser)} · ${escapeHtml(context.os)}</span>`,
+    context.sourcePage
+      ? `<span style="color:${BRAND.muted};">Sent from </span><span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">${escapeHtml(context.sourcePage)}</span>`
+      : null,
+    context.ip
+      ? `<span style="color:${BRAND.muted};">IP </span><span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">${escapeHtml(context.ip)}</span>`
+      : null,
+  ].filter(Boolean);
 
   return `<div style="margin-top:26px;padding-top:18px;border-top:1px solid ${BRAND.line};">
     <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};margin-bottom:10px;">Submitted</div>
     <div style="color:${BRAND.text};font-size:13px;line-height:1.7;">
-      ${escapeHtml(context.submittedAt)} <span style="color:${BRAND.muted};">(${escapeHtml(context.timezone)})</span><br>
-      <span style="color:${BRAND.muted};">${escapeHtml(context.device)} · ${escapeHtml(context.browser)} · ${escapeHtml(context.os)}</span>
+      ${rows.join('<br>')}
     </div>
   </div>`;
 }
 
-function contextLines(context?: {
-  submittedAt: string;
-  timezone: string;
-  browser: string;
-  os: string;
-  device: string;
-}) {
+function contextLines(context?: SubmissionContext) {
   if (!context) return [];
   return [
     '',
     '--- Submitted ---',
     `${context.submittedAt} (${context.timezone})`,
     `${context.device} · ${context.browser} · ${context.os}`,
+    ...(context.sourcePage ? [`Sent from: ${context.sourcePage}`] : []),
+    ...(context.ip ? [`IP: ${context.ip}`] : []),
+    ...(context.userAgent ? [`User agent: ${context.userAgent}`] : []),
   ];
 }
 
@@ -139,14 +160,6 @@ function button(label: string, href: string) {
 /* -------------------------------------------------------------------------- */
 /* Quote request                                                              */
 /* -------------------------------------------------------------------------- */
-
-export type SubmissionContext = {
-  submittedAt: string;
-  timezone: string;
-  browser: string;
-  os: string;
-  device: string;
-};
 
 export type QuoteEmailData = {
   reference: string;

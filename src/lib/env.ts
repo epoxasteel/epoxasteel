@@ -22,6 +22,10 @@
 
 type Report = { errors: string[]; warnings: string[]; notes: string[] };
 
+function siteDomain() {
+  return (process.env.NEXT_PUBLIC_SITE_DOMAIN || 'epoxasteel.com').trim().toLowerCase();
+}
+
 function isUrl(value: string) {
   try {
     const url = new URL(value);
@@ -46,6 +50,25 @@ function collect(): Report {
         'RESEND_API_KEY does not look like a Resend key (expected a "re_" prefix)',
       );
     }
+    /*
+     * The sending domain has to be verified in Resend or every send is refused
+     * with `invalid_from_address`. We cannot check verification from here, but we
+     * can check the two things that are always wrong: no sender configured at all,
+     * and a sender on a domain the site does not own.
+     */
+    const from = process.env.FROM_EMAIL || process.env.EMAIL_FROM;
+    if (!from) {
+      report.warnings.push(
+        `FROM_EMAIL is not set — falling back to no-reply@${siteDomain()}, which must be a verified Resend domain`,
+      );
+    } else {
+      const domain = from.split('@').pop()?.replace(/>$/, '').trim().toLowerCase();
+      if (domain && domain !== siteDomain()) {
+        report.warnings.push(
+          `FROM_EMAIL sends from @${domain} but the site is ${siteDomain()} — make sure @${domain} is verified in Resend`,
+        );
+      }
+    }
   } else if (smtpHost) {
     report.notes.push(`email: SMTP via ${smtpHost}`);
     if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
@@ -63,19 +86,25 @@ function collect(): Report {
     );
   }
 
-  if (process.env.EMAIL_FROM && !process.env.EMAIL_FROM.includes('@')) {
-    report.errors.push('EMAIL_FROM is not an email address');
+  for (const key of ['FROM_EMAIL', 'EMAIL_FROM', 'REPLY_TO_EMAIL'] as const) {
+    const value = process.env[key];
+    if (value && !value.includes('@')) report.errors.push(`${key} is not an email address`);
   }
 
-  const to = process.env.EMAIL_TO;
+  const to = process.env.OWNER_EMAIL || process.env.EMAIL_TO;
+  if (process.env.OWNER_EMAIL && process.env.EMAIL_TO) {
+    report.notes.push('OWNER_EMAIL and EMAIL_TO are both set — OWNER_EMAIL wins');
+  }
   if (to) {
     const bad = to
       .split(',')
       .map((address) => address.trim())
       .filter((address) => address && !address.includes('@'));
-    if (bad.length) report.errors.push(`EMAIL_TO contains invalid addresses: ${bad.join(', ')}`);
+    if (bad.length) report.errors.push(`OWNER_EMAIL contains invalid addresses: ${bad.join(', ')}`);
   } else {
-    report.warnings.push('EMAIL_TO is not set — notifications go to the address in lib/site.ts');
+    report.warnings.push(
+      'OWNER_EMAIL is not set — notifications go to the public contact address in lib/site.ts',
+    );
   }
 
   /* --- Secrets ----------------------------------------------------------- */
@@ -137,6 +166,12 @@ function collect(): Report {
   const maxUpload = process.env.UPLOAD_MAX_MB;
   if (maxUpload && (!Number.isFinite(Number(maxUpload)) || Number(maxUpload) <= 0)) {
     report.errors.push(`UPLOAD_MAX_MB is not a positive number: ${maxUpload}`);
+  }
+
+  if (process.env.EMAIL_INCLUDE_IP === 'true') {
+    report.notes.push(
+      'owner emails include the submitter IP — the privacy policy says so automatically',
+    );
   }
 
   const timezone = process.env.TIMEZONE;

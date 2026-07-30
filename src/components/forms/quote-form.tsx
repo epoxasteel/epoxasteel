@@ -175,6 +175,7 @@ export function QuoteForm({
       formData.append(key, String(value));
     });
     formData.set('elapsedMs', String(elapsedSinceMount()));
+    formData.set('sourcePage', window.location.pathname);
     const issued = await token();
     if (issued) formData.set('formToken', issued);
     for (const file of files) formData.append('attachments', file);

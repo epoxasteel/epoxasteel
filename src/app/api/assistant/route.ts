@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { streamAssistant, AssistantError, assistantConfigured } from '@/lib/assistant/provider';
 import { createLeadExtractor } from '@/lib/assistant/lead';
-import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
+import { sendEmail, ownerRecipients, generateReference } from '@/lib/email';
 import { assistantLeadEmail } from '@/lib/email/templates';
 
 export const runtime = 'nodejs';
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
         });
 
         void sendEmail({
-          to: internalRecipients(),
+          to: ownerRecipients(),
           replyTo: lead.email,
           ...message,
         }).catch((error) => console.error('[assistant] lead notification failed', error));

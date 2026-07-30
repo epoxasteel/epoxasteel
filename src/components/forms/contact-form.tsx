@@ -62,6 +62,10 @@ export function ContactForm({ className }: { className?: string }) {
           ...values,
           elapsedMs: elapsedSinceMount(),
           formToken: await token(),
+          // Which page they were on. Sent from the client rather than read from
+          // Referer, which privacy tooling strips and which on a client-side route
+          // change still names whichever page loaded first.
+          sourcePage: window.location.pathname,
         }),
       });
 

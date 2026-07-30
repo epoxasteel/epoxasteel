@@ -78,6 +78,15 @@ const antiSpam = {
    * `lib/form-token.ts`.
    */
   formToken: z.string().max(400).optional(),
+  /**
+   * Which page the form was submitted from, sent by the client.
+   *
+   * Optional and never validated into an error, because it is diagnostic context
+   * for the owner rather than something the visitor typed — a malformed value
+   * should be dropped, not turned into a message about a field nobody can see.
+   * `describeRequest` sanitises it before it reaches an email.
+   */
+  sourcePage: z.string().max(200).optional(),
 };
 
 export const projectTypes = [

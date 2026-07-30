@@ -1,118 +1,65 @@
-import { siteConfig } from '@/lib/site';
 import { spool, drainSpool } from '@/lib/email/queue';
+import { sendWithResend } from '@/lib/email/resend';
+import { sendWithSmtp } from '@/lib/email/smtp';
+import { emailProvider, fromAddress, ownerRecipients, replyToAddress } from '@/lib/email/config';
+import type { EmailMessage, EmailProvider, SendResult } from '@/lib/email/types';
+
+export type { EmailMessage, EmailAttachment, SendResult } from '@/lib/email/types';
+export { emailProvider, fromAddress, ownerRecipients, replyToAddress };
 
 /**
- * Transport-agnostic email sending.
+ * Sending email, and not losing it.
  *
- * Three providers are supported and selected automatically:
- *   1. Resend      — set RESEND_API_KEY
- *   2. SMTP        — set SMTP_HOST (plus user/pass)
- *   3. Console log — neither configured (development default)
+ * Three transports, selected automatically:
  *
- * The console transport means forms are fully testable locally with no
- * credentials, and a first Railway deploy succeeds before email is wired up.
+ *   1. **Resend** — `RESEND_API_KEY`. The production path. See `resend.ts` for the
+ *      pacing, idempotency and error classification that live there.
+ *   2. **SMTP** — `SMTP_HOST`. A mailbox at your own host, no third party.
+ *   3. **Console** — neither configured. Prints what it would have sent.
+ *
+ * The console transport is why a first deploy succeeds before email exists: every
+ * form works, every validation runs, and the enquiry is printed rather than
+ * delivered. It is also how the whole pipeline is testable with no credentials.
  */
 
-export type EmailMessage = {
-  to: string | string[];
-  subject: string;
-  html: string;
-  text: string;
-  replyTo?: string;
-  attachments?: { filename: string; content: Buffer; contentType?: string }[];
-  /** The enquiry's reference, carried so a spooled failure can be traced to it. */
-  reference?: string;
-};
+/**
+ * Strips control characters from anything that becomes an email header.
+ *
+ * A carriage return inside a header value is how header injection works:
+ * everything after it is parsed as a new header, so a contact-form subject of
+ * `"Enquiry\r\nBcc: attacker@example.com"` becomes a blind copy to an address
+ * the sender chose. Confirmed reachable from the contact form before this
+ * existed — the schema caps the subject's length but said nothing about newlines.
+ *
+ * Fixed here rather than in the schema because this is where headers are actually
+ * constructed. Every route, and every route added later, goes through this
+ * function; a rule in one schema protects one form and has to be remembered again
+ * for the next.
+ *
+ * Nodemailer folds most subjects safely on its own. Relying on a library's encoder
+ * to contain a hostile value is the wrong place to make that decision.
+ */
+const CONTROL_CHARS = /[\u0000-\u001f\u007f]+/g;
 
-export type SendResult = {
-  ok: boolean;
-  provider: 'resend' | 'smtp' | 'console';
-  id?: string;
-  error?: string;
-  /**
-   * Delivery failed but the message is on disk and will be retried.
-   *
-   * The distinction matters to the caller: `ok: false` alone used to mean the
-   * enquiry was gone, and a route seeing it told the customer to phone instead.
-   * A held message has not been lost, so that would now be a lie in the
-   * pessimistic direction — which costs a real enquiry just as surely.
-   */
-  held?: boolean;
-};
-
-function fromAddress() {
-  return process.env.EMAIL_FROM || `${siteConfig.name} <no-reply@${siteConfig.domain}>`;
+function headerSafe(value: string) {
+  return value.replace(CONTROL_CHARS, ' ').trim();
 }
 
-export function internalRecipients() {
-  const configured = process.env.EMAIL_TO || siteConfig.contact.email;
-  return configured
-    .split(',')
-    .map((address) => address.trim())
-    .filter(Boolean);
-}
-
-export function emailProvider(): SendResult['provider'] {
-  if (process.env.RESEND_API_KEY) return 'resend';
-  if (process.env.SMTP_HOST) return 'smtp';
-  return 'console';
-}
-
-async function sendWithResend(message: EmailMessage): Promise<SendResult> {
-  const { Resend } = await import('resend');
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
-  const { data, error } = await resend.emails.send({
-    from: fromAddress(),
-    to: Array.isArray(message.to) ? message.to : [message.to],
-    subject: message.subject,
-    html: message.html,
-    text: message.text,
-    replyTo: message.replyTo,
-    attachments: message.attachments?.map((attachment) => ({
-      filename: attachment.filename,
-      content: attachment.content,
-    })),
-  });
-
-  if (error) {
-    return { ok: false, provider: 'resend', error: error.message };
-  }
-
-  return { ok: true, provider: 'resend', id: data?.id };
-}
-
-async function sendWithSmtp(message: EmailMessage): Promise<SendResult> {
-  const nodemailer = (await import('nodemailer')).default;
-
-  const port = Number(process.env.SMTP_PORT || 587);
-
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port,
-    // Implicit TLS on 465, STARTTLS everywhere else.
-    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : port === 465,
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASSWORD
-        ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD }
-        : undefined,
-  });
-
-  const info = await transporter.sendMail({
-    from: fromAddress(),
-    to: Array.isArray(message.to) ? message.to.join(', ') : message.to,
-    subject: message.subject,
-    html: message.html,
-    text: message.text,
-    replyTo: message.replyTo,
-    attachments: message.attachments?.map((attachment) => ({
-      filename: attachment.filename,
-      content: attachment.content,
-      contentType: attachment.contentType,
-    })),
-  });
-
-  return { ok: true, provider: 'smtp', id: info.messageId };
+/**
+ * A stable idempotency key for one message.
+ *
+ * The reference identifies the enquiry; the recipient distinguishes the owner
+ * notification from the customer confirmation, which share it. Retries of the same
+ * message reuse the key and are collapsed by the provider; two different messages
+ * never collide.
+ *
+ * Returns undefined without a reference, which is correct — a message with no
+ * reference has nothing stable to key on, and a guessed key is worse than none.
+ */
+export function messageKey(reference: string | undefined, to: string | string[]) {
+  if (!reference) return undefined;
+  const recipients = (Array.isArray(to) ? to : [to]).join(',');
+  return `${reference}:${recipients}`.slice(0, 256);
 }
 
 function logToConsole(message: EmailMessage): SendResult {
@@ -144,31 +91,8 @@ function logToConsole(message: EmailMessage): SendResult {
   return { ok: true, provider: 'console', id: `console-${Date.now()}` };
 }
 
-/**
- * Strips control characters from anything that becomes an email header.
- *
- * A carriage return inside a header value is how header injection works:
- * everything after it is parsed as a new header, so a contact-form subject of
- * `"Enquiry\r\nBcc: attacker@example.com"` becomes a blind copy to an address
- * the sender chose. Confirmed reachable from the contact form before this
- * existed — the schema caps the subject's length but said nothing about newlines.
- *
- * Fixed here rather than in the schema because this is where headers are
- * actually constructed. Every route, and every route added later, goes through
- * this function; a rule in one schema protects one form and has to be remembered
- * again for the next.
- *
- * Nodemailer folds most subjects safely on its own. Relying on a library's
- * encoder to contain a hostile value is the wrong place to make that decision.
- */
-const CONTROL_CHARS = /[\u0000-\u001f\u007f]+/g;
-
-function headerSafe(value: string) {
-  return value.replace(CONTROL_CHARS, ' ').trim();
-}
-
 /** Delivers once, without retry or spooling — the primitive the rest builds on. */
-async function deliverOnce(message: EmailMessage, provider: SendResult['provider']) {
+async function deliverOnce(message: EmailMessage, provider: EmailProvider): Promise<SendResult> {
   switch (provider) {
     case 'resend':
       return sendWithResend(message);
@@ -188,13 +112,18 @@ function wait(ms: number) {
 /**
  * Sends an email, and does not lose it.
  *
- * Three attempts with growing gaps, because the overwhelming majority of
- * transport failures are a provider having a bad few seconds. If all three fail
- * the message is spooled to disk and retried on the back of later traffic — the
- * customer has already been told their enquiry arrived, and it has to be true.
+ * Three attempts with growing gaps, because the overwhelming majority of transport
+ * failures are a provider having a bad few seconds. If all three fail the message
+ * is spooled to disk and retried on the back of later traffic — the customer has
+ * already been told their enquiry arrived, and it has to be true.
  *
- * The call never throws and never blocks a form response on a slow relay: routes
- * fire it and move on. What it returns is for logging.
+ * A failure the transport reports as *permanent* skips both the retries and the
+ * spool. Trying an invalid API key three more times costs the visitor six seconds
+ * and changes nothing, and spooling the result fills the queue with messages that
+ * can never be delivered rather than ones that are merely delayed.
+ *
+ * The call never throws. What it returns is for the route to decide what to tell
+ * the customer.
  */
 export async function sendEmail(message: EmailMessage): Promise<SendResult> {
   const provider = emailProvider();
@@ -210,6 +139,7 @@ export async function sendEmail(message: EmailMessage): Promise<SendResult> {
       // separator in one is how an attachment escapes its own directory.
       filename: headerSafe(attachment.filename).replace(/[/\\]/g, '-'),
     })),
+    idempotencyKey: message.idempotencyKey ?? messageKey(message.reference, message.to),
   };
 
   let lastError = 'Unknown email error';
@@ -226,6 +156,11 @@ export async function sendEmail(message: EmailMessage): Promise<SendResult> {
       }
 
       lastError = result.error ?? lastError;
+
+      if (result.permanent) {
+        console.error(`[email] ${provider} failed permanently, not retrying: ${lastError}`);
+        return { ...result, held: false };
+      }
     } catch (error) {
       lastError = error instanceof Error ? error.message : lastError;
     }
