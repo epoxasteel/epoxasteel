@@ -20,11 +20,27 @@ import { z } from 'zod';
  */
 z.config({ jitless: true });
 
+/**
+ * A required text field whose message is the same whether the value is empty,
+ * whitespace or absent altogether.
+ *
+ * The reason this exists: Zod's message for a missing key is "Invalid input:
+ * expected string, received undefined", and a `.min()` message never gets the
+ * chance to replace it because the type check fails first. That string is written
+ * for whoever wrote the schema. Reaching a customer with it — which it did, until
+ * this helper — tells them nothing they can act on and quietly announces that
+ * nobody looked. The brief's rule is that technical errors never surface, and this
+ * is where the rule is actually kept.
+ */
+function requiredText(message: string, max: number, min = 1) {
+  return z.string({ error: message }).trim().min(min, message).max(max, 'That is too long');
+}
+
 const NAME_MIN = 2;
 const NAME_MAX = 80;
 
 const email = z
-  .string()
+  .string({ error: 'Email address is required' })
   .trim()
   .min(1, 'Email address is required')
   .max(254, 'Email address is too long')
@@ -35,7 +51,7 @@ const email = z
 
 /** Permissive on formatting, strict on content — international numbers vary. */
 const phone = z
-  .string()
+  .string({ error: 'Enter a valid phone number' })
   .trim()
   .min(7, 'Enter a valid phone number')
   .max(32, 'Phone number is too long')
@@ -54,6 +70,14 @@ const antiSpam = {
   // schema's input type `unknown`, which breaks React Hook Form's resolver
   // typing. The server coerces string form values before parsing instead.
   elapsedMs: z.number().int().nonnegative().optional(),
+  /**
+   * The signed token the form fetched before submitting — the invisible CAPTCHA
+   * and the CSRF check in one value. Optional in the schema on purpose: the
+   * server decides what to do about a missing one, and a validation error would
+   * show the visitor a message about a field they have never seen. See
+   * `lib/form-token.ts`.
+   */
+  formToken: z.string().max(400).optional(),
 };
 
 export const projectTypes = [
@@ -94,31 +118,67 @@ export const quantityUnits = [
   'To be confirmed',
 ] as const;
 
+/**
+ * Surface treatments, in the order a buyer thinks about them: bare, prepared,
+ * protected, coated. "To be advised" is first-class rather than an afterthought —
+ * at enquiry stage the finish is frequently still with the engineer, and forcing a
+ * guess produces a quotation against the wrong specification.
+ */
+export const finishes = [
+  'Mill finish / untreated',
+  'Shot blasted (SA 2.5)',
+  'Primed',
+  'Hot-dip galvanised',
+  'Painted to specification',
+  'Powder coated',
+  'Weathering steel (no coating)',
+  'To be advised',
+] as const;
+
+export const fulfilment = ['Delivery to site', 'Collection from works'] as const;
+
+/**
+ * The contact form's version of project type.
+ *
+ * The general enquiry option comes first and exists because most people who use a
+ * contact form rather than the quote form do not have a project — they have a
+ * question. A required dropdown with no honest answer for them is how a form
+ * teaches visitors to pick something untrue.
+ */
+export const enquiryTypes = ['General enquiry — no specific project', ...projectTypes] as const;
+
 export const quoteSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(NAME_MIN, 'Enter your full name')
-    .max(NAME_MAX, 'Name is too long'),
-  company: z.string().trim().min(2, 'Enter your company name').max(120, 'Company name is too long'),
+  fullName: requiredText('Enter your full name', NAME_MAX, NAME_MIN),
+  company: requiredText('Enter your company name', 120, 2),
   email,
   phone,
-  country: z.string().trim().min(2, 'Select or enter your country').max(80),
-  city: z.string().trim().min(2, 'Enter your city').max(80),
+  country: requiredText('Select or enter your country', 80, 2),
+  city: requiredText('Enter your city', 80, 2),
   projectType: z.enum(projectTypes, { message: 'Select a project type' }),
-  product: z.string().trim().min(1, 'Select a steel product').max(120),
-  quantity: z.string().trim().min(1, 'Enter an estimated quantity').max(60),
+  product: requiredText('Select a steel product', 120),
+  /**
+   * Sections, grades and lengths, as free text. Deliberately not a set of numeric
+   * fields: a real enquiry is "UB 305x165x40, 8no. at 6.2m and 4no. at 4.8m",
+   * which no dimension form survives, and forcing one produces a note in the
+   * description saying "see attached" — which is where we started.
+   */
+  dimensions: z
+    .string({ error: 'Give us the sections, grades or lengths you need' })
+    .trim()
+    .min(2, 'Give us the sections, grades or lengths you need')
+    .max(1000, 'Please put the detail in the notes below or attach a schedule'),
+  quantity: requiredText('Enter an estimated quantity', 60),
   quantityUnit: z.enum(quantityUnits, { message: 'Select a unit' }),
-  budget: z.enum(budgetRanges, { message: 'Select a budget range' }),
+  finish: z.enum(finishes, { message: 'Select a required finish' }),
+  fulfilment: z.enum(fulfilment, { message: 'Tell us whether you need delivery or collection' }),
+  /** Optional by design — many enquiries arrive before a budget exists. */
+  budget: z.union([z.enum(budgetRanges), z.literal('')]).optional(),
   timeline: z.enum(timelines, { message: 'Select a timeline' }),
   description: z
-    .string()
+    .string({ error: 'Please give us at least a sentence or two about the project' })
     .trim()
     .min(20, 'Please give us at least a sentence or two about the project')
     .max(5000, 'Description is too long — please attach a document instead'),
-  /** File metadata only; the file itself travels as multipart form data. */
-  attachmentName: z.string().max(255).optional(),
-  attachmentSize: z.number().int().nonnegative().optional(),
   consent: z.literal(true, {
     message: 'Please accept the terms to submit your request',
   }),
@@ -129,13 +189,14 @@ export const quoteSchema = z.object({
 export type QuoteInput = z.infer<typeof quoteSchema>;
 
 export const contactSchema = z.object({
-  name: z.string().trim().min(NAME_MIN, 'Enter your name').max(NAME_MAX, 'Name is too long'),
+  name: requiredText('Enter your name', NAME_MAX, NAME_MIN),
   email,
   phone: optionalPhone,
   company: z.string().trim().max(120).optional(),
-  subject: z.string().trim().min(3, 'Enter a subject').max(160, 'Subject is too long'),
+  projectType: z.enum(enquiryTypes, { message: 'Select what your enquiry is about' }),
+  subject: requiredText('Enter a subject', 160, 3),
   message: z
-    .string()
+    .string({ error: 'Please tell us a little more so we can route your message correctly' })
     .trim()
     .min(20, 'Please tell us a little more so we can route your message correctly')
     .max(5000, 'Message is too long'),
@@ -152,39 +213,48 @@ export const newsletterSchema = z.object({
 
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
 
-export const applicationSchema = z.object({
-  name: z.string().trim().min(NAME_MIN, 'Enter your name').max(NAME_MAX),
-  email,
-  phone,
-  role: z.string().trim().min(2, 'Which role are you applying for?').max(160),
-  message: z
-    .string()
-    .trim()
-    .min(20, 'Tell us briefly why you are a good fit')
-    .max(5000, 'Message is too long'),
-  consent: z.literal(true, { message: 'Please accept the terms to apply' }),
-  ...antiSpam,
-});
+/* There is no application schema. Job applications go straight to the careers
+   inbox from a prefilled mailto link on each role page — a candidate attaches a CV
+   from their own mail client, where they already have it. A schema nothing
+   validates against is a promise the codebase does not keep. */
 
-export type ApplicationInput = z.infer<typeof applicationSchema>;
-
-/** Upload constraints, enforced on the server and mirrored in the UI copy. */
-export const ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
-export const ATTACHMENT_ACCEPT = [
-  'application/pdf',
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-excel',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/zip',
-  'application/x-zip-compressed',
-  'image/vnd.dwg',
-  'application/acad',
-];
-export const ATTACHMENT_ACCEPT_LABEL = 'PDF, DWG, XLSX, DOCX, ZIP or images — up to 10 MB';
+/* Upload constraints live in `lib/uploads.ts` — size, formats and signature
+   checks are one policy, and the schema has no business restating it. */
 
 /** Minimum time a genuine user takes to complete a form, in milliseconds. */
 export const MIN_FORM_ELAPSED_MS = 2500;
+
+/**
+ * Turns a parse failure into field errors safe to put in a response body.
+ *
+ * The schemas above give every field a message written for a customer, so in the
+ * ordinary case this just passes them through. It exists for the case that is not
+ * ordinary: a field added later without a message, a nested refinement, a Zod
+ * upgrade that changes a default string. Any of those would put "Invalid input:
+ * expected string, received undefined" in front of somebody trying to buy steel.
+ *
+ * So anything still carrying Zod's own phrasing is replaced with a sentence that
+ * says what to do, and the original is logged for whoever has to fix the schema.
+ * The check is a shape match on Zod's message format rather than a list of known
+ * strings — a list would need updating in step with a library we do not control,
+ * which is the same mistake as a denylist of file extensions.
+ */
+const ZOD_INTERNAL =
+  /^(Invalid input|Invalid option|Too big|Too small|Unrecognized|Invalid literal)/i;
+
+export function safeFieldErrors(error: z.ZodError, form: string): Record<string, string[]> {
+  const flattened: Record<string, string[] | undefined> = error.flatten().fieldErrors;
+  const cleaned: Record<string, string[]> = {};
+
+  for (const [field, messages] of Object.entries(flattened)) {
+    if (!messages?.length) continue;
+
+    cleaned[field] = messages.map((message) => {
+      if (!ZOD_INTERNAL.test(message)) return message;
+      console.warn(`[${form}] schema is missing a human message for "${field}": ${message}`);
+      return 'Please check this field and try again.';
+    });
+  }
+
+  return cleaned;
+}

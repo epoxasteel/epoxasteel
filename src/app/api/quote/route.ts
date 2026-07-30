@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
-import { quoteSchema, MIN_FORM_ELAPSED_MS, ATTACHMENT_MAX_BYTES } from '@/lib/validations';
+import { quoteSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
+import { checkUpload, uploadMaxBytes, MAX_FILES } from '@/lib/uploads';
 import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
 import { quoteInternalEmail, quoteConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
+import { verifyFormToken, sameOrigin } from '@/lib/form-token';
+import { describeRequest } from '@/lib/request-context';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,6 +21,15 @@ function hashIdentifier(value: string) {
 }
 
 export async function POST(request: Request) {
+  /*
+   * A same-site form always sends an Origin (or at least a Referer) matching the
+   * host it was served from. Anything that positively identifies itself as coming
+   * from somewhere else is not one of ours, whatever it is carrying.
+   */
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ message: 'Request rejected.' }, { status: 403 });
+  }
+
   const identifier = clientIdentifier(request);
   const limited = rateLimit(`quote:${identifier}`, { limit: 4, windowMs: 15 * 60_000 });
 
@@ -35,18 +47,41 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Invalid request body.' }, { status: 400 });
   }
 
-  const attachment = formData.get('attachment');
-  const file = attachment instanceof File && attachment.size > 0 ? attachment : null;
+  /*
+   * Attachments, validated before anything else is done with the request.
+   *
+   * `attachments` is the current field name; `attachment` is accepted too so a page
+   * cached in somebody's browser from before this change still submits successfully
+   * rather than silently dropping their drawing.
+   *
+   * Every check that matters happens here, on the server. The client mirrors the
+   * cheap ones to save a wasted upload, but this is the pass that decides — see
+   * `lib/uploads.ts` for what is checked and, more importantly, what is not.
+   */
+  const files = [...formData.getAll('attachments'), ...formData.getAll('attachment')].filter(
+    (entry): entry is File => entry instanceof File && entry.size > 0,
+  );
 
-  if (file && file.size > ATTACHMENT_MAX_BYTES) {
+  if (files.length > MAX_FILES) {
     return NextResponse.json(
-      { message: 'That attachment exceeds the 10 MB limit.' },
+      { message: `Please attach no more than ${MAX_FILES} files, or send the rest as a ZIP.` },
       { status: 413 },
     );
   }
 
+  const maxBytes = uploadMaxBytes();
+  for (const file of files) {
+    const check = await checkUpload(file, maxBytes);
+    if (!check.ok) {
+      return NextResponse.json(
+        { message: check.message },
+        { status: file.size > maxBytes ? 413 : 415 },
+      );
+    }
+  }
+
   const raw = Object.fromEntries(
-    [...formData.entries()].filter(([key]) => key !== 'attachment'),
+    [...formData.entries()].filter(([key]) => key !== 'attachments' && key !== 'attachment'),
   ) as Record<string, string>;
 
   // FormData stringifies everything; restore the types the schema expects.
@@ -57,21 +92,35 @@ export async function POST(request: Request) {
     consent: raw.consent === 'true',
     newsletter: raw.newsletter === 'true',
     elapsedMs: Number.isFinite(rawElapsed) ? rawElapsed : undefined,
-    attachmentName: file?.name,
-    attachmentSize: file?.size,
   });
 
   if (!parsed.success) {
     return NextResponse.json(
       {
         message: 'Please check the highlighted fields and try again.',
-        errors: parsed.error.flatten().fieldErrors,
+        errors: safeFieldErrors(parsed.error, 'quote'),
       },
       { status: 422 },
     );
   }
 
-  const { website, elapsedMs, ...data } = parsed.data;
+  const { website, elapsedMs, formToken, ...data } = parsed.data;
+
+  /*
+   * The invisible CAPTCHA. To get here a client had to fetch a signed token from
+   * a separate endpoint first — trivial for a browser rendering the page, a real
+   * cost for a script POSTing blind.
+   *
+   * A bad or expired token is accepted silently rather than refused. Refusing
+   * would mean a visitor who left the tab open over lunch loses a written-out
+   * enquiry to a message about a field they cannot see, and the rate limit,
+   * honeypot, timing check and duplicate fingerprint all still apply. What it
+   * does is log the reason, so a spike is visible.
+   */
+  const token = verifyFormToken(formToken, 'quote');
+  if (!token.ok) {
+    console.warn(`[quote] form token ${token.reason} from ${hashIdentifier(identifier)}`);
+  }
 
   if (website || (typeof elapsedMs === 'number' && elapsedMs < MIN_FORM_ELAPSED_MS)) {
     return NextResponse.json({ message: 'Request received.', reference: 'received' });
@@ -95,7 +144,14 @@ export async function POST(request: Request) {
 
   const reference = generateReference('EPX-Q');
   remember(print, reference);
-  const emailData = { reference, ...data };
+  // Browser, OS, device and the local time it arrived — read from the request we
+  // already have, written into one email, never stored. See request-context.ts.
+  const emailData = {
+    reference,
+    context: describeRequest(request),
+    attachmentNames: files.map((file) => file.name),
+    ...data,
+  };
 
   const prisma = getPrisma();
   if (prisma) {
@@ -111,13 +167,16 @@ export async function POST(request: Request) {
           city: data.city,
           projectType: data.projectType,
           product: data.product,
+          dimensions: data.dimensions,
           quantity: data.quantity,
           quantityUnit: data.quantityUnit,
-          budget: data.budget,
+          finish: data.finish,
+          fulfilment: data.fulfilment,
+          budget: data.budget || null,
           timeline: data.timeline,
           description: data.description,
-          attachmentName: file?.name ?? null,
-          attachmentSize: file?.size ?? null,
+          attachmentName: files.length ? files.map((file) => file.name).join(', ') : null,
+          attachmentSize: files.length ? files.reduce((total, file) => total + file.size, 0) : null,
           newsletterOptIn: Boolean(data.newsletter),
           ipHash: hashIdentifier(identifier),
           userAgent: request.headers.get('user-agent')?.slice(0, 255) ?? null,
@@ -141,17 +200,17 @@ export async function POST(request: Request) {
     }
   }
 
-  // The attachment rides along with the internal notification. For higher
-  // volumes, move uploads to object storage and send a link instead —
-  // docs/DEPLOYMENT.md covers the swap.
-  const attachments = file
-    ? [
-        {
+  // The attachments ride along with the internal notification, so the owner opens
+  // one email and has everything. For higher volumes, move uploads to object
+  // storage and send links instead — docs/DEPLOYMENT.md covers the swap.
+  const attachments = files.length
+    ? await Promise.all(
+        files.map(async (file) => ({
           filename: file.name,
           content: Buffer.from(await file.arrayBuffer()),
           contentType: file.type || 'application/octet-stream',
-        },
-      ]
+        })),
+      )
     : undefined;
 
   const internal = quoteInternalEmail(emailData);
@@ -160,6 +219,7 @@ export async function POST(request: Request) {
   const [internalResult] = await Promise.all([
     sendEmail({
       to: internalRecipients(),
+      reference,
       subject: internal.subject,
       html: internal.html,
       text: internal.text,
@@ -168,13 +228,18 @@ export async function POST(request: Request) {
     }),
     sendEmail({
       to: data.email,
+      reference,
       subject: confirmation.subject,
       html: confirmation.html,
       text: confirmation.text,
     }),
   ]);
 
-  if (!internalResult.ok && !prisma) {
+  // See the contact route: delivered, held for retry, or genuinely lost. Only the
+  // last of the three is the visitor's problem to solve.
+  const captured = internalResult.ok || internalResult.held || Boolean(prisma);
+
+  if (!captured) {
     return NextResponse.json(
       {
         message:
@@ -184,5 +249,11 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ message: 'Request received.', reference });
+  return NextResponse.json({
+    message: 'Request received.',
+    reference,
+    ...(internalResult.ok
+      ? {}
+      : { notice: 'Your confirmation email may take a little longer than usual to arrive.' }),
+  });
 }

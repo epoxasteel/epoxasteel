@@ -5,18 +5,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Check, Loader2, Send } from 'lucide-react';
-import { contactSchema, type ContactInput } from '@/lib/validations';
-import { Field, Input, Textarea, Checkbox, Honeypot } from '@/components/ui/field';
+import { contactSchema, enquiryTypes, type ContactInput } from '@/lib/validations';
+import { Field, Input, Textarea, Select, Checkbox, Honeypot } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/misc';
 import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
 import { useFormDraft } from '@/lib/use-form-draft';
+import { useFormToken } from '@/lib/use-form-token';
 
 export function ContactForm({ className }: { className?: string }) {
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [reference, setReference] = React.useState<string | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
   const elapsedSinceMount = useElapsedSinceMount();
 
   const form = useForm<ContactInput>({
@@ -44,6 +46,8 @@ export function ContactForm({ className }: { className?: string }) {
 
   // Nobody should lose a half-written message to a stray click.
   const clearDraft = useFormDraft('epoxa:draft:contact', form);
+  // Fetched on first focus; awaited at submit. See lib/use-form-token.ts.
+  const { prime, token } = useFormToken('contact');
 
   const consent = watch('consent');
 
@@ -54,10 +58,18 @@ export function ContactForm({ className }: { className?: string }) {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, elapsedMs: elapsedSinceMount() }),
+        body: JSON.stringify({
+          ...values,
+          elapsedMs: elapsedSinceMount(),
+          formToken: await token(),
+        }),
       });
 
-      const data = (await response.json()) as { message?: string; reference?: string };
+      const data = (await response.json()) as {
+        message?: string;
+        reference?: string;
+        notice?: string;
+      };
 
       if (!response.ok) {
         setServerError(data.message ?? 'We could not send your message. Please try again.');
@@ -65,6 +77,7 @@ export function ContactForm({ className }: { className?: string }) {
       }
 
       clearDraft();
+      setNotice(data.notice ?? null);
       setReference(data.reference ?? 'received');
     } catch {
       setServerError('Network error. Please check your connection and try again.');
@@ -89,9 +102,13 @@ export function ContactForm({ className }: { className?: string }) {
         <div>
           <h3 className="font-display text-title text-bright font-semibold">Message sent</h3>
           <p className="text-ash mt-2 max-w-md text-[0.9375rem] leading-relaxed">
-            Thank you — your message is with the right team and we will respond within one business
-            day. A confirmation has been sent to your email address.
+            {notice
+              ? 'Thank you — your message is with the right team and we will respond within one business day.'
+              : 'Thank you — your message is with the right team and we will respond within one business day. A confirmation has been sent to your email address.'}
           </p>
+          {notice ? (
+            <p className="text-ash mt-3 max-w-md text-[0.875rem] leading-relaxed">{notice}</p>
+          ) : null}
           {reference !== 'received' ? (
             <p className="text-steel mt-4 font-mono text-[0.8125rem]">
               Reference <span className="text-chalk">{reference}</span>
@@ -103,7 +120,12 @@ export function ContactForm({ className }: { className?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-6', className)} noValidate>
+    <form
+      onFocus={prime}
+      onSubmit={handleSubmit(onSubmit)}
+      className={cn('space-y-6', className)}
+      noValidate
+    >
       <Honeypot {...register('website')} />
 
       <div className="grid gap-6 sm:grid-cols-2">
@@ -158,6 +180,23 @@ export function ContactForm({ className }: { className?: string }) {
           )}
         </Field>
       </div>
+
+      <Field
+        id="contact-project-type"
+        label="What is your enquiry about?"
+        error={errors.projectType?.message}
+        required
+      >
+        {(props) => (
+          <Select placeholder="Select an option" {...props} {...register('projectType')}>
+            {enquiryTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </Select>
+        )}
+      </Field>
 
       <Field id="contact-subject" label="Subject" error={errors.subject?.message} required>
         {(props) => (

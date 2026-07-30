@@ -46,12 +46,21 @@ model QuoteRequest {
 
   projectType  String
   product      String
+  /// Sections, grades and lengths, as the customer wrote them.
+  dimensions   String  @db.Text
   quantity     String
   quantityUnit String
-  budget       String
+  /// Required surface treatment, or "To be advised".
+  finish       String
+  /// Delivery to site or collection from works.
+  fulfilment   String
+  /// Optional — many enquiries arrive before a budget exists.
+  budget       String?
   timeline     String
-  description  String @db.Text
+  description  String  @db.Text
 
+  /// Comma-separated filenames, and the total bytes across them. Metadata only:
+  /// the files themselves go out with the notification and are never stored.
   attachmentName String?
   attachmentSize Int?
   /// Object-storage key once uploads are moved off the mail attachment path.
@@ -83,12 +92,14 @@ model ContactMessage {
   id        String @id @default(cuid())
   reference String @unique
 
-  name    String
-  email   String
-  phone   String?
-  company String?
-  subject String
-  message String  @db.Text
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  /// What the enquiry is about, including "General enquiry — no specific project".
+  projectType String?
+  subject     String
+  message     String  @db.Text
 
   status EnquiryStatus @default(NEW)
   source EnquirySource @default(WEBSITE_CONTACT)

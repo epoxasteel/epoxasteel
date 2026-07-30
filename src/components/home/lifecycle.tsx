@@ -140,7 +140,17 @@ export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
                   aria-hidden
                 >
                   {/* Decorative: the heading and caption beside it carry the
-                      meaning, so an alt text would say everything twice. */}
+                      meaning, so an alt text would say everything twice.
+
+                      A plain <img> on purpose. These are SVG, so there is no
+                      raster for next/image's optimizer to resize or re-encode —
+                      it would proxy each file through a serverless route to hand
+                      back the same bytes, and serving SVG through the optimizer
+                      needs `dangerouslyAllowSVG`, which we will not turn on for
+                      artwork we already ship ourselves. Width, height, lazy and
+                      async below give us what next/image was going to: no layout
+                      shift, no download before the section is near. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={stage.src}
                     alt=""

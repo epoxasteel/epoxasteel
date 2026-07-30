@@ -1,4 +1,5 @@
 import { siteConfig } from '@/lib/site';
+import { spool, drainSpool } from '@/lib/email/queue';
 
 /**
  * Transport-agnostic email sending.
@@ -19,6 +20,8 @@ export type EmailMessage = {
   text: string;
   replyTo?: string;
   attachments?: { filename: string; content: Buffer; contentType?: string }[];
+  /** The enquiry's reference, carried so a spooled failure can be traced to it. */
+  reference?: string;
 };
 
 export type SendResult = {
@@ -26,6 +29,15 @@ export type SendResult = {
   provider: 'resend' | 'smtp' | 'console';
   id?: string;
   error?: string;
+  /**
+   * Delivery failed but the message is on disk and will be retried.
+   *
+   * The distinction matters to the caller: `ok: false` alone used to mean the
+   * enquiry was gone, and a route seeing it told the customer to phone instead.
+   * A held message has not been lost, so that would now be a lie in the
+   * pessimistic direction — which costs a real enquiry just as surely.
+   */
+  held?: boolean;
 };
 
 function fromAddress() {
@@ -158,6 +170,35 @@ function headerSafe(value: string) {
   return value.replace(CONTROL_CHARS, ' ').trim();
 }
 
+/** Delivers once, without retry or spooling — the primitive the rest builds on. */
+async function deliverOnce(message: EmailMessage, provider: SendResult['provider']) {
+  switch (provider) {
+    case 'resend':
+      return sendWithResend(message);
+    case 'smtp':
+      return sendWithSmtp(message);
+    default:
+      return logToConsole(message);
+  }
+}
+
+const RETRY_DELAYS_MS = [400, 1_600, 4_000];
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Sends an email, and does not lose it.
+ *
+ * Three attempts with growing gaps, because the overwhelming majority of
+ * transport failures are a provider having a bad few seconds. If all three fail
+ * the message is spooled to disk and retried on the back of later traffic — the
+ * customer has already been told their enquiry arrived, and it has to be true.
+ *
+ * The call never throws and never blocks a form response on a slow relay: routes
+ * fire it and move on. What it returns is for logging.
+ */
 export async function sendEmail(message: EmailMessage): Promise<SendResult> {
   const provider = emailProvider();
 
@@ -174,23 +215,35 @@ export async function sendEmail(message: EmailMessage): Promise<SendResult> {
     })),
   };
 
-  try {
-    switch (provider) {
-      case 'resend':
-        return await sendWithResend(safe);
-      case 'smtp':
-        return await sendWithSmtp(safe);
-      default:
-        return logToConsole(safe);
+  let lastError = 'Unknown email error';
+
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt += 1) {
+    try {
+      const result = await deliverOnce(safe, provider);
+
+      if (result.ok) {
+        // A success is the cue to try anything still waiting. Traffic is the
+        // clock; there is no scheduler to keep alive.
+        void drainSpool((pending) => deliverOnce(pending, provider)).catch(() => undefined);
+        return result;
+      }
+
+      lastError = result.error ?? lastError;
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : lastError;
     }
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : 'Unknown email error';
-    // Never let a transport failure take down a form submission — the enquiry
-    // is already persisted (or logged) and the customer should still see
-    // success. The failure is logged for operators to pick up.
-    console.error(`[email] ${provider} delivery failed: ${reason}`);
-    return { ok: false, provider, error: reason };
+
+    const delay = RETRY_DELAYS_MS[attempt];
+    if (delay !== undefined) {
+      console.warn(`[email] ${provider} attempt ${attempt + 1} failed (${lastError}) — retrying`);
+      await wait(delay);
+    }
   }
+
+  console.error(`[email] ${provider} delivery failed after retries: ${lastError}`);
+  const held = await spool(safe, safe.reference);
+
+  return { ok: false, provider, error: lastError, held };
 }
 
 /** Human-readable reference, e.g. "EPX-7K3F9Q". */

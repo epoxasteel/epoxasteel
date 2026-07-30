@@ -12,11 +12,11 @@ import {
   budgetRanges,
   timelines,
   quantityUnits,
-  ATTACHMENT_MAX_BYTES,
-  ATTACHMENT_ACCEPT,
-  ATTACHMENT_ACCEPT_LABEL,
+  finishes,
+  fulfilment,
   type QuoteInput,
 } from '@/lib/validations';
+import { ALLOWED_EXTENSIONS, ALLOWED_MIME, ACCEPT_ATTRIBUTE, extensionOf } from '@/lib/uploads';
 import { products } from '@/content/products';
 import { countries } from '@/content/countries';
 import { Field, Input, Textarea, Select, Checkbox, Honeypot, Label } from '@/components/ui/field';
@@ -26,6 +26,8 @@ import { cn, formatBytes } from '@/lib/utils';
 import { EASE_OUT_EXPO, EASE_SPRING } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
 import { useFormDraft } from '@/lib/use-form-draft';
+import { useFormToken } from '@/lib/use-form-token';
+import { useUpload } from '@/lib/use-upload';
 
 /**
  * The enterprise RFQ form.
@@ -44,7 +46,8 @@ export function QuoteForm({
 }) {
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [reference, setReference] = React.useState<string | null>(null);
-  const [file, setFile] = React.useState<File | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
+  const [files, setFiles] = React.useState<File[]>([]);
   const [fileError, setFileError] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const elapsedSinceMount = useElapsedSinceMount();
@@ -60,7 +63,9 @@ export function QuoteForm({
       country: '',
       city: '',
       product: defaultProduct ?? '',
+      dimensions: '',
       quantity: '',
+      budget: '',
       description: '',
       consent: false as unknown as true,
       newsletter: false,
@@ -79,98 +84,139 @@ export function QuoteForm({
   /* A quote request asks for a project description, tonnages and a programme.
      People write that over several minutes with a drawing open beside them. */
   const clearDraft = useFormDraft('epoxa:draft:quote', form);
+  const { prime, token, upload } = useFormToken('quote');
+  // XMLHttpRequest rather than fetch, because only one of the two can tell a
+  // visitor how far a 9 MB drawing set has actually got. See lib/use-upload.ts.
+  const { phase, percent, send } = useUpload<{
+    message?: string;
+    reference?: string;
+    notice?: string;
+  }>();
 
   const consent = watch('consent');
   const newsletter = watch('newsletter');
 
+  /**
+   * Checks a selection before it costs anyone a round trip.
+   *
+   * A mirror of the server's rules, never a replacement for them — the server
+   * re-checks everything, including the file signature, which cannot be read here
+   * without loading the file into memory to no purpose. The limit itself comes from
+   * the server (see `useFormToken`), so this cannot drift out of step with it.
+   */
   function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     setFileError(null);
-    const selected = event.target.files?.[0];
+    const selected = Array.from(event.target.files ?? []);
+    // Reset immediately: the same file picked twice should re-fire change, and the
+    // chosen files live in React state from here on.
+    event.target.value = '';
 
-    if (!selected) {
-      setFile(null);
-      return;
+    if (!selected.length) return;
+
+    const accepted: File[] = [];
+
+    for (const file of selected) {
+      if (files.length + accepted.length >= upload.maxFiles) {
+        setFileError(
+          `You can attach up to ${upload.maxFiles} files. Please put the rest in a ZIP.`,
+        );
+        break;
+      }
+
+      if (file.size === 0) {
+        setFileError(`“${file.name}” is empty. Please check the file and try again.`);
+        continue;
+      }
+
+      if (file.size > upload.maxBytes) {
+        setFileError(
+          `“${file.name}” is ${formatBytes(file.size)} — the limit is ${formatBytes(upload.maxBytes)} per file.`,
+        );
+        continue;
+      }
+
+      // Some systems report an empty or generic type for CAD files, so the
+      // extension is what decides and the MIME type is only consulted when the
+      // browser was specific about it.
+      const extension = extensionOf(file.name);
+      const knownExtension = (ALLOWED_EXTENSIONS as readonly string[]).includes(extension);
+      const knownMime = !file.type || (ALLOWED_MIME as readonly string[]).includes(file.type);
+
+      if (!knownExtension || !knownMime) {
+        setFileError(
+          `We cannot accept “${file.name}”. Please attach a PDF, drawing, spreadsheet or image.`,
+        );
+        continue;
+      }
+
+      if (files.some((existing) => existing.name === file.name && existing.size === file.size)) {
+        setFileError(`“${file.name}” is already attached.`);
+        continue;
+      }
+
+      accepted.push(file);
     }
 
-    if (selected.size > ATTACHMENT_MAX_BYTES) {
-      setFileError(`That file is ${formatBytes(selected.size)}. The limit is 10 MB.`);
-      event.target.value = '';
-      return;
-    }
-
-    // Some browsers report an empty type for CAD files; fall back to extension.
-    const extension = selected.name.split('.').pop()?.toLowerCase() ?? '';
-    const allowedExtensions = [
-      'pdf',
-      'dwg',
-      'dxf',
-      'xlsx',
-      'xls',
-      'doc',
-      'docx',
-      'zip',
-      'png',
-      'jpg',
-      'jpeg',
-      'webp',
-    ];
-
-    if (
-      selected.type &&
-      !ATTACHMENT_ACCEPT.includes(selected.type) &&
-      !allowedExtensions.includes(extension)
-    ) {
-      setFileError(
-        'That file type is not supported. Please attach a PDF, drawing, spreadsheet or image.',
-      );
-      event.target.value = '';
-      return;
-    }
-
-    setFile(selected);
+    if (accepted.length) setFiles((current) => [...current, ...accepted]);
   }
 
-  function clearFile() {
-    setFile(null);
+  function removeFile(target: File) {
+    setFiles((current) => current.filter((file) => file !== target));
     setFileError(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
   }
 
   async function onSubmit(values: QuoteInput) {
     setServerError(null);
 
-    try {
-      // Multipart, so the attachment travels with the enquiry in one request.
-      const formData = new FormData();
-      Object.entries(values).forEach(([key, value]) => {
-        if (value === undefined || value === null) return;
-        formData.append(key, String(value));
-      });
-      formData.set('elapsedMs', String(elapsedSinceMount()));
-      if (file) formData.append('attachment', file);
+    // Multipart, so the drawings travel with the enquiry in one request.
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === '') return;
+      formData.append(key, String(value));
+    });
+    formData.set('elapsedMs', String(elapsedSinceMount()));
+    const issued = await token();
+    if (issued) formData.set('formToken', issued);
+    for (const file of files) formData.append('attachments', file);
 
-      const response = await fetch('/api/quote', { method: 'POST', body: formData });
-      const data = (await response.json()) as { message?: string; reference?: string };
+    const result = await send('/api/quote', formData);
 
-      if (!response.ok) {
-        setServerError(data.message ?? 'We could not submit your request. Please try again.');
-        return;
-      }
-
-      clearDraft();
-      setReference(data.reference ?? 'received');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch {
-      setServerError('Network error. Please check your connection and try again.');
+    if (!result.ok) {
+      setServerError(
+        result.data?.message ??
+          (result.status === 0
+            ? 'The upload did not complete. Please check your connection and try again.'
+            : 'We could not submit your request. Please try again, or call us directly.'),
+      );
+      return;
     }
+
+    clearDraft();
+    setNotice(result.data?.notice ?? null);
+    setReference(result.data?.reference ?? 'received');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   if (reference) {
-    return <QuoteSuccess reference={reference} className={className} />;
+    return (
+      <QuoteSuccess
+        reference={reference}
+        notice={notice}
+        files={files.map((file) => file.name)}
+        className={className}
+      />
+    );
   }
 
+  const busy = isSubmitting || phase !== 'idle';
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={cn('space-y-12', className)} noValidate>
+    <form
+      onFocus={prime}
+      onSubmit={handleSubmit(onSubmit)}
+      className={cn('space-y-12', className)}
+      noValidate
+    >
       <Honeypot {...register('website')} />
 
       {/* ---------------------------------------------------------------- */}
@@ -317,19 +363,47 @@ export function QuoteForm({
             )}
           </Field>
 
-          <Field id="quote-budget" label="Budget range" error={errors.budget?.message} required>
+          <Field
+            id="quote-finish"
+            label="Required finish"
+            error={errors.finish?.message}
+            hint="If the coating specification is still open, say so."
+            required
+          >
             {(props) => (
-              <Select placeholder="Select a budget range" {...props} {...register('budget')}>
-                {budgetRanges.map((range) => (
-                  <option key={range} value={range}>
-                    {range}
+              <Select placeholder="Select a finish" {...props} {...register('finish')}>
+                {finishes.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
                   </option>
                 ))}
               </Select>
             )}
           </Field>
 
-          <Field id="quote-timeline" label="Timeline" error={errors.timeline?.message} required>
+          <Field
+            id="quote-fulfilment"
+            label="Delivery or collection"
+            error={errors.fulfilment?.message}
+            required
+          >
+            {(props) => (
+              <Select placeholder="Select an option" {...props} {...register('fulfilment')}>
+                {fulfilment.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </Field>
+
+          <Field
+            id="quote-timeline"
+            label="Estimated deadline"
+            error={errors.timeline?.message}
+            required
+          >
             {(props) => (
               <Select placeholder="Select a timeline" {...props} {...register('timeline')}>
                 {timelines.map((timeline) => (
@@ -340,20 +414,55 @@ export function QuoteForm({
               </Select>
             )}
           </Field>
+
+          <Field
+            id="quote-budget"
+            label="Budget range"
+            hint="Optional. It helps us propose the right specification, not raise the price."
+            error={errors.budget?.message}
+          >
+            {(props) => (
+              <Select placeholder="Prefer not to say" {...props} {...register('budget')}>
+                {budgetRanges.map((range) => (
+                  <option key={range} value={range}>
+                    {range}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </Field>
         </div>
 
         <Field
+          id="quote-dimensions"
+          label="Sections, grades & dimensions"
+          hint="Section sizes, steel grades and lengths — as much as you have. A rough list beats an empty box."
+          error={errors.dimensions?.message}
+          required
+          className="mt-6"
+        >
+          {(props) => (
+            <Textarea
+              rows={3}
+              placeholder="UB 305×165×40 S355JR — 8no. at 6.2 m, 4no. at 4.8 m. Base plates 300×300×20."
+              {...props}
+              {...register('dimensions')}
+            />
+          )}
+        </Field>
+
+        <Field
           id="quote-description"
-          label="Project description"
-          hint="Grades, sizes, lengths, finish, delivery location and any processing you need. The more specific you are, the more accurate our quotation."
+          label="Additional notes"
+          hint="Delivery location, access constraints, sequencing, any processing you need, and anything else that shapes the price."
           error={errors.description?.message}
           required
           className="mt-6"
         >
           {(props) => (
             <Textarea
-              rows={8}
-              placeholder="We need wide-flange beams and base plates for a four-storey commercial frame in Newark. Erection starts mid-October and we would like delivery sequenced by bay…"
+              rows={7}
+              placeholder="A four-storey commercial frame in Newark. Erection starts mid-October and we would like delivery sequenced by bay. Site access is via a single crane bay before 07:00…"
               {...props}
               {...register('description')}
             />
@@ -368,67 +477,80 @@ export function QuoteForm({
         description="Optional, but it usually speeds things up considerably."
       >
         <Label htmlFor="quote-attachment" className="mb-2">
-          Attachment
+          Attachments
         </Label>
 
-        <AnimatePresence mode="wait">
-          {file ? (
-            <motion.div
-              key="file"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25 }}
-              className="border-hairline bg-graphite flex items-center gap-4 rounded-sm border p-4"
-            >
-              <span className="border-hairline bg-charcoal text-arc-glow grid size-10 shrink-0 place-items-center rounded-sm border">
-                <FileText aria-hidden className="size-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-bright truncate text-[0.875rem] font-medium">{file.name}</p>
-                <p className="text-steel text-[0.8125rem]">{formatBytes(file.size)}</p>
-              </div>
-              <button
-                type="button"
-                onClick={clearFile}
-                aria-label={`Remove ${file.name}`}
-                className="text-steel hover:text-danger grid size-8 shrink-0 place-items-center rounded-sm transition-colors"
-              >
-                <X aria-hidden className="size-4" />
-              </button>
-            </motion.div>
-          ) : (
-            <motion.label
-              key="picker"
-              htmlFor="quote-attachment"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={cn(
-                'flex cursor-pointer flex-col items-center justify-center gap-3 rounded-sm',
-                'border-hairline-strong bg-graphite/60 border border-dashed px-6 py-10 text-center',
-                'hover:border-arc/50 hover:bg-graphite transition-colors duration-300',
-                'focus-within:border-arc-bright',
-              )}
-            >
-              <span className="border-hairline text-steel grid size-11 place-items-center rounded-full border">
-                <Paperclip aria-hidden className="size-4" />
-              </span>
-              <span className="text-chalk text-[0.9375rem]">
-                Attach drawings, a bill of quantities or a specification
-              </span>
-              <span className="text-steel text-[0.8125rem]">{ATTACHMENT_ACCEPT_LABEL}</span>
-            </motion.label>
-          )}
-        </AnimatePresence>
+        {files.length ? (
+          <ul className="mb-4 space-y-2.5">
+            <AnimatePresence initial={false}>
+              {files.map((file) => (
+                <motion.li
+                  key={`${file.name}:${file.size}`}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                  transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
+                  className="border-hairline bg-graphite flex items-center gap-4 overflow-hidden rounded-sm border p-4"
+                >
+                  <span className="border-hairline bg-charcoal text-arc-glow grid size-10 shrink-0 place-items-center rounded-sm border">
+                    <FileText aria-hidden className="size-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-bright truncate text-[0.875rem] font-medium">{file.name}</p>
+                    <p className="text-steel text-[0.8125rem]">{formatBytes(file.size)}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(file)}
+                    disabled={busy}
+                    aria-label={`Remove ${file.name}`}
+                    className="text-steel hover:text-danger grid size-11 shrink-0 place-items-center rounded-sm transition-colors disabled:opacity-40"
+                  >
+                    <X aria-hidden className="size-4" />
+                  </button>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        ) : null}
+
+        {files.length < upload.maxFiles ? (
+          <label
+            htmlFor="quote-attachment"
+            className={cn(
+              'flex cursor-pointer flex-col items-center justify-center gap-3 rounded-sm',
+              'border-hairline-strong bg-graphite/60 border border-dashed px-6 text-center',
+              'hover:border-arc/50 hover:bg-graphite transition-colors duration-300',
+              'focus-within:border-arc-bright',
+              files.length ? 'py-6' : 'py-10',
+            )}
+          >
+            <span className="border-hairline text-steel grid size-11 place-items-center rounded-full border">
+              <Paperclip aria-hidden className="size-4" />
+            </span>
+            <span className="text-chalk text-[0.9375rem]">
+              {files.length
+                ? 'Add another drawing or document'
+                : 'Attach drawings, a bill of quantities or a specification'}
+            </span>
+            <span className="text-steel text-[0.8125rem]">{upload.label}</span>
+          </label>
+        ) : (
+          <p className="text-steel border-hairline bg-graphite/60 rounded-sm border border-dashed px-6 py-5 text-center text-[0.8125rem]">
+            That is the maximum of {upload.maxFiles} files. Remove one to attach a different
+            document, or send the rest as a ZIP.
+          </p>
+        )}
 
         <input
           ref={fileInputRef}
           id="quote-attachment"
           type="file"
+          multiple
           className="sr-only"
           onChange={onFileChange}
-          accept=".pdf,.dwg,.dxf,.xlsx,.xls,.doc,.docx,.zip,.png,.jpg,.jpeg,.webp"
+          disabled={busy}
+          accept={ACCEPT_ATTRIBUTE}
           aria-describedby={fileError ? 'quote-attachment-error' : undefined}
         />
 
@@ -497,11 +619,11 @@ export function QuoteForm({
         ) : null}
 
         <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center">
-          <Button type="submit" size="lg" disabled={isSubmitting} sheen>
-            {isSubmitting ? (
+          <Button type="submit" size="lg" disabled={busy} sheen>
+            {busy ? (
               <>
                 <Loader2 aria-hidden className="animate-spin" />
-                Submitting…
+                {phase === 'uploading' ? `Uploading ${percent}%` : 'Submitting…'}
               </>
             ) : (
               <>
@@ -515,12 +637,93 @@ export function QuoteForm({
             with your reference immediately.
           </p>
         </div>
+
+        <UploadProgress phase={phase} percent={percent} fileCount={files.length} />
       </div>
     </form>
   );
 }
 
 /* -------------------------------------------------------------------------- */
+
+/**
+ * The progress bar, and the reason it is worth the code.
+ *
+ * Two states, because the wait has two halves that feel different. While bytes are
+ * moving there is a real number to show, and it is announced politely so a screen
+ * reader user is not left guessing either. Once the last byte lands there is nothing
+ * left to measure — the server is validating signatures, writing the record and
+ * sending two emails — so the bar stops pretending to know and animates instead. A
+ * bar parked at 100% for eight seconds reads as broken.
+ *
+ * `aria-live="polite"` on the caption rather than the bar: announcing every
+ * percentage would be unusable, so the bar carries `aria-valuenow` for anyone who
+ * asks and the caption speaks only when the phase changes.
+ */
+function UploadProgress({
+  phase,
+  percent,
+  fileCount,
+}: {
+  phase: 'idle' | 'uploading' | 'processing';
+  percent: number;
+  fileCount: number;
+}) {
+  return (
+    <AnimatePresence>
+      {phase !== 'idle' ? (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+          className="overflow-hidden"
+        >
+          <div className="border-hairline bg-graphite mt-1 rounded-sm border p-4">
+            <div className="mb-2.5 flex items-baseline justify-between gap-4">
+              <p aria-live="polite" className="text-chalk text-[0.875rem]">
+                {phase === 'uploading'
+                  ? `Uploading ${fileCount === 1 ? 'your file' : `${fileCount} files`}…`
+                  : 'Upload complete — submitting your request…'}
+              </p>
+              {phase === 'uploading' ? (
+                <span className="text-steel font-mono text-[0.8125rem] tabular-nums">
+                  {percent}%
+                </span>
+              ) : null}
+            </div>
+
+            <div
+              className="bg-void h-1.5 overflow-hidden rounded-full"
+              role="progressbar"
+              aria-label="Upload progress"
+              {...(phase === 'uploading'
+                ? { 'aria-valuenow': percent, 'aria-valuemin': 0, 'aria-valuemax': 100 }
+                : {})}
+            >
+              {phase === 'uploading' ? (
+                <motion.div
+                  className="bg-arc-bright h-full rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${percent}%` }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                />
+              ) : (
+                // Indeterminate: a sweep, because there is genuinely nothing to
+                // measure and a static full bar would be a lie about being stuck.
+                <motion.div
+                  className="via-arc-bright h-full w-1/3 rounded-full bg-gradient-to-r from-transparent to-transparent"
+                  animate={{ x: ['-100%', '300%'] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              )}
+            </div>
+          </div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+}
 
 function FormSection({
   index,
@@ -547,7 +750,19 @@ function FormSection({
   );
 }
 
-function QuoteSuccess({ reference, className }: { reference: string; className?: string }) {
+function QuoteSuccess({
+  reference,
+  notice,
+  files,
+  className,
+}: {
+  reference: string;
+  /** Set when the transport is degraded and the confirmation email may be slow. */
+  notice?: string | null;
+  /** Named back so somebody can see the drawings arrived, not just assume it. */
+  files: string[];
+  className?: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }}
@@ -588,6 +803,29 @@ function QuoteSuccess({ reference, className }: { reference: string; className?:
           <span className="text-steel text-[0.6875rem] tracking-[0.16em] uppercase">Reference</span>
           <span className="text-bright font-mono text-lg font-medium">{reference}</span>
         </div>
+
+        {notice ? (
+          <p className="text-ash mt-6 max-w-xl text-[0.875rem] leading-relaxed">{notice}</p>
+        ) : null}
+
+        {/* Upload confirmation: naming the files back is the only way somebody knows
+            the attachment actually made it, rather than hoping it did. */}
+        {files.length ? (
+          <div className="border-hairline bg-graphite/60 mt-6 max-w-xl rounded-md border p-5">
+            <p className="text-chalk flex items-center gap-2 text-[0.875rem] font-medium">
+              <Check aria-hidden className="text-success size-4" strokeWidth={2.5} />
+              {files.length === 1 ? '1 file received' : `${files.length} files received`}
+            </p>
+            <ul className="mt-3 space-y-1.5">
+              {files.map((name) => (
+                <li key={name} className="text-ash flex items-baseline gap-2 text-[0.8125rem]">
+                  <FileText aria-hidden className="text-steel size-3.5 shrink-0 translate-y-0.5" />
+                  <span className="truncate">{name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <div className="border-hairline mt-10 grid gap-6 border-t pt-8 sm:grid-cols-3">
           {[

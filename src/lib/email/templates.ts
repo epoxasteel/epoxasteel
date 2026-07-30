@@ -87,6 +87,47 @@ function detailTable(rows: [string, string][]) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 20px;">${body}</table>`;
 }
 
+/**
+ * Where and when the enquiry came from.
+ *
+ * Rendered at the foot of an owner notification, below the enquiry itself,
+ * because it is context rather than content: useful before you call someone back,
+ * never the thing you read first.
+ */
+function submissionContext(context?: {
+  submittedAt: string;
+  timezone: string;
+  browser: string;
+  os: string;
+  device: string;
+}) {
+  if (!context) return '';
+
+  return `<div style="margin-top:26px;padding-top:18px;border-top:1px solid ${BRAND.line};">
+    <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};margin-bottom:10px;">Submitted</div>
+    <div style="color:${BRAND.text};font-size:13px;line-height:1.7;">
+      ${escapeHtml(context.submittedAt)} <span style="color:${BRAND.muted};">(${escapeHtml(context.timezone)})</span><br>
+      <span style="color:${BRAND.muted};">${escapeHtml(context.device)} · ${escapeHtml(context.browser)} · ${escapeHtml(context.os)}</span>
+    </div>
+  </div>`;
+}
+
+function contextLines(context?: {
+  submittedAt: string;
+  timezone: string;
+  browser: string;
+  os: string;
+  device: string;
+}) {
+  if (!context) return [];
+  return [
+    '',
+    '--- Submitted ---',
+    `${context.submittedAt} (${context.timezone})`,
+    `${context.device} · ${context.browser} · ${context.os}`,
+  ];
+}
+
 function button(label: string, href: string) {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 4px;">
     <tr><td style="background:${BRAND.accent};border-radius:6px;">
@@ -99,8 +140,17 @@ function button(label: string, href: string) {
 /* Quote request                                                              */
 /* -------------------------------------------------------------------------- */
 
+export type SubmissionContext = {
+  submittedAt: string;
+  timezone: string;
+  browser: string;
+  os: string;
+  device: string;
+};
+
 export type QuoteEmailData = {
   reference: string;
+  context?: SubmissionContext;
   fullName: string;
   company: string;
   email: string;
@@ -109,16 +159,27 @@ export type QuoteEmailData = {
   city: string;
   projectType: string;
   product: string;
+  dimensions: string;
   quantity: string;
   quantityUnit: string;
-  budget: string;
+  finish: string;
+  fulfilment: string;
+  budget?: string;
   timeline: string;
   description: string;
-  attachmentName?: string;
+  /** Names of the files attached to this notification, in the order they arrived. */
+  attachmentNames?: string[];
   newsletter?: boolean;
 };
 
 export function quoteInternalEmail(data: QuoteEmailData) {
+  const files = data.attachmentNames ?? [];
+  // "Attached to this email" rather than a bare list, because the owner's next
+  // action is to look for them in this message — not to wonder where they went.
+  const fileSummary = files.length
+    ? `${files.length} file${files.length === 1 ? '' : 's'} attached to this email: ${files.join(', ')}`
+    : 'None';
+
   const content = `
     ${heading(`New quote request — ${data.reference}`)}
     ${paragraph(`${data.fullName} at ${data.company} has requested a quotation.`)}
@@ -132,14 +193,19 @@ export function quoteInternalEmail(data: QuoteEmailData) {
       ['Project type', data.projectType],
       ['Product', data.product],
       ['Quantity', `${data.quantity} ${data.quantityUnit}`],
-      ['Budget', data.budget],
-      ['Timeline', data.timeline],
-      ['Attachment', data.attachmentName ?? 'None'],
+      ['Required finish', data.finish],
+      ['Fulfilment', data.fulfilment],
+      ['Deadline', data.timeline],
+      ['Budget', data.budget || 'Not stated'],
+      ['Files', fileSummary],
       ['Newsletter opt-in', data.newsletter ? 'Yes' : 'No'],
     ])}
-    <div style="color:${BRAND.muted};font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Project description</div>
+    <div style="color:${BRAND.muted};font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Sections, grades &amp; dimensions</div>
+    <div style="background:${BRAND.bg};border:1px solid ${BRAND.line};border-radius:6px;padding:16px;color:${BRAND.text};font-size:14px;line-height:1.65;white-space:pre-wrap;margin-bottom:20px;">${escapeHtml(data.dimensions)}</div>
+    <div style="color:${BRAND.muted};font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Additional notes</div>
     <div style="background:${BRAND.bg};border:1px solid ${BRAND.line};border-radius:6px;padding:16px;color:${BRAND.text};font-size:14px;line-height:1.65;white-space:pre-wrap;">${escapeHtml(data.description)}</div>
     <p style="margin:20px 0 0;color:${BRAND.muted};font-size:13px;">Reply directly to this message to reach the customer.</p>
+    ${submissionContext(data.context)}
   `;
 
   return {
@@ -156,28 +222,48 @@ export function quoteInternalEmail(data: QuoteEmailData) {
       `Project type: ${data.projectType}`,
       `Product:      ${data.product}`,
       `Quantity:     ${data.quantity} ${data.quantityUnit}`,
-      `Budget:       ${data.budget}`,
-      `Timeline:     ${data.timeline}`,
-      `Attachment:   ${data.attachmentName ?? 'None'}`,
+      `Finish:       ${data.finish}`,
+      `Fulfilment:   ${data.fulfilment}`,
+      `Deadline:     ${data.timeline}`,
+      `Budget:       ${data.budget || 'Not stated'}`,
+      `Files:        ${fileSummary}`,
       '',
-      'DESCRIPTION',
+      'SECTIONS, GRADES & DIMENSIONS',
+      data.dimensions,
+      '',
+      'ADDITIONAL NOTES',
       data.description,
+      ...contextLines(data.context),
     ].join('\n'),
   };
 }
 
 export function quoteConfirmationEmail(data: QuoteEmailData) {
+  const files = data.attachmentNames ?? [];
+
   const content = `
     ${heading('We have your request')}
     ${paragraph(`Thank you, ${data.fullName.split(' ')[0]}. Your quotation request has been received and assigned reference ${data.reference}.`)}
     ${paragraph('A member of our commercial team will review the details and respond within one business day. Standard enquiries are quoted within 48 hours; where a package needs mill-direct sourcing or fabrication we will confirm the expected turnaround first, so you always know when to expect our number.')}
-    ${detailTable([
-      ['Reference', data.reference],
-      ['Product', data.product],
-      ['Quantity', `${data.quantity} ${data.quantityUnit}`],
-      ['Project type', data.projectType],
-      ['Timeline', data.timeline],
-    ])}
+    ${detailTable(
+      [
+        ['Reference', data.reference],
+        ['Product', data.product],
+        ['Quantity', `${data.quantity} ${data.quantityUnit}`],
+        ['Required finish', data.finish],
+        ['Project type', data.projectType],
+        ['Fulfilment', data.fulfilment],
+        ['Deadline', data.timeline],
+        // Confirming the filenames back is what tells somebody the drawing
+        // actually arrived. A generic "we received your attachments" does not.
+        files.length
+          ? ([files.length === 1 ? 'File received' : 'Files received', files.join(', ')] as [
+              string,
+              string,
+            ])
+          : null,
+      ].filter((row): row is [string, string] => row !== null),
+    )}
     ${paragraph('If anything changes in the meantime — quantities, dates or specification — reply to this email with your reference and we will update the enquiry.')}
     ${button('Explore our products', `${siteConfig.url}/products`)}
   `;
@@ -197,7 +283,9 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
       '',
       `Product:  ${data.product}`,
       `Quantity: ${data.quantity} ${data.quantityUnit}`,
-      `Timeline: ${data.timeline}`,
+      `Finish:   ${data.finish}`,
+      `Deadline: ${data.timeline}`,
+      ...(files.length ? [`Files:    ${files.join(', ')}`] : []),
       '',
       `${siteConfig.legalName} · ${siteConfig.contact.email} · ${siteConfig.contact.phone}`,
     ].join('\n'),
@@ -210,10 +298,12 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
 
 export type ContactEmailData = {
   reference: string;
+  context?: SubmissionContext;
   name: string;
   email: string;
   phone?: string;
   company?: string;
+  projectType: string;
   subject: string;
   message: string;
 };
@@ -227,10 +317,12 @@ export function contactInternalEmail(data: ContactEmailData) {
       ['Email', data.email],
       ['Phone', data.phone ?? ''],
       ['Company', data.company ?? ''],
+      ['Enquiry about', data.projectType],
       ['Subject', data.subject],
     ])}
     <div style="color:${BRAND.muted};font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Message</div>
     <div style="background:${BRAND.bg};border:1px solid ${BRAND.line};border-radius:6px;padding:16px;color:${BRAND.text};font-size:14px;line-height:1.65;white-space:pre-wrap;">${escapeHtml(data.message)}</div>
+    ${submissionContext(data.context)}
   `;
 
   return {
@@ -239,13 +331,15 @@ export function contactInternalEmail(data: ContactEmailData) {
     text: [
       `NEW ENQUIRY — ${data.reference}`,
       '',
-      `Name:    ${data.name}`,
-      `Email:   ${data.email}`,
-      `Phone:   ${data.phone ?? '—'}`,
-      `Company: ${data.company ?? '—'}`,
-      `Subject: ${data.subject}`,
+      `Name:     ${data.name}`,
+      `Email:    ${data.email}`,
+      `Phone:    ${data.phone ?? '—'}`,
+      `Company:  ${data.company ?? '—'}`,
+      `About:    ${data.projectType}`,
+      `Subject:  ${data.subject}`,
       '',
       data.message,
+      ...contextLines(data.context),
     ].join('\n'),
   };
 }

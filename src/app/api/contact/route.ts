@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
-import { contactSchema, MIN_FORM_ELAPSED_MS } from '@/lib/validations';
+import { contactSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { sendEmail, internalRecipients, generateReference } from '@/lib/email';
 import { contactInternalEmail, contactConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
+import { verifyFormToken, sameOrigin } from '@/lib/form-token';
+import { describeRequest } from '@/lib/request-context';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,6 +21,15 @@ function hashIdentifier(value: string) {
 }
 
 export async function POST(request: Request) {
+  /*
+   * A same-site form always sends an Origin (or at least a Referer) matching the
+   * host it was served from. Anything that positively identifies itself as coming
+   * from somewhere else is not one of ours, whatever it is carrying.
+   */
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ message: 'Request rejected.' }, { status: 403 });
+  }
+
   const identifier = clientIdentifier(request);
   const limited = rateLimit(`contact:${identifier}`, { limit: 5, windowMs: 10 * 60_000 });
 
@@ -42,13 +53,29 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: 'Please check the highlighted fields and try again.',
-        errors: parsed.error.flatten().fieldErrors,
+        errors: safeFieldErrors(parsed.error, 'contact'),
       },
       { status: 422 },
     );
   }
 
-  const { website, elapsedMs, ...data } = parsed.data;
+  const { website, elapsedMs, formToken, ...data } = parsed.data;
+
+  /*
+   * The invisible CAPTCHA. To get here a client had to fetch a signed token from
+   * a separate endpoint first — trivial for a browser rendering the page, a real
+   * cost for a script POSTing blind.
+   *
+   * A bad or expired token is accepted silently rather than refused. Refusing
+   * would mean a visitor who left the tab open over lunch loses a written-out
+   * enquiry to a message about a field they cannot see, and the rate limit,
+   * honeypot, timing check and duplicate fingerprint all still apply. What it
+   * does is log the reason, so a spike is visible.
+   */
+  const token = verifyFormToken(formToken, 'contact');
+  if (!token.ok) {
+    console.warn(`[contact] form token ${token.reason} from ${hashIdentifier(identifier)}`);
+  }
 
   if (website || (typeof elapsedMs === 'number' && elapsedMs < MIN_FORM_ELAPSED_MS)) {
     // Accept silently — a bot that sees an error just tries again.
@@ -71,7 +98,9 @@ export async function POST(request: Request) {
 
   const reference = generateReference('EPX-C');
   remember(print, reference);
-  const emailData = { reference, ...data };
+  // Browser, OS, device and the local time it arrived — read from the request we
+  // already have, written into one email, never stored. See request-context.ts.
+  const emailData = { reference, context: describeRequest(request), ...data };
 
   const prisma = getPrisma();
   if (prisma) {
@@ -83,6 +112,7 @@ export async function POST(request: Request) {
           email: data.email,
           phone: data.phone || null,
           company: data.company || null,
+          projectType: data.projectType,
           subject: data.subject,
           message: data.message,
           ipHash: hashIdentifier(identifier),
@@ -101,6 +131,7 @@ export async function POST(request: Request) {
   const [internalResult] = await Promise.all([
     sendEmail({
       to: internalRecipients(),
+      reference,
       subject: internal.subject,
       html: internal.html,
       text: internal.text,
@@ -108,14 +139,26 @@ export async function POST(request: Request) {
     }),
     sendEmail({
       to: data.email,
+      reference,
       subject: confirmation.subject,
       html: confirmation.html,
       text: confirmation.text,
     }),
   ]);
 
-  if (!internalResult.ok && !prisma) {
-    // Nothing captured the enquiry — tell the user rather than pretending.
+  /*
+   * Three outcomes, and only the third is a failure the visitor needs to act on.
+   *
+   *   Delivered — the desk has it.
+   *   Held      — the transport is having a bad few minutes; the message is on the
+   *               spool and goes out on the back of the next successful send. The
+   *               enquiry is not lost, so telling someone to phone instead would
+   *               be wrong. We do say the confirmation may be slow, because it will.
+   *   Lost      — nothing captured it: no delivery, no spool, no database. Say so.
+   */
+  const captured = internalResult.ok || internalResult.held || Boolean(prisma);
+
+  if (!captured) {
     return NextResponse.json(
       {
         message:
@@ -125,5 +168,11 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ message: 'Message received.', reference });
+  return NextResponse.json({
+    message: 'Message received.',
+    reference,
+    ...(internalResult.ok
+      ? {}
+      : { notice: 'Your confirmation email may take a little longer than usual to arrive.' }),
+  });
 }

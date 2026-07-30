@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ArrowRight, Check, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
+import { useFormToken } from '@/lib/use-form-token';
 
 /**
  * Newsletter subscription.
@@ -32,6 +33,7 @@ export function NewsletterForm({ className }: { className?: string }) {
   const [fieldError, setFieldError] = React.useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const elapsedSinceMount = useElapsedSinceMount();
+  const { prime, token } = useFormToken('newsletter');
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -50,7 +52,11 @@ export function NewsletterForm({ className }: { className?: string }) {
       const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, elapsedMs: elapsedSinceMount() }),
+        body: JSON.stringify({
+          ...values,
+          elapsedMs: elapsedSinceMount(),
+          formToken: await token(),
+        }),
       });
 
       const data = (await response.json()) as { message?: string };
@@ -88,7 +94,7 @@ export function NewsletterForm({ className }: { className?: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className={cn('space-y-2.5', className)} noValidate>
+    <form onFocus={prime} onSubmit={onSubmit} className={cn('space-y-2.5', className)} noValidate>
       <div className="flex flex-col gap-2.5 sm:flex-row">
         <div className="flex-1">
           <label htmlFor="newsletter-email" className="sr-only">

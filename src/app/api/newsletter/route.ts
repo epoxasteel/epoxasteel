@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { newsletterSchema, MIN_FORM_ELAPSED_MS } from '@/lib/validations';
+import { newsletterSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
+import { verifyFormToken, sameOrigin } from '@/lib/form-token';
 import { sendEmail, internalRecipients } from '@/lib/email';
 import { newsletterConfirmationEmail, newsletterInternalEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
@@ -9,6 +10,10 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  if (!sameOrigin(request)) {
+    return NextResponse.json({ message: 'Request rejected.' }, { status: 403 });
+  }
+
   const identifier = clientIdentifier(request);
   const limited = rateLimit(`newsletter:${identifier}`, { limit: 4, windowMs: 60_000 });
 
@@ -32,13 +37,17 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: 'Please enter a valid email address.',
-        errors: parsed.error.flatten().fieldErrors,
+        errors: safeFieldErrors(parsed.error, 'newsletter'),
       },
       { status: 422 },
     );
   }
 
-  const { email, website, elapsedMs } = parsed.data;
+  const { email, website, elapsedMs, formToken } = parsed.data;
+
+  // Logged rather than refused — see the note in the contact route.
+  const token = verifyFormToken(formToken, 'newsletter');
+  if (!token.ok) console.warn(`[newsletter] form token ${token.reason}`);
 
   // Silent spam rejections: return success so a bot learns nothing.
   if (website || (typeof elapsedMs === 'number' && elapsedMs < MIN_FORM_ELAPSED_MS)) {
