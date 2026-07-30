@@ -51,20 +51,34 @@ export function Eyebrow({
   children,
   index,
   className,
+  as: Component = 'p',
 }: {
   children: React.ReactNode;
   /** Renders a zero-padded section number, e.g. "03". */
   index?: number;
   className?: string;
+  /**
+   * The element to render. A paragraph by default, because most eyebrows label a
+   * heading that sits directly beneath them and a second heading would be noise.
+   *
+   * Pass `h2` where the eyebrow is the *only* thing naming its section — the FAQ
+   * category strips, for one. There the visible label was a `<p>`, so the page
+   * ran `<h1>` straight into the accordion's `<h3>` questions and a screen-reader
+   * user navigating by heading level fell through a whole level. Promoting the
+   * label that is already on screen fixes the outline and changes nothing visually.
+   */
+  as?: 'p' | 'h2' | 'h3';
 }) {
   return (
-    <p className={cn('text-eyebrow text-arc-glow flex items-center gap-3 uppercase', className)}>
+    <Component
+      className={cn('text-eyebrow text-arc-glow flex items-center gap-3 uppercase', className)}
+    >
       {typeof index === 'number' ? (
         <span className="text-steel font-mono tabular-nums">{pad(index)}</span>
       ) : null}
       <span aria-hidden className="bg-arc/60 h-px w-6" />
       {children}
-    </p>
+    </Component>
   );
 }
 

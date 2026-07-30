@@ -65,7 +65,22 @@ const optionalPhone = z.union([phone, z.literal('')]).optional();
  * rejected server-side.
  */
 const antiSpam = {
-  website: z.literal('').optional(),
+  /**
+   * The honeypot. Hidden from people, irresistible to a form-filling bot.
+   *
+   * Deliberately permissive, and that is the whole point. It used to be
+   * `z.literal('')`, which meant a filled honeypot failed *schema validation* —
+   * so the request never reached the check that exists to handle it, and the
+   * route answered 422 with `{"errors": {"website": [...]}}`. That response names
+   * the trap. A scraper reads it, empties that one field, and walks straight in;
+   * the silent-accept branch in every route was unreachable code the whole time.
+   *
+   * Anything at all parses now, and the routes decide — they answer 200 with a
+   * plausible confirmation and quietly drop the submission, so a bot has nothing
+   * to learn from. Nobody real ever sees this field, so there is nothing to
+   * validate for their benefit. The cap is only there to bound what gets parsed.
+   */
+  website: z.string().max(200).optional(),
   // Plain number rather than `z.coerce.number()`: coercion would make the
   // schema's input type `unknown`, which breaks React Hook Form's resolver
   // typing. The server coerces string form values before parsing instead.

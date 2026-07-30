@@ -79,6 +79,11 @@ export default async function BlogPage({
 
       <Section tone="void">
         <div className="container-page">
+          {/* Names the section for anyone navigating by heading level. The
+              page title is an <h1> and these cards are <h3>s, so without a
+              level in between the outline skips one. Nothing on screen
+              needed a heading here, so it is announced rather than drawn. */}
+          <h2 className="sr-only">Articles</h2>
           <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((post, index) => (
               <RevealItem

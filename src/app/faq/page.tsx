@@ -75,7 +75,7 @@ export default function FaqPage() {
               <div className="grid gap-10 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-16">
                 <div className="lg:sticky lg:top-32 lg:self-start">
                   <Reveal direction="none">
-                    <Eyebrow>{category}</Eyebrow>
+                    <Eyebrow as="h2">{category}</Eyebrow>
                   </Reveal>
                   <Reveal delay={0.06}>
                     <p className="text-ash mt-5 text-[0.9375rem] leading-relaxed">

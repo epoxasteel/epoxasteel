@@ -126,6 +126,10 @@ export default async function CategoryPage({
         <div className="container-page">
           {items.length > 0 ? (
             <>
+              {/* Same missing level as /blog: the page title is an <h1> and the
+                  cards are <h3>s, so the outline skipped a step for anyone
+                  navigating by heading. Announced, not drawn. */}
+              <h2 className="sr-only">Articles in this category</h2>
               <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((post) => (
                   <RevealItem key={post.slug}>
