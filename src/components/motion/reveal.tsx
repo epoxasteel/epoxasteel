@@ -172,6 +172,16 @@ export function MaskedLines({
             style={{ '--reveal-delay': `${delay + index * stagger}s` } as React.CSSProperties}
           >
             {line}
+            {/*
+              A trailing space on every line but the last.
+
+              These are block elements, so it renders as nothing — but without it
+              `textContent` concatenates the lines into one word: the homepage's
+              second heading read "Steel is a commodityuntil it is late." That is
+              what a crawler indexes and what a copy-paste produces, on every
+              heading this component renders.
+            */}
+            {index < lines.length - 1 ? ' ' : null}
           </span>
         </span>
       ))}

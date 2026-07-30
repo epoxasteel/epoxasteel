@@ -60,8 +60,9 @@ export default function NotFound() {
 
           <Reveal delay={0.06}>
             <h1 className="font-display text-display-lg text-bright mt-7 font-semibold">
-              This member is
-              <br />
+              {/* See the hero: the space before the break keeps `textContent`
+                  readable as words rather than one run-together string. */}
+              This member is <br />
               <span className="text-metal">not in the frame.</span>
             </h1>
           </Reveal>

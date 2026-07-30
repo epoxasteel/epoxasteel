@@ -118,11 +118,26 @@ export default function QuotePage() {
                       WhatsApp us
                     </a>
                   </div>
-                  <p className="border-hairline text-steel measure mt-6 border-t pt-5 text-[0.8125rem] leading-relaxed">
-                    {siteConfig.contact.hours[0].days}: {siteConfig.contact.hours[0].time}
-                    <br />
-                    {siteConfig.contact.hours[1].days}: {siteConfig.contact.hours[1].time}
-                  </p>
+                  {/*
+                    Every configured row, not the first two.
+
+                    This read `hours[0]` and `hours[1]` directly, which broke the
+                    moment opening hours became configurable: a business that sets
+                    a single row in NEXT_PUBLIC_BUSINESS_HOURS crashed the whole
+                    build with "Cannot read properties of undefined", because this
+                    page is prerendered. A third row was silently dropped.
+
+                    A list also gives each line its own element, so `textContent`
+                    reads them as separate lines rather than running the last time
+                    into the next day.
+                  */}
+                  <ul className="border-hairline text-steel measure mt-6 space-y-0.5 border-t pt-5 text-[0.8125rem] leading-relaxed">
+                    {siteConfig.contact.hours.map((entry) => (
+                      <li key={entry.days}>
+                        {entry.days}: {entry.time}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </Reveal>
             </aside>

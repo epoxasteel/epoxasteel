@@ -121,7 +121,17 @@ export function Testimonials() {
               </div>
             </div>
 
-            <AnimatePresence mode="wait" custom={direction}>
+            {/*
+              `initial={false}` so the first quote renders settled rather than
+              animating in.
+
+              Without it the opening slide is server-rendered at `opacity: 0` and
+              only becomes visible once JavaScript runs — so the entire
+              testimonial section was blank for anyone without it, and blank in
+              the pre-hydration paint. The cross-fade is only meaningful *between*
+              quotes; there is nothing to transition from on the first one.
+            */}
+            <AnimatePresence mode="wait" custom={direction} initial={false}>
               <motion.figure
                 key={index}
                 custom={direction}

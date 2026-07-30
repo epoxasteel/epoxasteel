@@ -446,8 +446,10 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
         {...line}
         className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7"
       >
-        Reinforce
-        <br />
+        {/* The trailing space is load-bearing. Without it `textContent` reads
+            "ReinforceYour Dream." — which is what a crawler indexes and what a
+            copy-paste produces, even though it renders correctly on screen. */}
+        Reinforce <br />
         <span className="text-metal">Your Dream.</span>
       </motion.h1>
 

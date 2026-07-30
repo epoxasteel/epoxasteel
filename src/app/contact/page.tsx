@@ -143,12 +143,9 @@ export default function ContactPage() {
                   <p className="text-eyebrow text-steel uppercase">Head office</p>
                   <address className="text-mist mt-5 text-[0.9375rem] leading-relaxed not-italic">
                     <span className="text-bright block font-medium">{siteConfig.legalName}</span>
-                    {address.line1}
-                    <br />
-                    {address.line2}
-                    <br />
-                    {address.city}, {address.region} {address.postalCode}
-                    <br />
+                    {address.line1} <br />
+                    {address.line2} <br />
+                    {address.city}, {address.region} {address.postalCode} <br />
                     {address.country}
                   </address>
 

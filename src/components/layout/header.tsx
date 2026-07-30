@@ -124,7 +124,22 @@ export function Header() {
               <button
                 type="button"
                 onClick={openSearch}
-                aria-label="Search the site"
+                /*
+                 * No aria-label, deliberately.
+                 *
+                 * WCAG 2.5.3 Label in Name wants the accessible name to contain
+                 * the visible text, so a voice-control user saying "click Search"
+                 * hits this button. Any hand-written label had to match the
+                 * concatenation of the contents exactly — and the contents read
+                 * "Search⌘K" with no space, because the gap between them is CSS,
+                 * not a text node. Every label that read naturally failed, and the
+                 * one that passed read badly.
+                 *
+                 * Letting the browser compute the name from the content makes the
+                 * two identical by construction, and nothing can drift later. The
+                 * word below is always rendered whenever this button is, so the
+                 * name can never be empty.
+                 */
                 className={cn(
                   'group border-hairline hidden h-10 items-center gap-2.5 rounded-sm border',
                   'text-steel bg-white/[0.02] px-3 text-[0.8125rem]',
@@ -133,8 +148,12 @@ export function Header() {
                 )}
               >
                 <Search aria-hidden className="size-3.5" />
-                <span className="hidden lg:inline">Search</span>
+                {/* Shown from `md`, which is where this button first appears —
+                    it used to start at `lg`, leaving an icon-only button with no
+                    computable name at tablet widths. */}
+                <span>Search</span>
                 <kbd
+                  aria-hidden
                   className={cn(
                     'border-hairline bg-graphite ml-1 hidden rounded-xs border px-1.5',
                     'text-steel font-sans text-[0.6875rem] lg:inline',

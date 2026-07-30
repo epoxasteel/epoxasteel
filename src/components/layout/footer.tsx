@@ -58,10 +58,8 @@ export function Footer() {
               <li className="text-mist flex items-start gap-3">
                 <MapPin aria-hidden className="text-steel mt-0.5 size-4 shrink-0" />
                 <address className="not-italic">
-                  {siteConfig.address.line1}
-                  <br />
-                  {siteConfig.address.line2}
-                  <br />
+                  {siteConfig.address.line1} <br />
+                  {siteConfig.address.line2} <br />
                   {siteConfig.address.city}, {siteConfig.address.region}{' '}
                   {siteConfig.address.postalCode}
                 </address>
