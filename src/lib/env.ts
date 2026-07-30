@@ -110,11 +110,13 @@ function collect(): Report {
       'AI_ENABLED is true but OPENAI_API_KEY is not set — the assistant would be offered and then fail',
     );
   } else if (aiEnabled) {
-    report.notes.push(`assistant: enabled (${process.env.OPENAI_MODEL || 'gpt-4.1-mini'})`);
+    report.notes.push(`assistant: live (${process.env.OPENAI_MODEL || 'gpt-4.1-mini'})`);
   } else if (openai) {
-    report.notes.push('assistant: key present but AI_ENABLED is not true — showing Coming Soon');
+    report.notes.push(
+      'assistant: Coming Soon — key present, set AI_ENABLED=true and redeploy to go live',
+    );
   } else {
-    report.notes.push('assistant: Coming Soon');
+    report.notes.push('assistant: Coming Soon — set OPENAI_API_KEY and AI_ENABLED=true to go live');
   }
 
   if (process.env.OPENAI_BASE_URL && !isUrl(process.env.OPENAI_BASE_URL)) {
@@ -137,16 +139,87 @@ function collect(): Report {
     report.errors.push(`UPLOAD_MAX_MB is not a positive number: ${maxUpload}`);
   }
 
-  /* --- Analytics -------------------------------------------------------- */
-  const analytics = [
-    ['NEXT_PUBLIC_GA_ID', 'Google Analytics'],
-    ['NEXT_PUBLIC_GTM_ID', 'Google Tag Manager'],
-    ['NEXT_PUBLIC_META_PIXEL_ID', 'Meta Pixel'],
-    ['NEXT_PUBLIC_LINKEDIN_PARTNER_ID', 'LinkedIn Insight'],
+  const timezone = process.env.TIMEZONE;
+  if (timezone) {
+    try {
+      new Intl.DateTimeFormat('en-GB', { timeZone: timezone });
+      report.notes.push(`timestamps: ${timezone}`);
+    } catch {
+      report.errors.push(
+        `TIMEZONE is not a recognised IANA zone: ${timezone} (e.g. "America/New_York")`,
+      );
+    }
+  }
+
+  /* --- Contact details ---------------------------------------------------- */
+  /*
+   * Reachability is the one thing on this site that has to be right. A typo in a
+   * public contact address does not break a build, does not throw, and does not
+   * show up in testing — it just quietly sends every enquiry nowhere.
+   */
+  const publicEmails = [
+    ['NEXT_PUBLIC_CONTACT_EMAIL', process.env.NEXT_PUBLIC_CONTACT_EMAIL],
+    ['NEXT_PUBLIC_SALES_EMAIL', process.env.NEXT_PUBLIC_SALES_EMAIL],
+    ['NEXT_PUBLIC_QUOTES_EMAIL', process.env.NEXT_PUBLIC_QUOTES_EMAIL],
+    ['NEXT_PUBLIC_CAREERS_EMAIL', process.env.NEXT_PUBLIC_CAREERS_EMAIL],
   ] as const;
 
-  const active = analytics.filter(([key]) => process.env[key]).map(([, label]) => label);
-  if (active.length) report.notes.push(`analytics: ${active.join(', ')}`);
+  for (const [key, value] of publicEmails) {
+    if (value && !value.includes('@'))
+      report.errors.push(`${key} is not an email address: ${value}`);
+  }
+
+  const mapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL;
+  if (mapsUrl && !isUrl(mapsUrl)) {
+    report.errors.push('NEXT_PUBLIC_GOOGLE_MAPS_URL is not a valid http(s) URL');
+  }
+
+  const socials = [
+    ['NEXT_PUBLIC_LINKEDIN_URL', process.env.NEXT_PUBLIC_LINKEDIN_URL],
+    ['NEXT_PUBLIC_INSTAGRAM_URL', process.env.NEXT_PUBLIC_INSTAGRAM_URL],
+    ['NEXT_PUBLIC_FACEBOOK_URL', process.env.NEXT_PUBLIC_FACEBOOK_URL],
+    ['NEXT_PUBLIC_X_URL', process.env.NEXT_PUBLIC_X_URL],
+    ['NEXT_PUBLIC_YOUTUBE_URL', process.env.NEXT_PUBLIC_YOUTUBE_URL],
+  ] as const;
+
+  for (const [key, value] of socials) {
+    // An empty string is the documented way to hide an icon, so only a non-empty
+    // value that is not a URL is a mistake.
+    if (value?.trim() && !isUrl(value)) {
+      report.errors.push(`${key} is not a valid http(s) URL: ${value}`);
+    }
+  }
+
+  /* --- Analytics -------------------------------------------------------- */
+  const analytics = [
+    ['NEXT_PUBLIC_GA_ID', 'Google Analytics', /^G-[A-Z0-9]+$/i],
+    ['NEXT_PUBLIC_GTM_ID', 'Google Tag Manager', /^GTM-[A-Z0-9]+$/i],
+    ['NEXT_PUBLIC_META_PIXEL_ID', 'Meta Pixel', /^\d+$/],
+    ['NEXT_PUBLIC_LINKEDIN_PARTNER_ID', 'LinkedIn Insight', /^\d+$/],
+  ] as const;
+
+  const active: string[] = [];
+  for (const [key, label, shape] of analytics) {
+    const value = process.env[key]?.trim();
+    if (!value) continue;
+    active.push(label);
+    // A warning, not an error: ID formats are the provider's to change, and
+    // refusing to boot over one would be this file overreaching.
+    if (!shape.test(value)) {
+      report.warnings.push(`${key} does not look like a ${label} ID: ${value}`);
+    }
+  }
+
+  if (active.length) {
+    report.notes.push(`analytics: ${active.join(', ')} — loaded only after consent`);
+    if (process.env.NEXT_PUBLIC_GTM_ID && process.env.NEXT_PUBLIC_GA_ID) {
+      report.notes.push(
+        'Google Analytics will be loaded inside the Tag Manager container, not separately',
+      );
+    }
+  } else {
+    report.notes.push('analytics: none — no cookies set, no consent banner');
+  }
 
   return report;
 }

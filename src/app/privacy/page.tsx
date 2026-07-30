@@ -6,6 +6,7 @@ import { Reveal } from '@/components/motion/reveal';
 import { Article, TableOfContents } from '@/components/article';
 import { Alert } from '@/components/ui/misc';
 import { extractHeadings } from '@/lib/markdown';
+import { analyticsEnabled } from '@/lib/analytics';
 
 const LAST_UPDATED = '2026-07-01';
 
@@ -19,6 +20,27 @@ const trail = [
   { name: 'Home', href: '/' },
   { name: 'Privacy Policy', href: '/privacy' },
 ];
+
+/**
+ * The two paragraphs that must not lie.
+ *
+ * A privacy policy that says "no analytics run on this site" is true of the default
+ * deployment and becomes false the moment somebody sets a measurement ID. Rather
+ * than write the optimistic version and rely on whoever flips the switch also
+ * remembering to edit prose, both paragraphs are generated from the same
+ * configuration the scripts read. The page and the behaviour cannot disagree.
+ */
+function trackingParagraph() {
+  return analyticsEnabled()
+    ? 'This deployment has analytics configured. **Nothing loads until you accept the cookie notice** — no script is requested and no cookie is set before then, and declining leaves the site working exactly as it does now. Our [Cookie Notice](/cookies) lists each provider by name, and you can change your answer there at any time. We do not use retargeting cookies or behavioural profiling in any configuration.'
+    : 'We do **not** use advertising cookies, tracking pixels, cross-site trackers or behavioural profiling on this website. There is no analytics script running on this deployment. If that ever changes, the [Cookie Notice](/cookies) will name every provider and you will be asked before any of it runs.';
+}
+
+function cookieParagraph() {
+  return analyticsEnabled()
+    ? 'This website sets no advertising cookies. Analytics cookies are configured but load only after you accept the cookie notice; your answer is remembered in your browser, not in a cookie sent to us.'
+    : 'This website sets no cookies at all — not for advertising, not for analytics, and not for its own operation.';
+}
 
 const body = `
 ## Who we are
@@ -43,7 +65,7 @@ We only collect information you choose to give us, plus a minimal amount of tech
 - A **hashed form of your IP address** when you submit a form. We hash it, so we cannot recover the original address; it exists only to detect and limit automated abuse of our forms.
 - Your **browser user-agent string** and the **referring page** on form submissions, for the same purpose.
 
-We do **not** use advertising cookies, tracking pixels, cross-site trackers or behavioural profiling on this website. There is no analytics script running on this site as published; if that changes, this policy will be updated before it does, and any cookie requiring consent will ask for it first.
+${trackingParagraph()}
 
 ## Why we use it
 
@@ -80,7 +102,7 @@ We may also disclose information where we are legally required to do so, or wher
 - All traffic to this site is encrypted in transit using TLS.
 - Access to enquiry data is restricted to staff who need it to do their job.
 - IP addresses are hashed before storage, never stored in the clear.
-- The site enforces a strict Content Security Policy and does not load third-party scripts.
+- The site enforces a strict Content Security Policy, and its allowance for third-party hosts is widened only for services actually configured — never in anticipation of one.
 - File attachments you send with a quotation request are transmitted directly to our commercial team; they are not published or made publicly accessible.
 
 ## Your rights
@@ -98,9 +120,11 @@ To exercise any of these, email **${siteConfig.contact.email}**. We respond with
 
 ## Cookies
 
-This website sets no advertising or analytics cookies.
+${cookieParagraph()}
 
-We use **session storage** — not a cookie — to remember that you have already seen the homepage opening animation, so it does not replay on every page you visit in the same session. This stays in your browser, is never transmitted to us, and clears when you close the tab.
+We also use **session storage** — not a cookie — for a handful of small conveniences: remembering that you have already seen the homepage opening animation, keeping a half-written form from being lost to a stray click, and holding a conversation with our assistant across pages. All of it stays in your browser, is never transmitted to us, and clears when you close the tab.
+
+Our [Cookie Notice](/cookies) lists every item individually, with what each one is for and how long it lasts.
 
 ## Children
 

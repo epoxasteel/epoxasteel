@@ -139,7 +139,9 @@ export function organizationSchema() {
         areaServed: 'Worldwide',
       },
     ],
-    sameAs: Object.values(siteConfig.social),
+    // Filtered: an unconfigured account is an empty string, and an empty entry in
+    // sameAs is a validation error in Google's structured-data testing.
+    sameAs: Object.values(siteConfig.social).filter(Boolean),
   };
 }
 

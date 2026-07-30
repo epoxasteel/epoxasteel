@@ -60,6 +60,12 @@ const staticPages: { title: string; description: string; href: string; keywords:
     keywords: 'privacy data protection gdpr cookies personal information',
   },
   {
+    title: 'Cookie Notice',
+    description: 'Every piece of storage this site puts in your browser, and what each one is for.',
+    href: '/cookies',
+    keywords: 'cookies cookie notice consent tracking analytics storage local session',
+  },
+  {
     title: 'Terms & Conditions',
     description: 'The terms governing use of this website and our supply of goods and services.',
     href: '/terms',

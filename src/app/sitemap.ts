@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/faq`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
     { url: `${BASE}/search`, changeFrequency: 'yearly', priority: 0.2, lastModified: now },
     { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
+    { url: `${BASE}/cookies`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
     { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
   ];
 

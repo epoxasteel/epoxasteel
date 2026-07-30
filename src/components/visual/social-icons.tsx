@@ -6,6 +6,8 @@
  * as the rest of the iconography and inherit `currentColor`.
  */
 
+import { siteConfig } from '@/lib/site';
+
 type IconProps = { className?: string };
 
 export function LinkedInIcon({ className }: IconProps) {
@@ -77,3 +79,24 @@ export function XIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/**
+ * The social links, in display order, with unconfigured accounts removed.
+ *
+ * One list rather than the identical array copy-pasted into the footer and the
+ * contact page — which is what this replaced, and which meant adding an account
+ * needed two edits and a good memory.
+ *
+ * Filtering matters now that these come from the environment: a business with no
+ * YouTube channel sets `NEXT_PUBLIC_YOUTUBE_URL=""` and the icon disappears,
+ * rather than a footer offering a link to nowhere.
+ */
+export const socialLinks = (
+  [
+    { label: 'LinkedIn', href: siteConfig.social.linkedin, icon: LinkedInIcon },
+    { label: 'X', href: siteConfig.social.x, icon: XIcon },
+    { label: 'Instagram', href: siteConfig.social.instagram, icon: InstagramIcon },
+    { label: 'Facebook', href: siteConfig.social.facebook, icon: FacebookIcon },
+    { label: 'YouTube', href: siteConfig.social.youtube, icon: YouTubeIcon },
+  ] as const
+).filter((link) => Boolean(link.href));

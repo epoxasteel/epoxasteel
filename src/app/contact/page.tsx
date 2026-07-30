@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
 import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowUpRight } from 'lucide-react';
-import { siteConfig } from '@/lib/site';
+import { siteConfig, mapsHref } from '@/lib/site';
 import { buildMetadata, breadcrumbSchema, localBusinessSchema } from '@/lib/seo';
 import { PageHero, Section, JsonLd, Eyebrow } from '@/components/layout/section';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
 import { ContactForm } from '@/components/forms/contact-form';
 import { whatsappHref } from '@/components/ui/misc';
-import {
-  LinkedInIcon,
-  InstagramIcon,
-  FacebookIcon,
-  YouTubeIcon,
-  XIcon,
-} from '@/components/visual/social-icons';
+import { socialLinks } from '@/components/visual/social-icons';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = buildMetadata({
@@ -60,19 +54,8 @@ const channels = [
   },
 ];
 
-const socials = [
-  { label: 'LinkedIn', href: siteConfig.social.linkedin, icon: LinkedInIcon },
-  { label: 'X', href: siteConfig.social.x, icon: XIcon },
-  { label: 'Instagram', href: siteConfig.social.instagram, icon: InstagramIcon },
-  { label: 'Facebook', href: siteConfig.social.facebook, icon: FacebookIcon },
-  { label: 'YouTube', href: siteConfig.social.youtube, icon: YouTubeIcon },
-];
-
 export default function ContactPage() {
   const { address } = siteConfig;
-  const mapQuery = encodeURIComponent(
-    `${address.line1}, ${address.line2}, ${address.city}, ${address.region} ${address.postalCode}`,
-  );
 
   return (
     <>
@@ -170,7 +153,7 @@ export default function ContactPage() {
                   </address>
 
                   <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                    href={mapsHref()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"
@@ -202,7 +185,7 @@ export default function ContactPage() {
                 <div className="border-hairline bg-charcoal rounded-lg border p-7">
                   <p className="text-eyebrow text-steel uppercase">Follow us</p>
                   <ul className="mt-5 flex flex-wrap gap-2.5">
-                    {socials.map((social) => (
+                    {socialLinks.map((social) => (
                       <li key={social.label}>
                         <a
                           href={social.href}
@@ -262,7 +245,7 @@ export default function ContactPage() {
                     {address.line2}, {address.city}, {address.region} {address.postalCode}
                   </p>
                   <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                    href={mapsHref()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"

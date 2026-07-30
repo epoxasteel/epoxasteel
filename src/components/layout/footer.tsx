@@ -1,24 +1,10 @@
 import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import {
-  LinkedInIcon,
-  InstagramIcon,
-  FacebookIcon,
-  YouTubeIcon,
-  XIcon,
-} from '@/components/visual/social-icons';
+import { socialLinks } from '@/components/visual/social-icons';
 import { footerNav, legalNav, siteConfig } from '@/lib/site';
 import { Wordmark } from '@/components/visual/wordmark';
 import { NewsletterForm } from '@/components/forms/newsletter-form';
 import { cn } from '@/lib/utils';
-
-const socialLinks = [
-  { label: 'LinkedIn', href: siteConfig.social.linkedin, icon: LinkedInIcon },
-  { label: 'X', href: siteConfig.social.x, icon: XIcon },
-  { label: 'Instagram', href: siteConfig.social.instagram, icon: InstagramIcon },
-  { label: 'Facebook', href: siteConfig.social.facebook, icon: FacebookIcon },
-  { label: 'YouTube', href: siteConfig.social.youtube, icon: YouTubeIcon },
-];
 
 export function Footer() {
   const year = new Date().getFullYear();

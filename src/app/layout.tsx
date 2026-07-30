@@ -14,6 +14,9 @@ import { OvertureScript } from '@/components/home/overture-script';
 import { AssistantProvider } from '@/components/assistant/assistant-context';
 import { AssistantDock } from '@/components/assistant/assistant-dock';
 import { assistantConfigured } from '@/lib/assistant/config';
+import { Analytics } from '@/components/layout/analytics';
+import { CookieNotice } from '@/components/layout/cookie-notice';
+import { analyticsEnabled } from '@/lib/analytics';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -47,6 +50,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const assistantEnabled = assistantConfigured();
+  const tracking = analyticsEnabled();
 
   return (
     <html lang="en" className={fontVariables} suppressHydrationWarning>
@@ -82,6 +86,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <FloatingContact />
             <AssistantDock enabled={assistantEnabled} />
             <SearchDialog />
+            {/*
+              Both hang off whether any analytics provider has an ID in the
+              environment. With none — the default — there is nothing to load and
+              nothing to consent to, so neither renders anything and the site sets
+              no analytics cookies at all. See lib/analytics.ts.
+            */}
+            <CookieNotice configured={tracking} />
+            {tracking ? <Analytics /> : null}
           </AssistantProvider>
         </SearchProvider>
       </body>
