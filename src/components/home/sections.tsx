@@ -19,7 +19,7 @@ export function Introduction() {
     <Section id="introduction" tone="void" className="overflow-hidden">
       <div className="container-page">
         <Reveal direction="none">
-          <Eyebrow index={1}>Who we are</Eyebrow>
+          <Eyebrow>Who we are</Eyebrow>
         </Reveal>
 
         {/*
@@ -112,7 +112,6 @@ export function WhyChooseUs() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Why EPOXA STEEL"
-          index={2}
           title="Six reasons contractors keep coming back."
           description="Repeat business has not fallen below 78% of revenue in eleven years. These are the reasons clients give when we ask them why."
         />
@@ -151,7 +150,7 @@ export function QualityCommitment() {
         <div className="grid gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
           <div className="lg:sticky lg:top-32 lg:self-start">
             <Reveal direction="none">
-              <Eyebrow index={9}>Quality commitment</Eyebrow>
+              <Eyebrow>Quality commitment</Eyebrow>
             </Reveal>
 
             <Reveal delay={0.06}>

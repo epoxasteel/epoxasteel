@@ -82,9 +82,7 @@ export function Testimonials() {
           onBlurCapture={() => setPaused(false)}
         >
           <Reveal direction="none">
-            <Eyebrow index={8} className="justify-center">
-              What clients say
-            </Eyebrow>
+            <Eyebrow className="justify-center">What clients say</Eyebrow>
           </Reveal>
 
           <Reveal delay={0.08}>

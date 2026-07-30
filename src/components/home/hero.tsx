@@ -2,12 +2,12 @@
 
 import * as React from 'react';
 import { AnimatePresence, motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Magnetic } from '@/components/motion/magnetic';
-import { WordmarkStacked } from '@/components/visual/wordmark';
+import { Wordmark } from '@/components/visual/wordmark';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { OVERTURE_KEY } from '@/components/home/overture-script';
 
@@ -387,7 +387,16 @@ function Overture({ onDone }: { onDone: () => void }) {
             transition={{ duration: 1.1, ease: EASE_OUT_EXPO }}
             className="px-6"
           >
-            <WordmarkStacked />
+            {/*
+              The header's lockup, at display size — not a second, stacked
+              treatment of it.
+
+              The intro used to draw its own version: EPOXA over a rule over
+              STEEL, no beam mark. So the first thing a visitor ever saw of the
+              brand was a logo they would then never see again, and the header
+              they landed on looked like a different company's. One mark.
+            */}
+            <Wordmark size="xl" />
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -456,20 +465,33 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
 
   return (
     <motion.div {...group} className="max-w-3xl">
+      {/*
+        The tagline leads, quietly, and the promise carries the size.
+
+        "Reinforce Your Dream." was set at display-xl and was the first and
+        largest thing on the page. It is the brand line, not the proposition —
+        a contractor deciding whether to send us a drawing is looking for what
+        they get, and that is the three words below it.
+
+        The tagline stays above rather than being cut: it is on the social card,
+        in the overture and in the email header, and dropping it here alone
+        would be the one place the brand does not say its own line.
+      */}
       <motion.p {...line} className="text-eyebrow text-arc-glow flex items-center gap-3 uppercase">
         <span aria-hidden className="bg-arc h-px w-10" />
-        Structural steel · Since {siteConfig.founded}
+        Reinforce Your Dream
       </motion.p>
 
       <motion.h1
         {...line}
         className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7"
       >
-        {/* The trailing space is load-bearing. Without it `textContent` reads
-            "ReinforceYour Dream." — which is what a crawler indexes and what a
-            copy-paste produces, even though it renders correctly on screen. */}
-        Reinforce <br />
-        <span className="text-metal">Your Dream.</span>
+        {/* The trailing spaces are load-bearing. Without them `textContent`
+            reads "Trust,Quality,Service." — which is what a crawler indexes and
+            what a copy-paste produces, even though it renders correctly. */}
+        Trust, <br />
+        Quality, <br />
+        <span className="text-metal">Service.</span>
       </motion.h1>
 
       <motion.p {...line} className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
@@ -492,9 +514,8 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
           </Button>
         </Magnetic>
 
-        <Button href="/products" size="lg" variant="outline" className="max-sm:w-full">
-          <Play aria-hidden className="size-3.5" />
-          Explore Products
+        <Button href="/contact" size="lg" variant="outline" className="max-sm:w-full">
+          Contact
         </Button>
       </motion.div>
 

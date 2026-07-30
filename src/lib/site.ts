@@ -345,12 +345,19 @@ export type NavGroup = {
   href: string;
   /** When present the header renders a mega-menu panel for this entry. */
   columns?: { title: string; items: NavItem[] }[];
-  featured?: { title: string; body: string; href: string; cta: string };
 };
 
 export const mainNav: NavGroup[] = [
   {
-    label: 'Products',
+    /*
+     * Products and services are one entry, not two.
+     *
+     * They were separate top-level items, which asked the visitor to know
+     * whether "steel cutting" is a thing we sell or a thing we do before they
+     * could find it. It is both, and the answer was in whichever menu they did
+     * not open. One panel lists everything we can put on an order.
+     */
+    label: 'Products & Services',
     href: '/products',
     columns: [
       {
@@ -360,6 +367,7 @@ export const mainNav: NavGroup[] = [
           { label: 'Steel Beams', href: '/products/steel-beams' },
           { label: 'Steel Channels', href: '/products/steel-channels' },
           { label: 'Steel Angles', href: '/products/steel-angles' },
+          { label: 'All products', href: '/products' },
         ],
       },
       {
@@ -380,13 +388,28 @@ export const mainNav: NavGroup[] = [
           { label: 'Stainless Steel', href: '/products/stainless-steel' },
         ],
       },
+      {
+        title: 'Supply & Processing',
+        items: [
+          { label: 'Steel Supply', href: '/services/steel-supply' },
+          { label: 'Fabrication', href: '/services/fabrication' },
+          { label: 'Steel Cutting', href: '/services/steel-cutting' },
+          { label: 'Custom Fabrication', href: '/products/custom-fabrication' },
+          { label: 'Logistics', href: '/services/logistics' },
+          { label: 'Delivery', href: '/services/delivery' },
+        ],
+      },
+      {
+        title: 'Advisory',
+        items: [
+          { label: 'Engineering Support', href: '/services/engineering-support' },
+          { label: 'Project Consultation', href: '/services/project-consultation' },
+          { label: 'Technical Assistance', href: '/services/technical-assistance' },
+          { label: 'Custom Orders', href: '/services/custom-orders' },
+          { label: 'All services', href: '/services' },
+        ],
+      },
     ],
-    featured: {
-      title: 'Custom Fabrication',
-      body: 'Cut, drilled, coped, welded and finished to your shop drawings — delivered sequenced for erection.',
-      href: '/products/custom-fabrication',
-      cta: 'Explore fabrication',
-    },
   },
   {
     label: 'Industries',
@@ -420,79 +443,8 @@ export const mainNav: NavGroup[] = [
         ],
       },
     ],
-    /*
-     * Every mega panel carries a featured card. Without one the columns
-     * stretched across the full panel width and left a third of it empty, so
-     * the menu looked different depending on which item you hovered. It is also
-     * the one place in the navigation where we get to make an argument rather
-     * than just list destinations.
-     */
-    featured: {
-      title: 'Bridges & infrastructure',
-      body: 'Fracture-critical fabrication under third-party inspection, with full traceability from mill to span.',
-      href: '/industries/bridges',
-      cta: 'See the work',
-    },
   },
-  {
-    label: 'Services',
-    href: '/services',
-    columns: [
-      {
-        title: 'Supply',
-        items: [
-          { label: 'Steel Supply', href: '/services/steel-supply' },
-          { label: 'Custom Orders', href: '/services/custom-orders' },
-          { label: 'Logistics', href: '/services/logistics' },
-          { label: 'Delivery', href: '/services/delivery' },
-        ],
-      },
-      {
-        title: 'Processing',
-        items: [
-          { label: 'Fabrication', href: '/services/fabrication' },
-          { label: 'Steel Cutting', href: '/services/steel-cutting' },
-        ],
-      },
-      {
-        title: 'Advisory',
-        items: [
-          { label: 'Engineering Support', href: '/services/engineering-support' },
-          { label: 'Project Consultation', href: '/services/project-consultation' },
-          { label: 'Technical Assistance', href: '/services/technical-assistance' },
-        ],
-      },
-    ],
-    featured: {
-      title: 'Engineering support',
-      body: 'Chartered engineers who review buildability and cost before the package is frozen — calculations attached.',
-      href: '/services/engineering-support',
-      cta: 'Talk to an engineer',
-    },
-  },
-  { label: 'Projects', href: '/projects' },
   { label: 'About', href: '/about' },
-  {
-    label: 'Insights',
-    href: '/blog',
-    columns: [
-      {
-        title: 'Company',
-        items: [
-          { label: 'Blog', href: '/blog' },
-          { label: 'Careers', href: '/careers' },
-          { label: 'FAQ', href: '/faq' },
-          { label: 'Contact', href: '/contact' },
-        ],
-      },
-    ],
-    featured: {
-      title: 'Working at EPOXA',
-      body: 'Detailers, coded welders, CNC operators and project engineers — we are hiring across the shop and the office.',
-      href: '/careers',
-      cta: 'See open roles',
-    },
-  },
 ];
 
 export const footerNav = [

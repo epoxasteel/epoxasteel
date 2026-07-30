@@ -81,7 +81,7 @@ export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
         <div className="container-page relative grid w-full items-center gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-20">
           {/* Copy column */}
           <div className="relative">
-            <Eyebrow index={6}>From molten metal to standing structure</Eyebrow>
+            <Eyebrow>From molten metal to standing structure</Eyebrow>
 
             <div className="relative mt-8 h-52 sm:h-48">
               {stages.map((stage, index) => (
@@ -192,7 +192,7 @@ function LifecycleStatic({ stages }: { stages: LifecycleStage[] }) {
   return (
     <section className="section-y bg-graphite" aria-label="The lifecycle of structural steel">
       <div className="container-page">
-        <Eyebrow index={6}>From molten metal to standing structure</Eyebrow>
+        <Eyebrow>From molten metal to standing structure</Eyebrow>
         <ol className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {stages.map((stage, index) => (
             <li key={stage.title} className="border-hairline border-t pt-5">

@@ -23,7 +23,6 @@ export function FeaturedProducts() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Products"
-          index={3}
           title="A catalogue built around what specifications actually call for."
           description="Thirteen product families held in the grades and sizes engineers specify — most orders ship from stock rather than waiting on a mill rolling window."
           action={{ label: 'View all products', href: '/products' }}
@@ -54,7 +53,6 @@ export function IndustriesServed() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Industries"
-          index={4}
           title="Twelve sectors. One standard."
           description="Each sector asks something different of a steel supplier. We have learned what — usually the hard way, on somebody's critical path."
           action={{ label: 'All industries', href: '/industries' }}
@@ -115,7 +113,6 @@ export function ServicesOverview() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Services"
-          index={5}
           title="Everything between the mill and your crane hook."
           description="Supply is where we start. Fabrication, engineering support and sequenced logistics are what turn material into a package your erector can actually build with."
           action={{ label: 'All services', href: '/services' }}
@@ -148,7 +145,6 @@ export function ProjectShowcase() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Projects"
-          index={7}
           title="Work that had to be right the first time."
           description="Fracture-critical bridge welds. A frame erected above live platforms. A grid connection that could not slip. The projects where the margin for error was zero."
           action={{ label: 'All projects', href: '/projects' }}
@@ -186,7 +182,6 @@ export function LatestNews() {
       <div className="container-page">
         <SectionHeading
           eyebrow="Insights"
-          index={10}
           title="Written by the people who do the work."
           description="Technical guidance, market conditions and project stories from our engineers, buyers and shop floor — not a marketing department."
           action={{ label: 'Read the blog', href: '/blog' }}

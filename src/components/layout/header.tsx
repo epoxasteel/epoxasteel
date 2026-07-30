@@ -5,13 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
-import { ChevronDown, Search, ArrowUpRight } from 'lucide-react';
+import { ChevronDown, ArrowUpRight } from 'lucide-react';
 import { mainNav, siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Wordmark } from '@/components/visual/wordmark';
 import { Button } from '@/components/ui/button';
 import { MobileNav } from '@/components/layout/mobile-nav';
-import { useSearchDialog } from '@/components/search/search-provider';
 import { ScrollProgress } from '@/components/motion/parallax';
 
 /**
@@ -22,7 +21,6 @@ import { ScrollProgress } from '@/components/motion/parallax';
 export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
-  const { open: openSearch } = useSearchDialog();
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
@@ -90,56 +88,18 @@ export function Header() {
             <DesktopNav pathname={pathname} />
 
             <div className="flex items-center gap-1.5 sm:gap-2.5">
-              <button
-                type="button"
-                onClick={openSearch}
-                /*
-                 * No aria-label, deliberately.
-                 *
-                 * WCAG 2.5.3 Label in Name wants the accessible name to contain
-                 * the visible text, so a voice-control user saying "click Search"
-                 * hits this button. Any hand-written label had to match the
-                 * concatenation of the contents exactly — and the contents read
-                 * "Search⌘K" with no space, because the gap between them is CSS,
-                 * not a text node. Every label that read naturally failed, and the
-                 * one that passed read badly.
-                 *
-                 * Letting the browser compute the name from the content makes the
-                 * two identical by construction, and nothing can drift later. The
-                 * word below is always rendered whenever this button is, so the
-                 * name can never be empty.
-                 */
-                className={cn(
-                  'group border-hairline hidden h-10 items-center gap-2.5 rounded-sm border',
-                  'text-steel bg-white/[0.02] px-3 text-[0.8125rem]',
-                  'hover:border-hairline-strong hover:text-mist transition-colors duration-300',
-                  'md:flex',
-                )}
-              >
-                <Search aria-hidden className="size-3.5" />
-                {/* Shown from `md`, which is where this button first appears —
-                    it used to start at `lg`, leaving an icon-only button with no
-                    computable name at tablet widths. */}
-                <span>Search</span>
-                <kbd
-                  aria-hidden
-                  className={cn(
-                    'border-hairline bg-graphite ml-1 hidden rounded-xs border px-1.5',
-                    'text-steel font-sans text-[0.6875rem] lg:inline',
-                  )}
-                >
-                  ⌘K
-                </kbd>
-              </button>
+              {/*
+                Contact and Request a Quote, in that order.
 
-              <button
-                type="button"
-                onClick={openSearch}
-                aria-label="Search the site"
-                className="text-mist hover:text-bright grid size-10 place-items-center rounded-sm transition-colors md:hidden"
-              >
-                <Search aria-hidden className="size-4.5" />
-              </button>
+                The search button lived here and is gone. Search is still on the
+                site — ⌘K opens it and /search is indexed — but a magnifying
+                glass was taking the most valuable space in the header from the
+                second thing every visitor to a supplier's site wants, which is
+                a way to reach a person.
+              */}
+              <Button href="/contact" size="sm" variant="outline" className="hidden sm:inline-flex">
+                Contact
+              </Button>
 
               <Button href="/quote" size="sm" sheen className="hidden sm:inline-flex">
                 Request a Quote
@@ -269,11 +229,22 @@ function MegaPanel({ item, pathname }: { item: (typeof mainNav)[number]; pathnam
   const columns = item.columns ?? [];
 
   return (
-    <div className="grid gap-8 p-8 lg:grid-cols-[1fr_auto] lg:gap-12">
+    <div className="p-8">
+      {/*
+        One track now. The panel used to be `lg:grid-cols-[1fr_auto]` with a
+        featured card in the second column — the card is gone, and leaving the
+        track behind would have held a column of empty space open at every width.
+
+        Five columns is the widest panel; three is the rest.
+      */}
       <div
         className={cn(
           'grid gap-x-10 gap-y-8',
-          columns.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2',
+          columns.length >= 5
+            ? 'sm:grid-cols-3 lg:grid-cols-5'
+            : columns.length >= 3
+              ? 'sm:grid-cols-3'
+              : 'sm:grid-cols-2',
         )}
       >
         {columns.map((column) => (
@@ -312,44 +283,6 @@ function MegaPanel({ item, pathname }: { item: (typeof mainNav)[number]; pathnam
           </div>
         ))}
       </div>
-
-      {item.featured ? (
-        <NavigationMenu.Link asChild>
-          <Link
-            href={item.featured.href}
-            className={cn(
-              'group/feature relative flex w-full flex-col justify-between gap-6 overflow-hidden',
-              'border-hairline bg-charcoal rounded-md border p-6 lg:w-72',
-              'hover:border-arc/40 transition-colors duration-400',
-            )}
-          >
-            <div
-              aria-hidden
-              className="bg-grid-fine pointer-events-none absolute inset-0 opacity-50"
-            />
-            <div
-              aria-hidden
-              className="bg-arc/10 pointer-events-none absolute -top-16 -right-16 size-48 rounded-full blur-3xl"
-            />
-            <div className="relative">
-              <p className="text-eyebrow text-arc-glow uppercase">Featured</p>
-              <p className="font-display text-bright mt-3 text-lg font-semibold">
-                {item.featured.title}
-              </p>
-              <p className="text-ash mt-2 text-[0.8125rem] leading-relaxed">{item.featured.body}</p>
-            </div>
-            <span className="text-arc-glow relative inline-flex items-center gap-1.5 text-[0.8125rem] font-medium">
-              {item.featured.cta}
-              <ArrowUpRight
-                aria-hidden
-                className="size-3.5 transition-transform duration-300 group-hover/feature:translate-x-0.5 group-hover/feature:-translate-y-0.5"
-              />
-            </span>
-          </Link>
-        </NavigationMenu.Link>
-      ) : (
-        <div className="hidden lg:block lg:w-0" />
-      )}
     </div>
   );
 }
