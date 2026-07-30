@@ -625,6 +625,28 @@ a keyboard user can reach the right-hand columns.
 
 ## Build process
 
+### Why build tooling lives in `dependencies`
+
+`tsx`, `pdf-lib`, `typescript`, the `@types/*` packages, the Tailwind/PostCSS
+chain and `prisma` are **`dependencies`, not `devDependencies`** — deliberately,
+and it is not a mistake to "clean up".
+
+`devDependencies` means _needed to develop_. Everything listed above is needed to
+**build**, which is a different question with a different answer. A build host
+that installs production-only — which Railway's Railpack builder does — gets no
+`tsx`, so `prebuild` dies with `sh: 1: tsx: not found` before Next.js is ever
+invoked, and the platform reports the useless message "Failed to build an image".
+
+This cost a deployment. Reproduced with `npm ci --omit=dev && npm run build`,
+which is worth running before changing anything here:
+
+```bash
+npm ci --omit=dev && npm run build   # must succeed
+```
+
+Only ESLint and Prettier remain in `devDependencies`, because they are the only
+things genuinely not required to produce a build.
+
 ```bash
 npm run build
 ```
