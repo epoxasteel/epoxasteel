@@ -57,6 +57,23 @@ public/media/*.webm
 public/media/*.mov
 !public/media/.gitkeep
 !public/media/README.md
+# The hero background is the exception, and it has to be.
+#
+# Railway clones the repository fresh on every deploy — there is no persistent
+# disk and no upload step — so a file that is only on somebody's laptop is a file
+# production never sees. Ignored, the homepage would quietly fall back to the
+# vector city scene on the live site while looking correct locally, which is the
+# worst kind of difference between the two.
+#
+# Kept under 4 MB for that reason. Anything genuinely large belongs on a CDN with
+# NEXT_PUBLIC_HERO_VIDEO_URL pointing at it — see public/media/README.md.
+!public/media/hero.mp4
+# And the VP9 copy alongside it. Not for size — on this footage VP9 and H.264
+# land within 30 KB of each other — but for coverage: Chromium built from source
+# and Firefox on Linux without system codecs cannot decode H.264 at all, and
+# would fall back to the vector scene while every other browser showed video.
+# `resolveHeroVideo` offers this one first; Safari takes the MP4.
+!public/media/hero.webm
 
 # misc
 .vercel
