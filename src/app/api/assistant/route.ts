@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { streamAssistant, AssistantError, assistantConfigured } from '@/lib/assistant/provider';
 import { createLeadExtractor } from '@/lib/assistant/lead';
-import { sendEmail, ownerRecipients, generateReference } from '@/lib/email';
+import { generateReference } from '@/lib/email';
+import { deliverEnquiry } from '@/lib/email/workflow';
 import { assistantLeadEmail } from '@/lib/email/templates';
 
 export const runtime = 'nodejs';
@@ -124,16 +125,21 @@ export async function POST(request: Request) {
           .map((turn) => `${turn.role === 'user' ? 'Visitor' : 'Assistant'}: ${turn.content}`)
           .join('\n\n');
 
-        const message = assistantLeadEmail({
-          ...lead,
-          reference: generateReference('EPX-AI'),
-          transcript,
-        });
+        const reference = generateReference('EPX-AI');
+        const message = assistantLeadEmail({ ...lead, reference, transcript });
 
-        void sendEmail({
-          to: ownerRecipients(),
-          replyTo: lead.email,
-          ...message,
+        /*
+         * No customer confirmation: the visitor is mid-conversation and has just
+         * been told in the chat that we have their details. An email arriving to
+         * say the same thing a second later reads as a system talking to itself.
+         *
+         * The owner notification goes through the same workflow as every form, so
+         * the reference, the Reply-To and the routing cannot drift from them.
+         */
+        void deliverEnquiry({
+          reference,
+          customerEmail: lead.email,
+          owner: message,
         }).catch((error) => console.error('[assistant] lead notification failed', error));
       }
     },

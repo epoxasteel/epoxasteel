@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { createHash } from 'node:crypto';
 import { newsletterSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
 import { verifyFormToken, sameOrigin } from '@/lib/form-token';
-import { sendEmail, ownerRecipients } from '@/lib/email';
+import { deliverEnquiry } from '@/lib/email/workflow';
 import { newsletterConfirmationEmail, newsletterInternalEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 
@@ -88,20 +89,22 @@ export async function POST(request: Request) {
   const confirmation = newsletterConfirmationEmail(email);
   const internal = newsletterInternalEmail(email);
 
-  await Promise.allSettled([
-    sendEmail({
-      to: email,
-      subject: confirmation.subject,
-      html: confirmation.html,
-      text: confirmation.text,
-    }),
-    sendEmail({
-      to: ownerRecipients(),
-      subject: internal.subject,
-      html: internal.html,
-      text: internal.text,
-    }),
-  ]);
+  /*
+   * A reference even though a subscription has none to show the visitor.
+   *
+   * It is what the idempotency key is built from, so a retry after an ambiguous
+   * timeout is collapsed by the provider rather than sending someone a second
+   * welcome. Derived from the address so the same subscriber retried always keys
+   * the same way.
+   */
+  const reference = `EPX-N-${createHash('sha256').update(email).digest('hex').slice(0, 10).toUpperCase()}`;
+
+  await deliverEnquiry({
+    reference,
+    customerEmail: email,
+    owner: internal,
+    customer: confirmation,
+  });
 
   return NextResponse.json({ message: 'You are subscribed. Check your inbox for a welcome note.' });
 }

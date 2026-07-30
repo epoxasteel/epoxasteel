@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
 import { contactSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
-import { sendEmail, ownerRecipients, replyToAddress, generateReference } from '@/lib/email';
+import { generateReference } from '@/lib/email';
+import { deliverEnquiry } from '@/lib/email/workflow';
 import { contactInternalEmail, contactConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
@@ -149,27 +150,15 @@ export async function POST(request: Request) {
   const internal = contactInternalEmail(emailData);
   const confirmation = contactConfirmationEmail(emailData);
 
-  const [internalResult] = await Promise.all([
-    sendEmail({
-      to: ownerRecipients(),
-      reference,
-      subject: internal.subject,
-      html: internal.html,
-      text: internal.text,
-      replyTo: data.email,
-    }),
-    sendEmail({
-      to: data.email,
-      reference,
-      subject: confirmation.subject,
-      html: confirmation.html,
-      text: confirmation.text,
-      // Not no-reply@. Some people answer a confirmation with the thing they
-      // forgot to mention, and a reply that bounces off an unattended mailbox is
-      // a lost enquiry both sides believe was delivered.
-      replyTo: replyToAddress(),
-    }),
-  ]);
+  // Owner first with Reply-To set to the customer, then the confirmation. The
+  // routing, reply addresses and ordering all live in one place — see
+  // lib/email/workflow.ts.
+  const { owner: internalResult } = await deliverEnquiry({
+    reference,
+    customerEmail: data.email,
+    owner: internal,
+    customer: confirmation,
+  });
 
   /*
    * Three outcomes, and only the third is a failure the visitor needs to act on.

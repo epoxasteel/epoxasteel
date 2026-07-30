@@ -3,7 +3,8 @@ import { createHash } from 'node:crypto';
 import { quoteSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { checkUpload, uploadMaxBytes, MAX_FILES } from '@/lib/uploads';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
-import { sendEmail, ownerRecipients, replyToAddress, generateReference } from '@/lib/email';
+import { generateReference } from '@/lib/email';
+import { deliverEnquiry } from '@/lib/email/workflow';
 import { quoteInternalEmail, quoteConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
@@ -233,28 +234,14 @@ export async function POST(request: Request) {
   const internal = quoteInternalEmail(emailData);
   const confirmation = quoteConfirmationEmail(emailData);
 
-  const [internalResult] = await Promise.all([
-    sendEmail({
-      to: ownerRecipients(),
-      reference,
-      subject: internal.subject,
-      html: internal.html,
-      text: internal.text,
-      replyTo: data.email,
-      attachments,
-    }),
-    sendEmail({
-      to: data.email,
-      reference,
-      subject: confirmation.subject,
-      html: confirmation.html,
-      text: confirmation.text,
-      // Not no-reply@. Some people answer a confirmation with the thing they
-      // forgot to mention, and a reply that bounces off an unattended mailbox is
-      // a lost enquiry both sides believe was delivered.
-      replyTo: replyToAddress(),
-    }),
-  ]);
+  // Same workflow as every other form; the drawings ride with the owner's copy.
+  const { owner: internalResult } = await deliverEnquiry({
+    reference,
+    customerEmail: data.email,
+    owner: internal,
+    customer: confirmation,
+    attachments,
+  });
 
   // See the contact route: delivered, held for retry, or genuinely lost. Only the
   // last of the three is the visitor's problem to solve.

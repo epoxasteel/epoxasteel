@@ -20,6 +20,8 @@
  *   actually ran with.
  */
 
+import { fromAddress, ownerRecipients, replyToAddress } from '@/lib/email/config';
+
 type Report = { errors: string[]; warnings: string[]; notes: string[] };
 
 function siteDomain() {
@@ -59,7 +61,7 @@ function collect(): Report {
     const from = process.env.FROM_EMAIL || process.env.EMAIL_FROM;
     if (!from) {
       report.warnings.push(
-        `FROM_EMAIL is not set — falling back to no-reply@${siteDomain()}, which must be a verified Resend domain`,
+        `FROM_EMAIL is not set — falling back to noreply@${siteDomain()}, which must be a verified Resend sender`,
       );
     } else {
       const domain = from.split('@').pop()?.replace(/>$/, '').trim().toLowerCase();
@@ -105,6 +107,22 @@ function collect(): Report {
     report.warnings.push(
       'OWNER_EMAIL is not set — notifications go to the public contact address in lib/site.ts',
     );
+  }
+
+  /*
+   * Print where mail actually goes.
+   *
+   * Every address on this site is resolved from a variable through a chain of
+   * fallbacks, which is flexible and completely opaque from the outside. One line
+   * in the boot log turns "I think I set that correctly" into a fact, and it is
+   * the single most useful thing here on the day somebody wonders why an enquiry
+   * did not arrive.
+   */
+  if (production || resend || smtpHost) {
+    report.notes.push(`mail from:  ${fromAddress()}`);
+    report.notes.push(`mail to:    ${ownerRecipients().join(', ')}`);
+    report.notes.push(`replies to: ${replyToAddress()} (customer confirmations)`);
+    report.notes.push('replies to: the customer (owner notifications)');
   }
 
   /* --- Secrets ----------------------------------------------------------- */

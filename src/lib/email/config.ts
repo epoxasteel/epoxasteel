@@ -34,18 +34,28 @@ function headerValue(value: string | undefined) {
 }
 
 /**
- * The envelope sender.
+ * The envelope sender, for every message the site sends.
  *
- * Must be on a domain verified with the provider or delivery is refused outright.
- * The default is derived from the configured site domain, which is correct for
- * epoxasteel.com and wrong in a useful way anywhere else — a provider rejecting an
- * unverified sender is a loud, immediate failure rather than a silent one.
+ * `FROM_EMAIL` is the variable to set, and it must be on a domain verified with
+ * the provider or delivery is refused outright.
+ *
+ * The fallback is assembled from the configured company name and domain rather
+ * than written out, so there is no email address literal in this codebase and a
+ * deployment that changes `NEXT_PUBLIC_SITE_DOMAIN` does not silently keep sending
+ * as somebody else. `legalName` rather than `name` because `name` is the wordmark
+ * — "EPOXA STEEL" shouting from a From header reads like a mailing list, and the
+ * display name is the one part of an address a person actually reads.
+ *
+ * Both the owner notification and the customer confirmation send from here. That
+ * is deliberate: one verified sender, one reputation, one DKIM signature. What
+ * differs between them is the Reply-To — see `replyToAddress` below and the
+ * per-route calls.
  */
 export function fromAddress() {
   return (
     headerValue(process.env.FROM_EMAIL) ||
     headerValue(process.env.EMAIL_FROM) ||
-    `${siteConfig.name} <no-reply@${siteConfig.domain}>`
+    `${siteConfig.legalName} <noreply@${siteConfig.domain}>`
   );
 }
 

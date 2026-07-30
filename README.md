@@ -446,8 +446,31 @@ redeploy; Railway reclaims the container filesystem otherwise.
 ### Configuring email
 
 **Resend** (the production path): verify `epoxasteel.com` at
-[resend.com](https://resend.com), create an API key, and set `RESEND_API_KEY`,
-`FROM_EMAIL` and `OWNER_EMAIL`.
+[resend.com](https://resend.com), create an API key, and set three variables:
+
+```
+RESEND_API_KEY="re_..."
+FROM_EMAIL="Epoxa Steel <noreply@epoxasteel.com>"
+OWNER_EMAIL="info@epoxasteel.com"
+```
+
+Every form — contact, quote, newsletter, and the assistant's lead handoff — then
+follows one workflow, enforced in `lib/email/workflow.ts` rather than repeated in
+each route:
+
+|              | Owner notification | Customer confirmation                         |
+| ------------ | ------------------ | --------------------------------------------- |
+| **To**       | `OWNER_EMAIL`      | the customer                                  |
+| **From**     | `FROM_EMAIL`       | `FROM_EMAIL`                                  |
+| **Reply-To** | **the customer**   | `REPLY_TO_EMAIL`, defaulting to `OWNER_EMAIL` |
+| **Order**    | first              | second                                        |
+
+The owner's Reply-To is the whole reply workflow: press Reply in any mail client
+and you are writing to the customer. It is not configurable and should not be.
+
+There are no email address literals in `src/` outside `lib/site.ts`, which is the
+environment-fallback layer itself. The boot report prints the resolved addresses
+so a deploy log records where mail actually goes.
 
 Three things the integration handles that a naive one does not:
 
