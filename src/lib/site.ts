@@ -94,6 +94,21 @@ function parseHours(value: string | undefined, fallback: { days: string; time: s
 const phone = text(process.env.NEXT_PUBLIC_CONTACT_PHONE, '(212) 763-8921');
 
 /**
+ * The one published address. Everything else falls back to it.
+ *
+ * A business with one mailbox should publish one mailbox. Departmental addresses
+ * — sales@, quotes@, careers@ — read as a larger organisation and cost nothing
+ * while they resolve, but each is a promise that somebody is reading it. Pointing
+ * them at an address nobody collects loses the enquiry *and* the sender's belief
+ * that it arrived, which is the worst outcome a contact page can produce.
+ *
+ * The separate fields below stay, because splitting the routing later should be
+ * an environment variable rather than a code change. Until one is set, the quote
+ * page, the product pages and the job applications all reach the same inbox.
+ */
+const primaryEmail = text(process.env.NEXT_PUBLIC_CONTACT_EMAIL, 'info@epoxasteel.com');
+
+/**
  * The `tel:` form, derived rather than configured.
  *
  * It used to be its own field, which meant two variables that had to agree and
@@ -172,10 +187,11 @@ export const siteConfig = {
   locale: text(process.env.NEXT_PUBLIC_SITE_LOCALE, 'en_US'),
 
   contact: {
-    email: text(process.env.NEXT_PUBLIC_CONTACT_EMAIL, 'info@epoxasteel.com'),
-    salesEmail: text(process.env.NEXT_PUBLIC_SALES_EMAIL, 'sales@epoxasteel.com'),
-    quotesEmail: text(process.env.NEXT_PUBLIC_QUOTES_EMAIL, 'quotes@epoxasteel.com'),
-    careersEmail: text(process.env.NEXT_PUBLIC_CAREERS_EMAIL, 'careers@epoxasteel.com'),
+    email: primaryEmail,
+    // Each falls back to the primary address — see the note above `primaryEmail`.
+    salesEmail: text(process.env.NEXT_PUBLIC_SALES_EMAIL, primaryEmail),
+    quotesEmail: text(process.env.NEXT_PUBLIC_QUOTES_EMAIL, primaryEmail),
+    careersEmail: text(process.env.NEXT_PUBLIC_CAREERS_EMAIL, primaryEmail),
     phone,
     phoneHref: dialable(phone),
     hours: parseHours(process.env.NEXT_PUBLIC_BUSINESS_HOURS, [
