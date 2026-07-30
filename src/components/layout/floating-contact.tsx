@@ -22,12 +22,16 @@ import { useAssistant } from '@/components/assistant/assistant-context';
  *
  * It stays out of the way until the hero is behind you, and hides entirely while
  * the panel is open so it never sits on top of its own content.
+ *
+ * The button is unconditional. What the panel contains depends on whether the
+ * assistant has a model behind it (see `assistant-dock.tsx`), but either way it
+ * opens something useful, so there is no state in which this should be absent.
  */
 
 const SHOW_DOCK_AFTER = 700;
 const SHOW_TOP_AFTER = 2400;
 
-export function FloatingContact({ assistant }: { assistant: boolean }) {
+export function FloatingContact() {
   const { open, openAssistant } = useAssistant();
   const [past, setPast] = React.useState(false);
   const [deep, setDeep] = React.useState(false);
@@ -63,9 +67,7 @@ export function FloatingContact({ assistant }: { assistant: boolean }) {
     return () => observer.disconnect();
   }, []);
 
-  // With no model configured the dock still earns its place as back-to-top, so
-  // it appears at the depth where that is the only thing it would offer.
-  const visible = (assistant ? past : deep) && !open && !atFooter;
+  const visible = past && !open && !atFooter;
 
   return (
     <AnimatePresence>
@@ -99,26 +101,24 @@ export function FloatingContact({ assistant }: { assistant: boolean }) {
             ) : null}
           </AnimatePresence>
 
-          {assistant ? (
-            <button
-              type="button"
-              onClick={() => openAssistant()}
-              className={cn(
-                'group border-arc-bright/45 bg-graphite/92 relative inline-flex h-11 items-center gap-2.5 overflow-hidden rounded-full border pr-5 pl-4',
-                'text-chalk shadow-raised text-[0.875rem] font-medium backdrop-blur-xl backdrop-saturate-150',
-                'transition-[border-color,color,transform] duration-400 [transition-timing-function:var(--ease-out-quint)]',
-                'hover:border-arc-bright hover:text-bright hover:-translate-y-px',
-              )}
-            >
-              {/* A slow arc wash rather than a colour change — reads as lit metal. */}
-              <span
-                aria-hidden
-                className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"
-              />
-              <Sparkle aria-hidden className="text-arc-glow relative size-4" />
-              <span className="relative">Ask EPOXA</span>
-            </button>
-          ) : null}
+          <button
+            type="button"
+            onClick={() => openAssistant()}
+            className={cn(
+              'group border-arc-bright/45 bg-graphite/92 relative inline-flex h-11 items-center gap-2.5 overflow-hidden rounded-full border pr-5 pl-4',
+              'text-chalk shadow-raised text-[0.875rem] font-medium backdrop-blur-xl backdrop-saturate-150',
+              'transition-[border-color,color,transform] duration-400 [transition-timing-function:var(--ease-out-quint)]',
+              'hover:border-arc-bright hover:text-bright hover:-translate-y-px',
+            )}
+          >
+            {/* A slow arc wash rather than a colour change — reads as lit metal. */}
+            <span
+              aria-hidden
+              className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"
+            />
+            <Sparkle aria-hidden className="text-arc-glow relative size-4" />
+            <span className="relative">Ask EPOXA</span>
+          </button>
         </motion.div>
       ) : null}
     </AnimatePresence>
