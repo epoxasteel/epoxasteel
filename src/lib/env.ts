@@ -222,9 +222,30 @@ function collect(): Report {
       report.errors.push(`${key} is not an email address: ${value}`);
   }
 
-  const mapsUrl = process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL;
-  if (mapsUrl && !isUrl(mapsUrl)) {
-    report.errors.push('NEXT_PUBLIC_GOOGLE_MAPS_URL is not a valid http(s) URL');
+  /*
+   * Coordinates are optional and are published in the LocalBusiness schema only
+   * when both are present and parse. A latitude on its own puts nothing on a map
+   * and would be silently dropped, so say so at boot rather than let someone
+   * believe they had set it.
+   */
+  const lat = process.env.NEXT_PUBLIC_ADDRESS_LATITUDE?.trim();
+  const lon = process.env.NEXT_PUBLIC_ADDRESS_LONGITUDE?.trim();
+
+  if (Boolean(lat) !== Boolean(lon)) {
+    report.warnings.push(
+      'NEXT_PUBLIC_ADDRESS_LATITUDE and NEXT_PUBLIC_ADDRESS_LONGITUDE must both be set — geo coordinates are omitted from the schema until they are',
+    );
+  }
+
+  for (const [key, value, limit] of [
+    ['NEXT_PUBLIC_ADDRESS_LATITUDE', lat, 90],
+    ['NEXT_PUBLIC_ADDRESS_LONGITUDE', lon, 180],
+  ] as const) {
+    if (!value) continue;
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || Math.abs(parsed) > limit) {
+      report.errors.push(`${key} is not a valid coordinate: ${value}`);
+    }
   }
 
   const socials = [

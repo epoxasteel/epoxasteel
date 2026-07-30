@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 import { socialLinks } from '@/components/visual/social-icons';
 import { footerNav, legalNav, siteConfig } from '@/lib/site';
 import { Wordmark } from '@/components/visual/wordmark';
@@ -55,36 +55,39 @@ export function Footer() {
                   {siteConfig.contact.email}
                 </a>
               </li>
-              <li className="text-mist flex items-start gap-3">
-                <MapPin aria-hidden className="text-steel mt-0.5 size-4 shrink-0" />
-                <address className="not-italic">
-                  {siteConfig.address.line1} <br />
-                  {siteConfig.address.line2} <br />
-                  {siteConfig.address.city}, {siteConfig.address.region}{' '}
-                  {siteConfig.address.postalCode}
-                </address>
-              </li>
             </ul>
 
-            <ul className="mt-8 flex gap-2.5">
-              {socialLinks.map((social) => (
-                <li key={social.label}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${siteConfig.name} on ${social.label}`}
-                    className={cn(
-                      'border-hairline grid size-10 place-items-center rounded-sm border',
-                      'text-steel bg-white/[0.02] transition-all duration-300',
-                      'hover:border-arc/40 hover:text-arc-glow hover:-translate-y-0.5',
-                    )}
-                  >
-                    <social.icon className="size-4" />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {/*
+              The postal address is deliberately not here. It is published on the
+              contact page, where somebody looking for it will go; a footer that
+              repeats every fact on the site is a footer nobody reads.
+
+              Social icons render only once there is an account to point at, so
+              this disappears entirely until one is configured rather than leaving
+              a row of links to handles the business does not own. See
+              `siteConfig.social`.
+            */}
+            {socialLinks.length ? (
+              <ul className="mt-8 flex gap-2.5">
+                {socialLinks.map((social) => (
+                  <li key={social.label}>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${siteConfig.name} on ${social.label}`}
+                      className={cn(
+                        'border-hairline grid size-10 place-items-center rounded-sm border',
+                        'text-steel bg-white/[0.02] transition-all duration-300',
+                        'hover:border-arc/40 hover:text-arc-glow hover:-translate-y-0.5',
+                      )}
+                    >
+                      <social.icon className="size-4" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
 
           <div className="lg:pl-8">
@@ -98,10 +101,15 @@ export function Footer() {
             </p>
             <NewsletterForm className="mt-6" />
 
-            {/* All of them. `slice(0, 2)` quietly dropped Sunday — and Sunday is
-                the one that says emergency dispatch is available, which is
-                exactly the line a site manager needs to see. */}
-            <dl className="bg-hairline mt-10 grid gap-px overflow-hidden rounded-md sm:grid-cols-3">
+            {/* All of them. `slice(0, 2)` quietly dropped the last row, and the
+                last row is the one that says whether the yard opens at the
+                weekend — exactly the line a site manager needs to see.
+
+                Two columns, because the panel is a hairline grid: every cell
+                without a child shows as a lighter block, so an odd number of rows
+                against three columns leaves a visible hole. Four rows divide
+                cleanly by two. */}
+            <dl className="bg-hairline mt-10 grid gap-px overflow-hidden rounded-md sm:grid-cols-2">
               {siteConfig.contact.hours.map((entry) => (
                 <div key={entry.days} className="bg-graphite p-4">
                   <dt className="text-steel text-[0.6875rem] tracking-[0.14em] uppercase">
@@ -152,8 +160,10 @@ export function Footer() {
 
         {/* Legal bar */}
         <div className="container-page text-steel flex flex-col gap-4 py-7 text-[0.8125rem] md:flex-row md:items-center md:justify-between">
+          {/* The year is the current one, not a literal — a copyright notice that
+              silently goes stale on 1 January is the classic version of this bug. */}
           <p>
-            © {year} {siteConfig.legalName}. All rights reserved.
+            © {year} {siteConfig.legalEntity} All rights reserved.
           </p>
 
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">

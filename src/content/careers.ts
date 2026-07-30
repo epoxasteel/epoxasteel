@@ -40,7 +40,7 @@ export const jobs: Job[] = [
     slug: 'structural-steel-detailer',
     title: 'Structural Steel Detailer',
     department: 'Engineering',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-07-08',
     summary:
@@ -69,7 +69,7 @@ export const jobs: Job[] = [
     slug: 'coded-welder-mig-mag',
     title: 'Coded Welder (MIG/MAG)',
     department: 'Fabrication',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-07-15',
     summary:
@@ -98,7 +98,7 @@ export const jobs: Job[] = [
     slug: 'project-engineer',
     title: 'Project Engineer',
     department: 'Engineering',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-06-24',
     summary:
@@ -127,7 +127,7 @@ export const jobs: Job[] = [
     slug: 'cnc-machine-operator',
     title: 'CNC Machine Operator',
     department: 'Processing',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-07-20',
     summary:
@@ -156,7 +156,7 @@ export const jobs: Job[] = [
     slug: 'logistics-coordinator',
     title: 'Logistics Coordinator',
     department: 'Operations',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-07-02',
     summary:
@@ -185,7 +185,7 @@ export const jobs: Job[] = [
     slug: 'quality-inspector',
     title: 'Quality Inspector',
     department: 'Quality',
-    location: 'Newark, NJ',
+    location: 'Brooklyn, NY',
     type: 'Full-time',
     posted: '2026-06-30',
     summary:

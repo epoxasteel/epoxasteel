@@ -23,6 +23,7 @@ import { Field, Input, Textarea, Select, Checkbox, Honeypot, Label } from '@/com
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/misc';
 import { cn, formatBytes } from '@/lib/utils';
+import { siteConfig } from '@/lib/site';
 import { EASE_OUT_EXPO, EASE_SPRING } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
 import { useFormDraft } from '@/lib/use-form-draft';
@@ -290,7 +291,7 @@ export function QuoteForm({
             {(props) => (
               <Input
                 autoComplete="address-level2"
-                placeholder="Newark"
+                placeholder="Brooklyn"
                 {...props}
                 {...register('city')}
               />
@@ -463,7 +464,7 @@ export function QuoteForm({
           {(props) => (
             <Textarea
               rows={7}
-              placeholder="A four-storey commercial frame in Newark. Erection starts mid-October and we would like delivery sequenced by bay. Site access is via a single crane bay before 07:00…"
+              placeholder="A four-storey commercial frame in Brooklyn. Erection starts mid-October and we would like delivery sequenced by bay. Site access is via a single crane bay before 07:00…"
               {...props}
               {...register('description')}
             />
@@ -583,7 +584,7 @@ export function QuoteForm({
               <Link href="/terms" className="text-arc-glow underline underline-offset-2">
                 terms &amp; conditions
               </Link>{' '}
-              and consent to EPOXA STEEL processing my details in line with the{' '}
+              and consent to {siteConfig.legalName} processing my details in line with the{' '}
               <Link href="/privacy" className="text-arc-glow underline underline-offset-2">
                 privacy policy
               </Link>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, ShieldCheck, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Phone, Mail, MapPin } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 import { certifications, qualityCommitments, whyChooseUs, mission } from '@/content/company';
 import { Section, SectionHeading, Eyebrow, ArrowLink } from '@/components/layout/section';
@@ -8,7 +8,6 @@ import { SmartCounter } from '@/components/motion/counter';
 import { Button } from '@/components/ui/button';
 import { Card, CardEdgeGlow } from '@/components/ui/card';
 import { Parallax } from '@/components/motion/parallax';
-import { whatsappHref } from '@/components/ui/misc';
 import { cn, pad } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------- */
@@ -315,13 +314,18 @@ export function CallToAction({
 /* -------------------------------------------------------------------------- */
 
 export function ContactStrip() {
+  // The first row of the configured opening hours, not a written-out repeat of
+  // it. This card used to read "Mon–Fri, 07:00–18:00" as a literal, which is how
+  // it went on advertising the old hours after they changed everywhere else.
+  const [firstHours] = siteConfig.contact.hours;
+
   const items = [
     {
       icon: Phone,
       label: 'Call us',
       value: siteConfig.contact.phone,
       href: `tel:${siteConfig.contact.phoneHref}`,
-      hint: 'Mon–Fri, 07:00–18:00',
+      hint: firstHours ? `${firstHours.days}, ${firstHours.time}` : 'During business hours',
     },
     {
       icon: Mail,
@@ -335,52 +339,45 @@ export function ContactStrip() {
       label: 'Visit us',
       value: `${siteConfig.address.city}, ${siteConfig.address.region}`,
       href: '/contact#location',
-      hint: siteConfig.address.line2,
-    },
-    {
-      icon: Clock,
-      label: 'Urgent enquiry',
-      value: 'WhatsApp',
-      href: whatsappHref(),
-      hint: 'Fastest route to a person',
+      hint: `${siteConfig.address.line1} ${siteConfig.address.line2}`,
     },
   ];
 
   return (
     <Section tone="void" size="sm">
       <div className="container-page">
-        <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => {
-            const isExternal = item.href.startsWith('http');
-            const Wrapper = isExternal ? 'a' : Link;
-
-            return (
-              <RevealItem key={item.label}>
-                <Wrapper
-                  href={item.href}
-                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className={cn(
-                    'group bg-charcoal flex h-full flex-col gap-4 p-7',
-                    'hover:bg-slate transition-colors duration-400',
-                  )}
-                >
-                  <item.icon
-                    aria-hidden
-                    className="text-steel group-hover:text-arc-glow size-5 transition-colors duration-400"
-                  />
-                  <div>
-                    <p className="text-steel text-[0.6875rem] tracking-[0.14em] uppercase">
-                      {item.label}
-                    </p>
-                    <p className="font-display text-bright mt-2 text-[1.0625rem] font-medium">
-                      {item.value}
-                    </p>
-                    <p className="text-ash mt-1 text-[0.8125rem]">{item.hint}</p>
-                  </div>
-                </Wrapper>
-              </RevealItem>
-            );
-          })}
+        {/* Three cards on a hairline grid: any cell without a card in it shows as
+            a lighter block, so the last one spans the full width at `sm` where
+            two columns would otherwise leave a hole. */}
+        <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item, index) => (
+            <RevealItem
+              key={item.label}
+              className={cn(index === items.length - 1 && 'sm:col-span-2 lg:col-span-1')}
+            >
+              <Link
+                href={item.href}
+                className={cn(
+                  'group bg-charcoal flex h-full flex-col gap-4 p-7',
+                  'hover:bg-slate transition-colors duration-400',
+                )}
+              >
+                <item.icon
+                  aria-hidden
+                  className="text-steel group-hover:text-arc-glow size-5 transition-colors duration-400"
+                />
+                <div>
+                  <p className="text-steel text-[0.6875rem] tracking-[0.14em] uppercase">
+                    {item.label}
+                  </p>
+                  <p className="font-display text-bright mt-2 text-[1.0625rem] font-medium">
+                    {item.value}
+                  </p>
+                  <p className="text-ash mt-1 text-[0.8125rem]">{item.hint}</p>
+                </div>
+              </Link>
+            </RevealItem>
+          ))}
         </RevealGroup>
       </div>
     </Section>

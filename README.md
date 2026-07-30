@@ -275,14 +275,13 @@ Every business fact on the site reads from an environment variable, with the
 current value as a fallback. Change one, redeploy, done — no code edit, no
 rebuild of anything but the app.
 
-| Group         | Covers                                                             |
-| ------------- | ------------------------------------------------------------------ |
-| Company       | Name, legal name, tagline, founding year, domain, locale           |
-| Contact       | Four email addresses, phone, WhatsApp, opening hours               |
-| Address       | Both lines, city, region, postcode, country, coordinates           |
-| Maps          | The link the contact map opens — point it at your Business Profile |
-| Social        | Five URLs; set one to `""` and its icon disappears entirely        |
-| Feature flags | `AI_ENABLED`, analytics IDs, upload limits, timezone               |
+| Group         | Covers                                                   |
+| ------------- | -------------------------------------------------------- |
+| Company       | Name, legal name, tagline, founding year, domain, locale |
+| Contact       | Four email addresses, phone, opening hours               |
+| Address       | Both lines, city, region, postcode, country, coordinates |
+| Social        | Five URLs, all unset — set one and its icon appears      |
+| Feature flags | `AI_ENABLED`, analytics IDs, upload limits, timezone     |
 
 Two details worth knowing:
 

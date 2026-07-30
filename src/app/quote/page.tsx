@@ -6,7 +6,6 @@ import { siteConfig } from '@/lib/site';
 import { PageHero, Section, JsonLd, Eyebrow } from '@/components/layout/section';
 import { Reveal } from '@/components/motion/reveal';
 import { QuoteFormShell } from '@/components/forms/quote-form-shell';
-import { whatsappHref } from '@/components/ui/misc';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Request a Quote',
@@ -107,14 +106,6 @@ export default function QuotePage() {
                       className="text-mist hover:text-bright flex min-h-6 items-center transition-colors"
                     >
                       {siteConfig.contact.quotesEmail}
-                    </a>
-                    <a
-                      href={whatsappHref('Hello EPOXA STEEL, I would like a quotation.')}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-mist hover:text-bright flex min-h-6 items-center transition-colors"
-                    >
-                      WhatsApp us
                     </a>
                   </div>
                   {/*

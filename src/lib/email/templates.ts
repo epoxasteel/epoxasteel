@@ -1,4 +1,4 @@
-import { siteConfig } from '@/lib/site';
+import { siteConfig, formattedAddress } from '@/lib/site';
 import { escapeHtml } from '@/lib/utils';
 
 /**
@@ -59,7 +59,17 @@ function shell(title: string, preheader: string, content: string) {
         <tr>
           <td style="padding:22px 32px;border-top:1px solid ${BRAND.line};color:${BRAND.muted};font-size:12px;line-height:1.6;">
             <div style="color:${BRAND.text};font-weight:600;">${escapeHtml(siteConfig.legalName)}</div>
-            <div>${escapeHtml(siteConfig.address.line2)}, ${escapeHtml(siteConfig.address.city)}, ${escapeHtml(siteConfig.address.region)} ${escapeHtml(siteConfig.address.postalCode)}</div>
+            <!--
+              The full street address, both lines.
+
+              This printed line2 only, which read as "Building C, Newark, NJ"
+              — half an address, and the half that cannot be posted to.
+
+              It stays in the email footer even though the site footer no longer
+              shows it: CAN-SPAM requires a valid physical postal address in
+              commercial email, and the newsletter is commercial email.
+            -->
+            <div>${escapeHtml(formattedAddress())}</div>
             <div style="margin-top:8px;">
               <a href="mailto:${siteConfig.contact.email}" style="color:${BRAND.accent};text-decoration:none;">${siteConfig.contact.email}</a>
               &nbsp;·&nbsp;
@@ -282,7 +292,7 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
   `;
 
   return {
-    subject: `Your EPOXA STEEL quote request — ${data.reference}`,
+    subject: `Your ${siteConfig.legalName} quote request — ${data.reference}`,
     html: shell(
       'Quote request received',
       `Reference ${data.reference} — we will respond within one business day.`,
@@ -300,7 +310,7 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
       `Deadline: ${data.timeline}`,
       ...(files.length ? [`Files:    ${files.join(', ')}`] : []),
       '',
-      `${siteConfig.legalName} · ${siteConfig.contact.email} · ${siteConfig.contact.phone}`,
+      siteConfig.legalName,
     ].join('\n'),
   };
 }
@@ -378,7 +388,7 @@ export function contactConfirmationEmail(data: ContactEmailData) {
       `We have received your message (reference ${data.reference}) and will respond within one business day.`,
       `If it is urgent, call ${siteConfig.contact.phone}.`,
       '',
-      `${siteConfig.legalName} · ${siteConfig.contact.email}`,
+      siteConfig.legalName,
     ].join('\n'),
   };
 }
@@ -390,20 +400,20 @@ export function contactConfirmationEmail(data: ContactEmailData) {
 export function newsletterConfirmationEmail(email: string) {
   const content = `
     ${heading('You are subscribed')}
-    ${paragraph('Thank you for subscribing to the EPOXA STEEL briefing. You will receive market conditions, technical guidance and project news — roughly once a month, and never more than twice.')}
+    ${paragraph(`Thank you for subscribing to the ${siteConfig.legalName} briefing. You will receive market conditions, technical guidance and project news — roughly once a month, and never more than twice.`)}
     ${paragraph('We do not share your address with anyone, and every email includes a one-click unsubscribe link.')}
     ${button('Read the latest insights', `${siteConfig.url}/blog`)}
   `;
 
   return {
-    subject: 'Welcome to the EPOXA STEEL briefing',
+    subject: `Welcome to the ${siteConfig.legalName} briefing`,
     html: shell(
       'Subscription confirmed',
       'Market insight and technical guidance, monthly.',
       content,
     ),
     text: [
-      'You are subscribed to the EPOXA STEEL briefing.',
+      `You are subscribed to the ${siteConfig.legalName} briefing.`,
       '',
       'Market conditions, technical guidance and project news — roughly monthly.',
       `Read the latest at ${siteConfig.url}/blog`,

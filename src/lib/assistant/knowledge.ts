@@ -77,7 +77,7 @@ function companyDigest() {
   const { contact, address, founded, stats } = siteConfig;
 
   return [
-    `EPOXA STEEL — ${siteConfig.legalName}. Founded ${founded}.`,
+    `${siteConfig.legalName}. Founded ${founded}.`,
     mission.statement,
     '',
     'Verified figures (use these exact numbers, do not estimate others):',

@@ -10,14 +10,13 @@ import { useAssistant } from '@/components/assistant/assistant-context';
 /**
  * The dock.
  *
- * This was a white circular "+" that expanded into WhatsApp, phone and
- * back-to-top. Three problems with that: a bare plus sign asks the visitor to
+ * This was a white circular "+" that expanded into three shortcuts. Three problems with that: a bare plus sign asks the visitor to
  * guess, a solid white disc was the brightest thing on a very dark page and
  * pulled the eye away from whatever they were reading, and it took two taps to
  * reach anything.
  *
- * Now it is one labelled action — the enquiry desk — with the phone, WhatsApp
- * and quote routes living inside the panel it opens. Back to top sits beside it
+ * Now it is one labelled action — the enquiry desk — with the phone and quote
+ * routes living inside the panel it opens. Back to top sits beside it
  * and only appears once there is enough page behind you to want it.
  *
  * It stays out of the way until the hero is behind you, and hides entirely while

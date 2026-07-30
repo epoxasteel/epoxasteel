@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ChevronRight, Info, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { siteConfig } from '@/lib/site';
 
 /* -------------------------------------------------------------------------- */
 /* Badge                                                                      */
@@ -341,13 +340,4 @@ export function Checklist({ items, className }: { items: string[]; className?: s
       ))}
     </ul>
   );
-}
-
-/* -------------------------------------------------------------------------- */
-/* WhatsApp link                                                              */
-/* -------------------------------------------------------------------------- */
-
-export function whatsappHref(message?: string) {
-  const text = message ?? `Hello ${siteConfig.name}, I would like to discuss a steel enquiry.`;
-  return `https://wa.me/${siteConfig.contact.whatsapp}?text=${encodeURIComponent(text)}`;
 }

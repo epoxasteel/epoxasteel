@@ -4,12 +4,11 @@ import * as React from 'react';
 import Link from 'next/link';
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Menu, X, ChevronDown, Phone, Mail, MessageCircle } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, Mail } from 'lucide-react';
 import { mainNav, legalNav, siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Wordmark } from '@/components/visual/wordmark';
 import { Button } from '@/components/ui/button';
-import { whatsappHref } from '@/components/ui/misc';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 
 /**
@@ -207,15 +206,6 @@ export function MobileNav({ pathname }: { pathname: string }) {
                     >
                       <Mail aria-hidden className="text-steel size-4" />
                       {siteConfig.contact.email}
-                    </a>
-                    <a
-                      href={whatsappHref()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-mist hover:text-bright flex items-center gap-3 transition-colors"
-                    >
-                      <MessageCircle aria-hidden className="text-steel size-4" />
-                      WhatsApp
                     </a>
                   </div>
 

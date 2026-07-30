@@ -20,33 +20,41 @@ the site builds — run `npm run typecheck` to check.
 ## Company details — `src/lib/site.ts`
 
 **Edit this first.** It drives the header, footer, contact page, email
-templates, schema.org payloads and the WhatsApp link.
+templates and schema.org payloads.
 
 ```ts
 export const siteConfig = {
   contact: {
     email: 'info@epoxasteel.com',
-    phone: '+1 (212) 555-0180',       // ← placeholder, replace
-    phoneHref: '+12125550180',        // ← digits only, for tel: links
-    whatsapp: '12125550180',          // ← digits only, country code first
-    hours: [ … ],
+    phone: '(212) 763-8921',
+    phoneHref: '+12127638921',        // ← derived, never edited by hand
+    hours: [ … ],                     // ← also generates the schema.org hours
   },
   address: {
-    line1: 'Epoxa Steel Center',      // ← placeholder, replace
-    line2: '1180 Ironworks Parkway, Building C',
-    city: 'Newark',
-    region: 'NJ',
-    postalCode: '07114',
-    latitude: 40.6895,                // ← used in LocalBusiness schema
-    longitude: -74.1745,
+    line1: '199 Lee Ave.',
+    line2: 'Suite 810',
+    city: 'Brooklyn',
+    region: 'NY',
+    postalCode: '11211',
+    latitude: null,                   // ← unset; omitted from LocalBusiness
+    longitude: null,
   },
-  social: { linkedin: '…', x: '…', instagram: '…', facebook: '…', youtube: '…' },
+  social: { linkedin: '', x: '', instagram: '', facebook: '', youtube: '' },
   stats: [ … ],                       // ← the animated homepage counters
 };
 ```
 
-> The shipped phone number uses the reserved `555-01xx` fictional range, so it
-> is obviously not a real number — but it must still be replaced before launch.
+> Every value above has a `NEXT_PUBLIC_*` variable behind it — see
+> `.env.example`. Change one in the host and redeploy; nothing here needs
+> editing.
+
+> Social accounts are all empty on purpose. No icon renders anywhere and
+> `sameAs` is left out of the schema until the business has real profiles. Set
+> one variable and its icon returns on the next deploy.
+
+> Map coordinates are unset. They are omitted from the LocalBusiness schema
+> rather than guessed, because a latitude that is merely close puts the pin on
+> the wrong building and structured data is believed. Set both to publish them.
 
 ### Navigation
 

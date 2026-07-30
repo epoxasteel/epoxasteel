@@ -50,9 +50,20 @@ function optionalText(value: string | undefined, fallback: string) {
   return value.trim();
 }
 
-function number(value: string | undefined, fallback: number) {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+/**
+ * A number, or `null` when there isn't a usable one.
+ *
+ * For map coordinates, which are the one fact here where a plausible-looking
+ * wrong value is worse than no value: a latitude that is merely near the office
+ * puts the pin on somebody else's building, and structured data is taken at face
+ * value. Unset means the `geo` block is left out of the schema entirely, which
+ * search engines handle by geocoding the postal address instead.
+ */
+function optionalNumber(value: string | undefined) {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 /**
@@ -80,7 +91,7 @@ function parseHours(value: string | undefined, fallback: { days: string; time: s
   return parsed.length ? parsed : fallback;
 }
 
-const phone = text(process.env.NEXT_PUBLIC_CONTACT_PHONE, '+1 (212) 555-0180');
+const phone = text(process.env.NEXT_PUBLIC_CONTACT_PHONE, '(212) 763-8921');
 
 /**
  * The `tel:` form, derived rather than configured.
@@ -88,10 +99,21 @@ const phone = text(process.env.NEXT_PUBLIC_CONTACT_PHONE, '+1 (212) 555-0180');
  * It used to be its own field, which meant two variables that had to agree and
  * would eventually not — a corrected display number with a stale dial link is a
  * bug nobody notices until a customer reaches the wrong company.
+ *
+ * The result is always E.164 where it can be worked out, because a `tel:` link
+ * without a country code only dials from inside that country. "(212) 763-8921"
+ * reads correctly to a New York contractor and fails for the one calling from
+ * Toronto, and this site sells to both. Ten digits is a North American number
+ * and takes +1; eleven beginning with 1 is the same number written long. Anything
+ * else is left as typed, since guessing a country code for a number we cannot
+ * identify would be worse than the problem it solves.
  */
 function dialable(display: string) {
   const digits = display.replace(/[^\d]/g, '');
-  return display.trim().startsWith('+') ? `+${digits}` : digits;
+  if (display.trim().startsWith('+')) return `+${digits}`;
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+  return digits;
 }
 
 export const siteConfig = {
@@ -111,6 +133,15 @@ export const siteConfig = {
    * them as one entity and print the name instead of the bare domain.
    */
   legalName: text(process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME, 'Epoxa Steel'),
+  /**
+   * The incorporated entity, for the copyright line only.
+   *
+   * Separate from `legalName` because they genuinely differ: the business trades
+   * and is addressed as "Epoxa Steel", and a copyright notice names the company
+   * that holds the copyright. Putting "Inc." in every title and schema node would
+   * be wrong; leaving it off the copyright line would be too.
+   */
+  legalEntity: text(process.env.NEXT_PUBLIC_COMPANY_LEGAL_ENTITY, 'Epoxa Steel Inc.'),
   shortName: text(process.env.NEXT_PUBLIC_COMPANY_SHORT_NAME, 'Epoxa'),
   domain: text(process.env.NEXT_PUBLIC_SITE_DOMAIN, 'epoxasteel.com'),
   url: process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, '') || 'https://epoxasteel.com',
@@ -147,60 +178,51 @@ export const siteConfig = {
     careersEmail: text(process.env.NEXT_PUBLIC_CAREERS_EMAIL, 'careers@epoxasteel.com'),
     phone,
     phoneHref: dialable(phone),
-    /** Digits only, no plus — what wa.me expects. */
-    whatsapp: text(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER, dialable(phone).replace(/^\+/, '')),
     hours: parseHours(process.env.NEXT_PUBLIC_BUSINESS_HOURS, [
-      { days: 'Monday – Friday', time: '07:00 – 18:00' },
-      { days: 'Saturday', time: '08:00 – 14:00' },
-      { days: 'Sunday', time: 'Closed — emergency dispatch available' },
+      { days: 'Monday – Thursday', time: '8:00 AM – 5:00 PM' },
+      { days: 'Friday', time: '8:00 AM – 1:00 PM' },
+      { days: 'Saturday', time: 'Closed' },
+      { days: 'Sunday', time: 'Closed' },
     ]),
   },
 
   address: {
-    line1: text(process.env.NEXT_PUBLIC_ADDRESS_LINE1, 'Epoxa Steel Center'),
-    line2: text(process.env.NEXT_PUBLIC_ADDRESS_LINE2, '1180 Ironworks Parkway, Building C'),
-    city: text(process.env.NEXT_PUBLIC_ADDRESS_CITY, 'Newark'),
-    region: text(process.env.NEXT_PUBLIC_ADDRESS_REGION, 'NJ'),
-    postalCode: text(process.env.NEXT_PUBLIC_ADDRESS_POSTAL_CODE, '07114'),
+    line1: text(process.env.NEXT_PUBLIC_ADDRESS_LINE1, '199 Lee Ave.'),
+    line2: text(process.env.NEXT_PUBLIC_ADDRESS_LINE2, 'Suite 810'),
+    city: text(process.env.NEXT_PUBLIC_ADDRESS_CITY, 'Brooklyn'),
+    region: text(process.env.NEXT_PUBLIC_ADDRESS_REGION, 'NY'),
+    postalCode: text(process.env.NEXT_PUBLIC_ADDRESS_POSTAL_CODE, '11211'),
     country: text(process.env.NEXT_PUBLIC_ADDRESS_COUNTRY, 'United States'),
     countryCode: text(process.env.NEXT_PUBLIC_ADDRESS_COUNTRY_CODE, 'US'),
-    // LocalBusiness schema.
-    latitude: number(process.env.NEXT_PUBLIC_ADDRESS_LATITUDE, 40.6895),
-    longitude: number(process.env.NEXT_PUBLIC_ADDRESS_LONGITUDE, -74.1745),
     /**
-     * The link the map card opens.
+     * Map coordinates for the LocalBusiness schema. Unset by default, and left
+     * out of the schema entirely when unset — see `optionalNumber` above. Set
+     * both to publish them:
      *
-     * Configurable because a business with a Google Business Profile wants its own
-     * listing — reviews, photos, opening hours — not a coordinate search that
-     * drops a pin in a car park. Falls back to a search for the address, which is
-     * always correct if never ideal.
+     *   NEXT_PUBLIC_ADDRESS_LATITUDE / NEXT_PUBLIC_ADDRESS_LONGITUDE
      */
-    mapsUrl: process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL?.trim() || '',
+    latitude: optionalNumber(process.env.NEXT_PUBLIC_ADDRESS_LATITUDE),
+    longitude: optionalNumber(process.env.NEXT_PUBLIC_ADDRESS_LONGITUDE),
   },
 
   /**
-   * Social accounts. An empty value hides the link rather than rendering a dead
-   * one — a footer icon that leads to somebody else's abandoned handle is worse
-   * than one fewer icon.
+   * Social accounts, all unset.
+   *
+   * Empty is the documented way to hide a profile: `socialLinks` drops it, the
+   * footer and contact page hide their whole panel when nothing survives, and
+   * `sameAs` is omitted from the organisation schema rather than published empty.
+   * Nothing here renders until there is a real account to point at, because a
+   * link to a handle the business does not own is worse than no link.
+   *
+   * To publish one, set its variable in the environment and redeploy — no code
+   * change, and the panels reappear on their own.
    */
   social: {
-    linkedin: optionalText(
-      process.env.NEXT_PUBLIC_LINKEDIN_URL,
-      'https://www.linkedin.com/company/epoxasteel',
-    ),
-    instagram: optionalText(
-      process.env.NEXT_PUBLIC_INSTAGRAM_URL,
-      'https://www.instagram.com/epoxasteel',
-    ),
-    facebook: optionalText(
-      process.env.NEXT_PUBLIC_FACEBOOK_URL,
-      'https://www.facebook.com/epoxasteel',
-    ),
-    x: optionalText(process.env.NEXT_PUBLIC_X_URL, 'https://x.com/epoxasteel'),
-    youtube: optionalText(
-      process.env.NEXT_PUBLIC_YOUTUBE_URL,
-      'https://www.youtube.com/@epoxasteel',
-    ),
+    linkedin: optionalText(process.env.NEXT_PUBLIC_LINKEDIN_URL, ''),
+    instagram: optionalText(process.env.NEXT_PUBLIC_INSTAGRAM_URL, ''),
+    facebook: optionalText(process.env.NEXT_PUBLIC_FACEBOOK_URL, ''),
+    x: optionalText(process.env.NEXT_PUBLIC_X_URL, ''),
+    youtube: optionalText(process.env.NEXT_PUBLIC_YOUTUBE_URL, ''),
   },
 
   /** Headline numbers used by the animated statistics blocks. */
@@ -224,18 +246,76 @@ export function formattedAddress() {
   return `${line1}, ${line2}, ${city}, ${region} ${postalCode}`;
 }
 
+const DAYS = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
+
+/** "8:00 AM" / "17:00" / "5 PM" → "17:00". Null when it is not a time at all. */
+function to24Hour(value: string) {
+  const match = value.trim().match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+  if (!match) return null;
+
+  let hour = Number(match[1]);
+  const minute = match[2] ?? '00';
+  const meridiem = match[3]?.toLowerCase();
+
+  if (meridiem === 'pm' && hour !== 12) hour += 12;
+  if (meridiem === 'am' && hour === 12) hour = 0;
+  if (hour > 23 || Number(minute) > 59) return null;
+
+  return `${String(hour).padStart(2, '0')}:${minute}`;
+}
+
 /**
- * Where the map card goes.
+ * The opening hours as schema.org wants them, derived from the same rows the page
+ * displays.
  *
- * `NEXT_PUBLIC_GOOGLE_MAPS_URL` wins so a business can point at its own Google
- * Business Profile — reviews, photos, the correct entrance. Without one, a search
- * for the address, which is always right if never as good.
+ * This used to be a second, hand-written copy inside the LocalBusiness schema,
+ * which meant changing `NEXT_PUBLIC_BUSINESS_HOURS` updated the contact page and
+ * the footer while quietly leaving the old hours in the structured data — the
+ * version Google reads and prints beside the business name. One source now feeds
+ * both.
+ *
+ * Handles "Monday – Thursday" and "Friday" alike, in either dash. A row whose
+ * time does not parse — "Closed", "By appointment" — is left out rather than
+ * guessed at, which is exactly right for a closed day: schema.org treats an
+ * unlisted day as closed, so "Saturday | Closed" needs no entry to be understood.
  */
-export function mapsHref() {
-  return (
-    siteConfig.address.mapsUrl ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formattedAddress())}`
-  );
+export function openingHours() {
+  const specs: { days: string[]; opens: string; closes: string }[] = [];
+
+  for (const { days, time } of siteConfig.contact.hours) {
+    const [openText, closeText] = time.split(/[–—-]/);
+    if (!openText || !closeText) continue;
+
+    const opens = to24Hour(openText);
+    const closes = to24Hour(closeText);
+    if (!opens || !closes) continue;
+
+    const parts = days.split(/[–—-]/).map((part) => part.trim().toLowerCase());
+    const first = DAYS.findIndex((day) => day.toLowerCase() === parts[0]);
+    if (first < 0) continue;
+
+    const last = parts[1] ? DAYS.findIndex((day) => day.toLowerCase() === parts[1]) : first;
+    if (last < 0) continue;
+
+    // Wraps across the week end for a range like "Saturday – Monday".
+    const span: string[] = [];
+    for (let i = first; ; i = (i + 1) % DAYS.length) {
+      span.push(DAYS[i]);
+      if (i === last) break;
+    }
+
+    specs.push({ days: span, opens, closes });
+  }
+
+  return specs;
 }
 
 export type NavItem = {

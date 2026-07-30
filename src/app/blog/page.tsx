@@ -15,7 +15,7 @@ const PER_PAGE = 9;
 export const metadata: Metadata = buildMetadata({
   title: 'Insights & Blog',
   description:
-    'Technical guidance, market conditions and project stories from the engineers, buyers and fabricators at EPOXA STEEL.',
+    'Technical guidance, market conditions and project stories from the engineers, buyers and fabricators at Epoxa Steel.',
   path: '/blog',
 });
 

@@ -3,9 +3,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Phone, X, RotateCcw, FileText, MessageCircle } from 'lucide-react';
+import { Phone, X, RotateCcw, FileText } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
-import { whatsappHref } from '@/components/ui/misc';
 import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { AssistantRichText } from '@/components/assistant/rich-text';
@@ -381,15 +380,6 @@ export function AssistantPanel() {
                 >
                   <Phone aria-hidden className="size-3.5" />
                   {siteConfig.contact.phone}
-                </a>
-                <a
-                  href={whatsappHref()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-mist inline-flex items-center gap-1.5 transition-colors"
-                >
-                  <MessageCircle aria-hidden className="size-3.5" />
-                  WhatsApp
                 </a>
               </div>
             </div>

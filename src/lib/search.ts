@@ -39,7 +39,7 @@ const staticPages: { title: string; description: string; href: string; keywords:
     title: 'Contact',
     description: 'Office details, business hours, direct lines and our enquiry form.',
     href: '/contact',
-    keywords: 'contact phone email address office hours location map whatsapp',
+    keywords: 'contact phone email address office hours location',
   },
   {
     title: 'Careers',

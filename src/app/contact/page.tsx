@@ -1,18 +1,17 @@
 import type { Metadata } from 'next';
-import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowUpRight } from 'lucide-react';
-import { siteConfig, mapsHref } from '@/lib/site';
+import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
+import { siteConfig } from '@/lib/site';
 import { buildMetadata, breadcrumbSchema, localBusinessSchema } from '@/lib/seo';
 import { PageHero, Section, JsonLd, Eyebrow } from '@/components/layout/section';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
 import { ContactForm } from '@/components/forms/contact-form';
-import { whatsappHref } from '@/components/ui/misc';
 import { socialLinks } from '@/components/visual/social-icons';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Contact',
   description:
-    'Speak to EPOXA STEEL: office details, business hours, direct lines, WhatsApp and an enquiry form answered within one business day.',
+    'Office address, business hours, phone and email for Epoxa Steel, and an enquiry form answered within one business day.',
   path: '/contact',
 });
 
@@ -43,14 +42,6 @@ const channels = [
     href: `mailto:${siteConfig.contact.quotesEmail}`,
     hint: 'Send drawings, schedules or a bill of quantities.',
   },
-  {
-    icon: MessageCircle,
-    label: 'WhatsApp',
-    value: 'Message us',
-    href: whatsappHref(),
-    hint: 'For site queries and anything urgent.',
-    external: true,
-  },
 ];
 
 export default function ContactPage() {
@@ -70,12 +61,20 @@ export default function ContactPage() {
       {/* Channels */}
       <Section tone="void" size="sm">
         <div className="container-page">
-          <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2 lg:grid-cols-4">
-            {channels.map((channel) => (
-              <RevealItem key={channel.label}>
+          {/*
+            Three channels across a hairline grid, so the column counts have to
+            divide into three or a cell with no card in it shows as a lighter
+            block. Two columns would leave that hole, so the last card spans the
+            full width at `sm` and returns to a third of it at `lg`.
+          */}
+          <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2 lg:grid-cols-3">
+            {channels.map((channel, index) => (
+              <RevealItem
+                key={channel.label}
+                className={cn(index === channels.length - 1 && 'sm:col-span-2 lg:col-span-1')}
+              >
                 <a
                   href={channel.href}
-                  {...(channel.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className={cn(
                     'group bg-charcoal flex h-full flex-col gap-4 p-7',
                     'hover:bg-slate transition-colors duration-400',
@@ -147,16 +146,6 @@ export default function ContactPage() {
                     {address.city}, {address.region} {address.postalCode} <br />
                     {address.country}
                   </address>
-
-                  <a
-                    href={mapsHref()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"
-                  >
-                    <MapPin aria-hidden className="size-3.5" />
-                    Open in Google Maps
-                  </a>
                 </div>
               </Reveal>
 
@@ -177,30 +166,35 @@ export default function ContactPage() {
                 </div>
               </Reveal>
 
-              <Reveal direction="left" delay={0.14}>
-                <div className="border-hairline bg-charcoal rounded-lg border p-7">
-                  <p className="text-eyebrow text-steel uppercase">Follow us</p>
-                  <ul className="mt-5 flex flex-wrap gap-2.5">
-                    {socialLinks.map((social) => (
-                      <li key={social.label}>
-                        <a
-                          href={social.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${siteConfig.name} on ${social.label}`}
-                          className={cn(
-                            'border-hairline grid size-10 place-items-center rounded-sm border',
-                            'text-steel bg-white/[0.02] transition-all duration-300',
-                            'hover:border-arc/40 hover:text-arc-glow hover:-translate-y-0.5',
-                          )}
-                        >
-                          <social.icon className="size-4" />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
+              {/* Not rendered at all until a social account is configured — see
+                  the note on `siteConfig.social`. An empty "Follow us" card is
+                  worse than no card. */}
+              {socialLinks.length ? (
+                <Reveal direction="left" delay={0.14}>
+                  <div className="border-hairline bg-charcoal rounded-lg border p-7">
+                    <p className="text-eyebrow text-steel uppercase">Follow us</p>
+                    <ul className="mt-5 flex flex-wrap gap-2.5">
+                      {socialLinks.map((social) => (
+                        <li key={social.label}>
+                          <a
+                            href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${siteConfig.name} on ${social.label}`}
+                            className={cn(
+                              'border-hairline grid size-10 place-items-center rounded-sm border',
+                              'text-steel bg-white/[0.02] transition-all duration-300',
+                              'hover:border-arc/40 hover:text-arc-glow hover:-translate-y-0.5',
+                            )}
+                          >
+                            <social.icon className="size-4" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
+              ) : null}
             </aside>
           </div>
         </div>
@@ -240,15 +234,6 @@ export default function ContactPage() {
                   <p className="text-ash mt-1.5 text-[0.875rem]">
                     {address.line2}, {address.city}, {address.region} {address.postalCode}
                   </p>
-                  <a
-                    href={mapsHref()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"
-                  >
-                    Get directions
-                    <ArrowUpRight aria-hidden className="size-3.5" />
-                  </a>
                 </div>
               </div>
             </div>

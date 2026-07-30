@@ -10,6 +10,7 @@ import { Field, Input, Textarea, Select, Checkbox, Honeypot } from '@/components
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/misc';
 import { cn } from '@/lib/utils';
+import { siteConfig } from '@/lib/site';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { useElapsedSinceMount } from '@/lib/use-elapsed';
 import { useFormDraft } from '@/lib/use-form-draft';
@@ -205,7 +206,7 @@ export function ContactForm({ className }: { className?: string }) {
       <Field id="contact-subject" label="Subject" error={errors.subject?.message} required>
         {(props) => (
           <Input
-            placeholder="Structural steel enquiry — Newark project"
+            placeholder="Structural steel enquiry — Brooklyn project"
             {...props}
             {...register('subject')}
           />
@@ -248,7 +249,7 @@ export function ContactForm({ className }: { className?: string }) {
             <a href="/terms" className="text-arc-glow underline underline-offset-2">
               terms &amp; conditions
             </a>{' '}
-            and consent to EPOXA STEEL processing my details in line with the{' '}
+            and consent to {siteConfig.legalName} processing my details in line with the{' '}
             <a href="/privacy" className="text-arc-glow underline underline-offset-2">
               privacy policy
             </a>

@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
-import { siteConfig } from './site';
+import { siteConfig, openingHours } from './site';
 
 const BASE = siteConfig.url;
+
+/** Every configured social profile. Empty until the business has real accounts. */
+const profiles = Object.values(siteConfig.social).filter(Boolean);
 
 /** `https://x.com/epoxasteel` → `@epoxasteel`. Empty when no account is configured. */
 const xHandle = (() => {
@@ -146,9 +149,13 @@ export function organizationSchema() {
     image: `${BASE}/opengraph-image`,
     description: siteConfig.description,
     foundingDate: siteConfig.founded,
-    // Filtered: an unconfigured account is an empty string, and an empty entry in
-    // sameAs is a validation error in Google's structured-data testing.
-    sameAs: Object.values(siteConfig.social).filter(Boolean),
+    /*
+     * Omitted entirely while there are no social accounts, rather than published
+     * as `[]`. An empty array is not "no profiles" to a validator, it is a
+     * malformed property — and the whole point of sameAs is to assert that two
+     * identities are the same entity, which an empty list cannot do.
+     */
+    ...(profiles.length ? { sameAs: profiles } : {}),
   };
 }
 
@@ -181,6 +188,8 @@ export function websiteSchema() {
  * business rather than two with similar details.
  */
 export function localBusinessSchema() {
+  const { latitude, longitude } = siteConfig.address;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -200,25 +209,21 @@ export function localBusinessSchema() {
       postalCode: siteConfig.address.postalCode,
       addressCountry: siteConfig.address.countryCode,
     },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: siteConfig.address.latitude,
-      longitude: siteConfig.address.longitude,
-    },
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '07:00',
-        closes: '18:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Saturday'],
-        opens: '08:00',
-        closes: '14:00',
-      },
-    ],
+    /*
+     * Only when both coordinates are configured. Publishing a guess would put the
+     * pin on a neighbouring building and be believed; without it, a search engine
+     * geocodes the postal address above, which is correct by construction.
+     */
+    ...(latitude !== null && longitude !== null
+      ? { geo: { '@type': 'GeoCoordinates', latitude, longitude } }
+      : {}),
+    // Derived from the same rows the contact page shows — see `openingHours`.
+    openingHoursSpecification: openingHours().map(({ days, opens, closes }) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: days,
+      opens,
+      closes,
+    })),
   };
 }
 
