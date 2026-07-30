@@ -13,12 +13,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Structural steel supply for commercial, residential, industrial and infrastructure work — bridges, warehousing, energy and government projects.',
   path: '/industries',
-  keywords: [
-    'steel for construction',
-    'infrastructure steel supplier',
-    'bridge steel',
-    'industrial steel',
-  ],
 });
 
 const trail = [

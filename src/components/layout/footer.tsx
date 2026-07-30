@@ -27,7 +27,7 @@ export function Footer() {
               <Wordmark size="lg" />
             </Link>
             <p className="text-ash mt-6 max-w-md text-[0.9375rem] leading-relaxed">
-              {siteConfig.description}
+              {siteConfig.overview}
             </p>
 
             <ul className="mt-8 space-y-3 text-[0.9375rem]">

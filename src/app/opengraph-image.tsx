@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { siteConfig } from '@/lib/site';
 
 export const runtime = 'nodejs';
-export const alt = `${siteConfig.name} — premium structural steel supply and fabrication`;
+export const alt = `${siteConfig.legalName} — ${siteConfig.description}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

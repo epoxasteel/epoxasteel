@@ -37,10 +37,6 @@ export async function generateMetadata({
     title: `${industry.name} Steel Supply`,
     description: industry.summary,
     path: `/industries/${industry.slug}`,
-    keywords: [
-      `${industry.name.toLowerCase()} steel`,
-      `steel supplier ${industry.name.toLowerCase()}`,
-    ],
   });
 }
 

@@ -15,7 +15,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Structural steel case studies: commercial towers, fracture-critical bridges, distribution centres, transit hubs, energy terminals and civic buildings.',
   path: '/projects',
-  keywords: ['steel project case studies', 'structural steel portfolio', 'bridge steel project'],
 });
 
 const trail = [

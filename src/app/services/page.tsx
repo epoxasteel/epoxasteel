@@ -14,12 +14,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Steel supply, fabrication, cutting, engineering support, logistics and delivery — from one accountable supplier, under one certificate.',
   path: '/services',
-  keywords: [
-    'steel fabrication services',
-    'steel cutting service',
-    'steel supply chain',
-    'engineering support',
-  ],
 });
 
 const trail = [

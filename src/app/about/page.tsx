@@ -24,16 +24,12 @@ import { CallToAction } from '@/components/home/sections';
 import { cn, pad } from '@/lib/utils';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'About EPOXA STEEL',
+  // Not "About Epoxa Steel" — the layout template already appends the brand, and
+  // the page was shipping as "About EPOXA STEEL | EPOXA STEEL".
+  title: 'About',
   description:
     'Our mission, values, history, leadership and the manufacturing, quality and safety standards behind every tonne of steel we supply.',
   path: '/about',
-  keywords: [
-    'about epoxa steel',
-    'steel company history',
-    'steel quality standards',
-    'steel leadership team',
-  ],
 });
 
 const trail = [

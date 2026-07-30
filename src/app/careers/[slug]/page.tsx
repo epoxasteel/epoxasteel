@@ -34,7 +34,6 @@ export async function generateMetadata({
     title: `${job.title} — ${job.location}`,
     description: job.summary,
     path: `/careers/${job.slug}`,
-    keywords: [job.title.toLowerCase(), `${job.department.toLowerCase()} jobs`, 'steel careers'],
   });
 }
 

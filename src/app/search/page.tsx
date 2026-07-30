@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { search, groupResults } from '@/lib/search';
 import { buildMetadata } from '@/lib/seo';
+import { siteConfig } from '@/lib/site';
 import { PageHero, Section, Eyebrow } from '@/components/layout/section';
 import { RevealGroup, RevealItem } from '@/components/motion/reveal';
 import { BlogSearch } from '@/components/blog/blog-search';
@@ -12,7 +13,7 @@ import { cn } from '@/lib/utils';
 export const metadata: Metadata = {
   ...buildMetadata({
     title: 'Search',
-    description: 'Search products, services, industries, projects and articles across EPOXA STEEL.',
+    description: `Search products, services, industries, projects and articles across ${siteConfig.legalName}.`,
     path: '/search',
     noIndex: true,
   }),

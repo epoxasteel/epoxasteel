@@ -12,12 +12,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Answers on ordering, products, delivery, certification, payment terms and technical support from EPOXA STEEL.',
   path: '/faq',
-  keywords: [
-    'steel supplier faq',
-    'steel delivery times',
-    'mill certificate',
-    'steel payment terms',
-  ],
 });
 
 const trail = [

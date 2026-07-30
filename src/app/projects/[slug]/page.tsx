@@ -37,7 +37,6 @@ export async function generateMetadata({
     title: project.name,
     description: project.summary,
     path: `/projects/${project.slug}`,
-    keywords: [project.name.toLowerCase(), `${project.industry} steel project`, project.location],
   });
 }
 

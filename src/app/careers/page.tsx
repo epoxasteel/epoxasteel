@@ -15,12 +15,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Open roles at EPOXA STEEL across engineering, fabrication, quality, processing and operations — with certification paid in full and genuine stop-work authority.',
   path: '/careers',
-  keywords: [
-    'steel fabrication jobs',
-    'welder jobs',
-    'structural steel careers',
-    'steel detailer jobs',
-  ],
 });
 
 const trail = [

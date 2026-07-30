@@ -14,13 +14,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Structural sections, plate, sheet, hollow section, bar, reinforcement and stainless steel — supplied to ASTM and EN standards with full mill certification.',
   path: '/products',
-  keywords: [
-    'steel products catalogue',
-    'structural sections',
-    'steel plate supplier',
-    'hollow sections',
-    'rebar supplier',
-  ],
 });
 
 const trail = [

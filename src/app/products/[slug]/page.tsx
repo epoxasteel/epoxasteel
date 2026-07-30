@@ -39,11 +39,6 @@ export async function generateMetadata({
     title: product.name,
     description: product.summary,
     path: `/products/${product.slug}`,
-    keywords: [
-      product.name.toLowerCase(),
-      `${product.name.toLowerCase()} supplier`,
-      ...product.grades.map((grade) => grade.toLowerCase()),
-    ],
   });
 }
 

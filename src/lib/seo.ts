@@ -3,12 +3,19 @@ import { siteConfig } from './site';
 
 const BASE = siteConfig.url;
 
+/** `https://x.com/epoxasteel` → `@epoxasteel`. Empty when no account is configured. */
+const xHandle = (() => {
+  const url = siteConfig.social.x;
+  if (!url) return '';
+  const name = url.replace(/\/+$/, '').split('/').pop() ?? '';
+  return name ? `@${name.replace(/^@/, '')}` : '';
+})();
+
 type SeoInput = {
   title: string;
   description: string;
   /** Path only, e.g. "/products/steel-beams". */
   path?: string;
-  keywords?: string[];
   /** Overrides the generated OG image. */
   image?: string;
   type?: 'website' | 'article';
@@ -27,7 +34,6 @@ export function buildMetadata({
   title,
   description,
   path = '/',
-  keywords = [],
   image,
   type = 'website',
   publishedTime,
@@ -37,10 +43,10 @@ export function buildMetadata({
 }: SeoInput): Metadata {
   const url = `${BASE}${path === '/' ? '' : path}`;
   const ogImage = image ?? `${BASE}/opengraph-image`;
-  const fullTitle = path === '/' ? title : `${title} | ${siteConfig.name}`;
+  const fullTitle = path === '/' ? title : `${title} | ${siteConfig.legalName}`;
 
   /*
-   * The root layout appends " | EPOXA STEEL" to every page title through its
+   * The root layout appends " | Epoxa Steel" to every page title through its
    * template. That is right for a five-word page name and wrong for an article
    * headline: "Embodied carbon in structural steel: what the numbers actually
    * mean" plus the suffix comes to 82 characters, and search results show about
@@ -49,14 +55,26 @@ export function buildMetadata({
    *
    * Past the budget the title is declared absolute, keeping the headline whole.
    * The brand is still on the card, the canonical and the schema.
+   *
+   * The home page is always absolute. Its title is the brand name on its own, and
+   * a template would turn that into "Epoxa Steel | Epoxa Steel" the moment this
+   * page stopped being a sibling of the layout that defines the template.
    */
   const TITLE_BUDGET = 60;
-  const suffixLength = ` | ${siteConfig.name}`.length;
+  const suffixLength = ` | ${siteConfig.legalName}`.length;
+  const keepWhole = path === '/' || title.length + suffixLength > TITLE_BUDGET;
 
   return {
-    title: path !== '/' && title.length + suffixLength > TITLE_BUDGET ? { absolute: title } : title,
+    title: keepWhole ? { absolute: title } : title,
     description,
-    keywords: [...defaultKeywords, ...keywords],
+    /*
+     * No `keywords`. Google has ignored the tag since 2009, Bing treats it as a
+     * spam signal, and what this site was publishing — twelve terms per page,
+     * with "structural steel supplier" appearing twice because the page list and
+     * the site-wide list overlapped — is the exact pattern it is a signal for.
+     * What a page is about is stated by its title, its description, its headings
+     * and its schema, all of which are read.
+     */
     alternates: { canonical: url },
     robots: noIndex
       ? { index: false, follow: false }
@@ -76,9 +94,11 @@ export function buildMetadata({
       url,
       title: fullTitle,
       description,
-      siteName: siteConfig.name,
+      siteName: siteConfig.legalName,
       locale: siteConfig.locale,
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${title} — ${siteConfig.name}` }],
+      images: [
+        { url: ogImage, width: 1200, height: 630, alt: `${title} — ${siteConfig.legalName}` },
+      ],
       ...(type === 'article' ? { publishedTime, modifiedTime, authors } : {}),
     },
     twitter: {
@@ -86,59 +106,46 @@ export function buildMetadata({
       title: fullTitle,
       description,
       images: [ogImage],
-      creator: '@epoxasteel',
-      site: '@epoxasteel',
+      // Derived from the configured profile rather than written out, so the handle
+      // cannot drift from the one the footer links to. Omitted entirely when there
+      // is no X account — a card citing a handle nobody owns is worse than a card
+      // that cites none.
+      ...(xHandle ? { creator: xHandle, site: xHandle } : {}),
     },
   };
 }
-
-export const defaultKeywords = [
-  'structural steel supplier',
-  'steel beams',
-  'steel fabrication',
-  'reinforcing steel',
-  'steel plates',
-  'construction steel',
-  'Epoxa Steel',
-];
 
 /* --------------------------------------------------------------------------
    JSON-LD builders
    Rendered through <JsonLd /> so the payloads stay out of component bodies.
    -------------------------------------------------------------------------- */
 
+/**
+ * The brand identity node, on every page.
+ *
+ * Deliberately narrow: who this is, where it lives on the web, what it looks
+ * like, and which profiles are the same entity. The postal address, telephone and
+ * sales mailbox used to be repeated here as well as in `localBusinessSchema`,
+ * which gave a crawler two nodes stating the same facts and no way to tell whether
+ * they were one business or two. The physical facts now live in exactly one place.
+ *
+ * `name` is the prose-case brand, and no `alternateName` is offered. Google picks
+ * the site name it displays from the candidates a site supplies — this one, the
+ * WebSite node, `og:site_name`, the manifest and the home page title — so every
+ * candidate here spells it the same way, and the all-caps wordmark is never
+ * among them.
+ */
 export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': `${BASE}/#organization`,
-    name: siteConfig.name,
-    legalName: siteConfig.legalName,
+    name: siteConfig.legalName,
     url: BASE,
     logo: `${BASE}/icon.svg`,
     image: `${BASE}/opengraph-image`,
     description: siteConfig.description,
     foundingDate: siteConfig.founded,
-    email: siteConfig.contact.email,
-    telephone: siteConfig.contact.phone,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: `${siteConfig.address.line1}, ${siteConfig.address.line2}`,
-      addressLocality: siteConfig.address.city,
-      addressRegion: siteConfig.address.region,
-      postalCode: siteConfig.address.postalCode,
-      addressCountry: siteConfig.address.countryCode,
-    },
-    contactPoint: [
-      {
-        '@type': 'ContactPoint',
-        telephone: siteConfig.contact.phone,
-        contactType: 'sales',
-        email: siteConfig.contact.salesEmail,
-        availableLanguage: ['English'],
-        areaServed: 'Worldwide',
-      },
-    ],
     // Filtered: an unconfigured account is an empty string, and an empty entry in
     // sameAs is a validation error in Google's structured-data testing.
     sameAs: Object.values(siteConfig.social).filter(Boolean),
@@ -151,7 +158,7 @@ export function websiteSchema() {
     '@type': 'WebSite',
     '@id': `${BASE}/#website`,
     url: BASE,
-    name: siteConfig.name,
+    name: siteConfig.legalName,
     description: siteConfig.description,
     publisher: { '@id': `${BASE}/#organization` },
     potentialAction: {
@@ -165,12 +172,21 @@ export function websiteSchema() {
   };
 }
 
+/**
+ * The physical business: where it is, when it is open, how to reach it.
+ *
+ * Home page only, and the single place the address and telephone are published as
+ * structured data. `organizationSchema` carries the identity; this carries the
+ * premises. Same spelling of the name in both, so the two nodes read as one
+ * business rather than two with similar details.
+ */
 export function localBusinessSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': `${BASE}/#localbusiness`,
-    name: siteConfig.name,
+    name: siteConfig.legalName,
+    description: siteConfig.description,
     image: `${BASE}/opengraph-image`,
     url: BASE,
     telephone: siteConfig.contact.phone,
@@ -233,7 +249,7 @@ export function productSchema(input: {
     description: input.description,
     url: `${BASE}${input.path}`,
     category: input.category,
-    brand: { '@type': 'Brand', name: siteConfig.name },
+    brand: { '@type': 'Brand', name: siteConfig.legalName },
     material: input.grades.join(', '),
     manufacturer: { '@id': `${BASE}/#organization` },
     offers: {

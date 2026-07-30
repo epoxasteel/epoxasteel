@@ -21,15 +21,28 @@ import { analyticsEnabled } from '@/lib/analytics';
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   ...buildMetadata({
-    title: `${siteConfig.name} — Premium Structural Steel Supply & Fabrication`,
-    description: siteConfig.shortDescription,
+    title: siteConfig.legalName,
+    description: siteConfig.description,
     path: '/',
   }),
+  /*
+   * The brand name alone, with no tagline after it.
+   *
+   * A browser tab, a bookmark and a search result all show the front of this
+   * string and truncate the rest, so the first words decide what the site is
+   * called. "Epoxa Steel — Premium Structural Steel Supply & Fabrication" spent
+   * that space on a phrase describing the whole industry, and left every tab
+   * reading the same as every competitor's. What the business does is the meta
+   * description's job, one line below.
+   */
   title: {
-    default: `${siteConfig.name} — Premium Structural Steel Supply & Fabrication`,
-    template: `%s | ${siteConfig.name}`,
+    default: siteConfig.legalName,
+    template: `%s | ${siteConfig.legalName}`,
   },
-  applicationName: siteConfig.name,
+  applicationName: siteConfig.legalName,
+  // The label under the icon when the site is saved to an iOS home screen.
+  // Without it Safari falls back to the page title, which is per-page.
+  appleWebApp: { title: siteConfig.legalName },
   authors: [{ name: siteConfig.legalName, url: siteConfig.url }],
   creator: siteConfig.legalName,
   publisher: siteConfig.legalName,

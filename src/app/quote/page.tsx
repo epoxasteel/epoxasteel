@@ -13,7 +13,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Request a quotation for structural steel, plate, tube, bar, reinforcement or fabrication. Line-by-line pricing within 48 hours for standard enquiries.',
   path: '/quote',
-  keywords: ['steel quote', 'request steel quotation', 'steel pricing', 'steel rfq'],
 });
 
 const trail = [

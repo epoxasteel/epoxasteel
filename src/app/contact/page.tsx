@@ -14,7 +14,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Speak to EPOXA STEEL: office details, business hours, direct lines, WhatsApp and an enquiry form answered within one business day.',
   path: '/contact',
-  keywords: ['contact steel supplier', 'steel company phone', 'steel enquiry'],
 });
 
 const trail = [

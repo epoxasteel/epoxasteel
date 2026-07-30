@@ -35,7 +35,6 @@ export async function generateMetadata({
     title: service.name,
     description: service.summary,
     path: `/services/${service.slug}`,
-    keywords: [service.name.toLowerCase(), `steel ${service.name.toLowerCase()}`],
   });
 }
 

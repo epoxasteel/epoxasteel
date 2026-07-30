@@ -50,7 +50,6 @@ export async function generateMetadata({
     title: `${category} Articles`,
     description: descriptions[category] ?? `Articles filed under ${category}.`,
     path: `/blog/category/${slug}`,
-    keywords: [category.toLowerCase(), 'steel articles'],
   });
 }
 

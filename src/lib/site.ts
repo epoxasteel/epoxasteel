@@ -95,16 +95,48 @@ function dialable(display: string) {
 }
 
 export const siteConfig = {
+  /**
+   * The wordmark — how the brand is *set* on the page: header, footer, the social
+   * card. All caps because that is the drawn logotype, not a shouted sentence.
+   *
+   * Never use this in metadata. A title, an og:site_name or a schema.org `name` is
+   * read by machines and quoted back by search engines verbatim, and "EPOXA STEEL"
+   * in a search result looks like a mistake. `legalName` is the name for those.
+   */
   name: text(process.env.NEXT_PUBLIC_COMPANY_NAME, 'EPOXA STEEL'),
+  /**
+   * The brand name in prose case, and the single name every metadata surface uses
+   * — titles, Open Graph, Twitter, the manifest, the Apple web-app title and every
+   * schema.org node. One spelling everywhere is what lets a search engine treat
+   * them as one entity and print the name instead of the bare domain.
+   */
   legalName: text(process.env.NEXT_PUBLIC_COMPANY_LEGAL_NAME, 'Epoxa Steel'),
   shortName: text(process.env.NEXT_PUBLIC_COMPANY_SHORT_NAME, 'Epoxa'),
   domain: text(process.env.NEXT_PUBLIC_SITE_DOMAIN, 'epoxasteel.com'),
   url: process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, '') || 'https://epoxasteel.com',
   tagline: text(process.env.NEXT_PUBLIC_COMPANY_TAGLINE, 'Reinforce Your Dream.'),
+  /**
+   * The one description, used by every SEO surface: the meta description, Open
+   * Graph, Twitter, the manifest and the schema.org nodes.
+   *
+   * There used to be two — a 237-character one for schema and a shorter one for
+   * the meta tag — which is how the site ended up describing itself two different
+   * ways to the same crawler. Kept under 155 characters so search results show it
+   * whole, and it opens with what the business does rather than with its own name:
+   * the name is already the title, the URL and the `name` field of two schema
+   * nodes, and repeating it a fourth time is the padding it looks like.
+   */
   description:
+    'Structural steel supply, fabrication, and delivery for commercial, industrial, and infrastructure projects.',
+  /**
+   * Longer prose, for the footer paragraph only.
+   *
+   * Deliberately not metadata. This is body copy a person reads once they are
+   * already on the page, so it can afford length and voice that a search snippet
+   * cannot — see `description` above for the one that crawlers get.
+   */
+  overview:
     'EPOXA STEEL supplies certified structural steel, plate, tube and reinforcement to commercial, residential and infrastructure projects worldwide — backed by in-house fabrication, mill-traceable documentation and schedule-driven logistics.',
-  shortDescription:
-    'Certified structural steel supply, fabrication and delivery for commercial, residential and infrastructure construction.',
   founded: text(process.env.NEXT_PUBLIC_COMPANY_FOUNDED, '2009'),
   locale: text(process.env.NEXT_PUBLIC_SITE_LOCALE, 'en_US'),
 

@@ -17,7 +17,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     'Technical guidance, market conditions and project stories from the engineers, buyers and fabricators at EPOXA STEEL.',
   path: '/blog',
-  keywords: ['steel industry blog', 'structural steel guidance', 'steel market insight'],
 });
 
 const trail = [

@@ -3,9 +3,13 @@ import { siteConfig } from '@/lib/site';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${siteConfig.name} — Structural Steel Supply & Fabrication`,
-    short_name: siteConfig.name,
-    description: siteConfig.shortDescription,
+    // Both the same, and both the plain brand name. `name` is what an install
+    // prompt shows, `short_name` the label under the icon — and the manifest is
+    // one of the candidates Google weighs when deciding which site name to print
+    // in a search result, so it agrees with the title and the schema exactly.
+    name: siteConfig.legalName,
+    short_name: siteConfig.legalName,
+    description: siteConfig.description,
     start_url: '/',
     display: 'standalone',
     background_color: '#060709',

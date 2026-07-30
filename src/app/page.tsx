@@ -31,19 +31,9 @@ import {
 } from '@/components/home/collections';
 
 export const metadata: Metadata = buildMetadata({
-  title: `${siteConfig.name} — Premium Structural Steel Supply & Fabrication`,
-  // `shortDescription`, not `description`: the long one runs to 237 characters
-  // and Google shows about 155. The full prose still sits in the footer and in
-  // the organisation schema, where length is not penalised.
-  description: siteConfig.shortDescription,
+  title: siteConfig.legalName,
+  description: siteConfig.description,
   path: '/',
-  keywords: [
-    'structural steel supplier',
-    'steel fabrication company',
-    'steel beams supplier',
-    'reinforcing steel supplier',
-    'commercial construction steel',
-  ],
 });
 
 export default function HomePage() {
