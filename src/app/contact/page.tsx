@@ -173,7 +173,7 @@ export default function ContactPage() {
                     href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex items-center gap-1.5 text-[0.875rem] transition-colors"
+                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"
                   >
                     <MapPin aria-hidden className="size-3.5" />
                     Open in Google Maps
@@ -265,7 +265,7 @@ export default function ContactPage() {
                     href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex items-center gap-1.5 text-[0.875rem] transition-colors"
+                    className="text-arc-glow hover:text-arc-bright mt-5 inline-flex min-h-6 items-center gap-1.5 text-[0.875rem] transition-colors"
                   >
                     Get directions
                     <ArrowUpRight aria-hidden className="size-3.5" />

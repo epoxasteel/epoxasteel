@@ -48,7 +48,7 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${siteConfig.contact.phoneHref}`}
-                  className="group text-mist hover:text-bright inline-flex items-center gap-3 transition-colors"
+                  className="group text-mist hover:text-bright inline-flex min-h-6 items-center gap-3 transition-colors"
                 >
                   <Phone
                     aria-hidden
@@ -60,7 +60,7 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
-                  className="group text-mist hover:text-bright inline-flex items-center gap-3 transition-colors"
+                  className="group text-mist hover:text-bright inline-flex min-h-6 items-center gap-3 transition-colors"
                 >
                   <Mail
                     aria-hidden

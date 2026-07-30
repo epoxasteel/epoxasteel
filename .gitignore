@@ -62,3 +62,4 @@ public/media/*.mov
 .vercel
 .turbo
 public/downloads/*.pdf
+public/media/scenes/

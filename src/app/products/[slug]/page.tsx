@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowRight, Download, FileText } from 'lucide-react';
 import { getProduct, getRelatedProducts, productSlugs } from '@/content/products';
 import { getIndustry } from '@/content/industries';
+import { siteConfig } from '@/lib/site';
 import { buildMetadata, breadcrumbSchema, productSchema } from '@/lib/seo';
 import { PageHero, Section, JsonLd, Eyebrow, ArrowLink } from '@/components/layout/section';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal';
@@ -272,16 +273,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </Reveal>
 
           <Reveal delay={0.1}>
-            <Alert tone="info" className="mt-8 max-w-3xl">
-              Datasheets are added to <code>public/downloads/</code> as they are finalised. If a
-              document you need is not yet listed, email{' '}
+            {/* This used to read "Datasheets are added to public/downloads/ as
+                they are finalised" — a build path, on a customer-facing page,
+                and untrue now the sheets are generated. */}
+            <Alert tone="info" className="measure-wide mt-8">
+              Need something that is not here — a mill certificate for a specific heat, a welding
+              procedure, a bar bending schedule? Email{' '}
               <a
-                href="mailto:info@epoxasteel.com"
+                href={`mailto:${siteConfig.contact.quotesEmail}`}
                 className="text-arc-glow underline underline-offset-2"
               >
-                info@epoxasteel.com
+                {siteConfig.contact.quotesEmail}
               </a>{' '}
-              and we will send it directly.
+              and we will send it across the same day.
             </Alert>
           </Reveal>
 

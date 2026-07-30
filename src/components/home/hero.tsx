@@ -155,15 +155,27 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         {phase === 'overture' ? <Overture key="overture" onDone={finishOverture} /> : null}
       </AnimatePresence>
 
-      {/* `my-auto` rather than `items-center`: auto margins centre the content
-          when there is room and collapse to zero when there is not, so tall
-          content pushes the section open instead of overflowing past both
-          edges of it. */}
+      {/*
+        Anchored from the top, not centred.
+
+        Centring the content — whether with `items-center` or auto margins —
+        makes its position a function of its own height. When the web font
+        replaces the fallback and the lead paragraph relands on a different
+        number of lines, the block re-centres and everything in the hero moves:
+        0.187 of cumulative layout shift, measured, on the most important screen
+        of the site.
+
+        A fluid top offset puts it in the same place to the eye and makes the
+        position independent of the content. Growth pushes downward into space
+        that already exists rather than dragging the headline upward. The
+        `min-h-dvh` floor still lets the section open up on a screen too short to
+        hold it, which is what stopped the proof bar being clipped.
+      */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative flex min-h-dvh w-full"
+        className="relative flex min-h-dvh w-full items-start"
       >
-        <div className="container-page my-auto w-full pt-(--header-h) pb-12 sm:pb-0">
+        <div className="container-page w-full pt-[calc(var(--header-h)+5vh)] pb-12 sm:pt-[calc(var(--header-h)+6vh)] sm:pb-8">
           <HeroContent entrance={entrance} active={phase === 'settled'} />
         </div>
       </motion.div>

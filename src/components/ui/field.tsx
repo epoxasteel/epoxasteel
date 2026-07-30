@@ -161,7 +161,9 @@ export function Checkbox({
     <CheckboxPrimitive.Root
       aria-invalid={invalid || undefined}
       className={cn(
-        'peer mt-0.5 grid size-5 shrink-0 place-items-center rounded-xs border',
+        // 24px, not 20: a checkbox is a target in its own right and 20 is under
+        // the WCAG 2.2 minimum. It also just makes it easier to hit on a phone.
+        'peer mt-px grid size-6 shrink-0 place-items-center rounded-xs border',
         'bg-graphite transition-colors duration-200',
         'hover:border-steel',
         'focus-visible:outline-arc-bright focus-visible:outline-2 focus-visible:outline-offset-2',

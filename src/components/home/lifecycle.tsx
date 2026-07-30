@@ -119,12 +119,11 @@ export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
           {/*
             Stage artwork, windowed.
 
-            Each scene is several hundred SVG elements. Mounting all twelve at
-            once put roughly 1,200 nodes in the document — most of them
-            permanently invisible — and the browser still had to parse, style
-            and hydrate every one. Rendering only the neighbours of the active
-            stage keeps the cross-fade seamless (the outgoing and incoming
-            scenes are both present) while the other nine never reach the DOM.
+            The scenes are files now, not markup (see `lifecycle-art.tsx`), and
+            only the active stage and its neighbours are mounted: the cross-fade
+            has both the outgoing and incoming drawing, and the other nine are
+            never requested at all. `loading="lazy"` means a visitor who stops
+            before this section downloads none of them.
           */}
           <div className="border-hairline bg-void relative aspect-4/3 w-full overflow-hidden rounded-lg border sm:aspect-16/10 lg:aspect-4/3">
             {stages.map((stage, index) =>
@@ -140,7 +139,17 @@ export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
                   className="absolute inset-0"
                   aria-hidden
                 >
-                  {stage.art}
+                  {/* Decorative: the heading and caption beside it carry the
+                      meaning, so an alt text would say everything twice. */}
+                  <img
+                    src={stage.src}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="size-full object-cover"
+                  />
                 </motion.div>
               ) : null,
             )}

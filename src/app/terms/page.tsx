@@ -4,7 +4,6 @@ import { buildMetadata, breadcrumbSchema } from '@/lib/seo';
 import { PageHero, Section, JsonLd } from '@/components/layout/section';
 import { Reveal } from '@/components/motion/reveal';
 import { Article, TableOfContents } from '@/components/article';
-import { Alert } from '@/components/ui/misc';
 import { extractHeadings } from '@/lib/markdown';
 
 const LAST_UPDATED = '2026-07-01';
@@ -188,18 +187,19 @@ export default function TermsPage() {
         <div className="container-page">
           <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,16rem)] lg:gap-20">
             <div className="min-w-0">
-              <Reveal direction="none">
-                <Alert
-                  tone="warning"
-                  title="Have these reviewed before you rely on them"
-                  className="mb-10 max-w-3xl"
-                >
-                  These terms are a well-structured starting point written for a steel supply
-                  business, but they are not legal advice and the governing-law clause is a
-                  placeholder. Have a qualified adviser review them against your actual trading
-                  terms, jurisdictions and insurance before publishing.
-                </Alert>
-              </Reveal>
+              {/*
+                  There was a warning here, visible to visitors, saying these
+                  terms were "a starting point" and "not legal advice". That is
+                  true, and telling a prospective customer that the company's own
+                  trading terms are provisional does more damage than the warning
+                  prevents — it is the one page where a buyer's lawyer looks.
+
+                  The warning belongs where the site's owner will see it, so it
+                  now lives in README.md's pre-launch checklist and in
+                  docs/CONTENT.md. Have a qualified adviser review this page and
+                  /privacy against your actual trading terms, jurisdictions and
+                  insurance before launch.
+                */}
 
               <Reveal direction="none">
                 <Article body={body} />

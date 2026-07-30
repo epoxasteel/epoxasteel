@@ -99,13 +99,13 @@ export default function QuotePage() {
                   <div className="mt-6 space-y-3 text-[0.9375rem]">
                     <a
                       href={`tel:${siteConfig.contact.phoneHref}`}
-                      className="text-bright hover:text-arc-glow block transition-colors"
+                      className="text-bright hover:text-arc-glow flex min-h-6 items-center transition-colors"
                     >
                       {siteConfig.contact.phone}
                     </a>
                     <a
                       href={`mailto:${siteConfig.contact.quotesEmail}`}
-                      className="text-mist hover:text-bright block transition-colors"
+                      className="text-mist hover:text-bright flex min-h-6 items-center transition-colors"
                     >
                       {siteConfig.contact.quotesEmail}
                     </a>
@@ -113,7 +113,7 @@ export default function QuotePage() {
                       href={whatsappHref('Hello EPOXA STEEL, I would like a quotation.')}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-mist hover:text-bright block transition-colors"
+                      className="text-mist hover:text-bright flex min-h-6 items-center transition-colors"
                     >
                       WhatsApp us
                     </a>

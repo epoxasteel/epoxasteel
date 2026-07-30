@@ -525,10 +525,19 @@ Content marked as illustrative must be replaced. In priority order:
 - [ ] **Statistics** — tonnage, project counts, on-time delivery and certification
       claims appear throughout. Verify every figure you intend to publish.
 - [ ] **Legal pages** — `/privacy` and `/terms` are well-structured starting
-      points, not legal advice. Have them reviewed. The governing-law clause is a
-      placeholder.
-- [ ] **Downloads** — add the PDFs listed in `public/downloads/README.md`, or
-      remove the entries from `src/content/products.ts`.
+      points, not legal advice, and the governing-law clause is a placeholder.
+      Have a qualified adviser review both against your actual trading terms,
+      jurisdictions and insurance. This warning used to be printed on the terms
+      page itself, where visitors read it; it lives here now, because telling a
+      prospective customer that your trading terms are provisional costs more
+      than the warning was worth.
+- [ ] **Downloads** — every product datasheet is generated from its own content
+      at build time, so nothing 404s. Substitute a real document by committing it
+      to `public/downloads/` under a new filename and pointing the product's
+      `href` at it in `src/content/products.ts`. Five documents that have to come
+      from the drawing office — a mill certificate, a bar-bending template, a DWG
+      profiling file, a WPS index — had their links removed rather than pointed at
+      an invention; add them back when the real files exist.
 - [ ] **Hero video** — optional. See `public/media/README.md`.
 - [ ] **Logo** — swap the placeholder wordmark. See [`docs/BRANDING.md`](./docs/BRANDING.md).
 

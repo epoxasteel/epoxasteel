@@ -87,7 +87,7 @@ export function Header() {
             <div className="flex items-center gap-5">
               <a
                 href={`tel:${siteConfig.contact.phoneHref}`}
-                className="hover:text-chalk inline-flex items-center gap-1.5 transition-colors"
+                className="hover:text-chalk inline-flex min-h-6 items-center gap-1.5 transition-colors"
               >
                 <Phone aria-hidden className="size-3" />
                 {siteConfig.contact.phone}
@@ -95,7 +95,7 @@ export function Header() {
               <span className="bg-hairline h-3 w-px" aria-hidden />
               <a
                 href={`mailto:${siteConfig.contact.email}`}
-                className="hover:text-chalk transition-colors"
+                className="hover:text-chalk inline-flex min-h-6 items-center transition-colors"
               >
                 {siteConfig.contact.email}
               </a>

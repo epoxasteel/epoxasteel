@@ -3,16 +3,36 @@ import type { ReactNode } from 'react';
 /**
  * Artwork for the lifecycle sequence, plus the copy that goes with each stage.
  *
- * This module deliberately has no `'use client'` directive and is imported only
- * by a server component. The twelve scenes below are a few hundred SVG elements
- * of static markup — rendering them here puts that markup in the initial HTML
- * and keeps it out of the browser's JavaScript bundle. `Lifecycle` receives the
- * finished nodes as props and does nothing but animate between them.
+ * The drawings are authored here and *shipped as files*. `scripts/build-scenes.mts`
+ * renders each one to `public/media/scenes/` before the build, and the section
+ * loads them through `<img loading="lazy">`.
+ *
+ * That indirection earns its keep. As props on a client component these twelve
+ * scenes were serialised into the RSC payload inlined in every homepage
+ * document: 381 KB of payload, 97% of it vector artwork for a section eight
+ * screens below the fold, all twelve present on every page load even though only
+ * three are ever in the DOM. As files the browser fetches the ones it shows, when
+ * it needs them, and caches them afterwards.
+ *
+ * This module has no `'use client'` directive and no runtime consumer of the
+ * nodes — only the build script reads `art`. Keep it that way: importing a scene
+ * component into the page would put it straight back in the payload.
  */
 
+/** Shared by every scene, and by the build script that writes the files. */
+export const SCENE_VIEWBOX = '0 0 800 600';
+
+/** What the page needs: the copy, and where the drawing lives. */
 export type LifecycleStage = {
   title: string;
   caption: string;
+  /** Path under /public, written by the prebuild step. */
+  src: string;
+};
+
+/** What the build script needs: the drawing itself. */
+export type LifecycleScene = {
+  slug: string;
   art: ReactNode;
 };
 
@@ -20,19 +40,14 @@ export type LifecycleStage = {
 /* Stage artwork                                                              */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Every scene is drawn into the same box. Presentation — fitting, cropping and
+ * hiding it from assistive technology — is the <img> element's job now, so
+ * nothing here carries a class or an ARIA attribute.
+ */
 function Frame({ children, tone = '#080b10' }: { children: React.ReactNode; tone?: string }) {
   return (
-    // Decorative: each stage's meaning is carried by the heading and caption
-    // beside it, so announcing the drawing as well would say everything twice.
-    // The wrapper in `lifecycle.tsx` is aria-hidden, but only the active one —
-    // these need it themselves to stay out of the accessibility tree.
-    <svg
-      viewBox="0 0 800 600"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden
-      focusable="false"
-      className="size-full"
-    >
+    <svg viewBox={SCENE_VIEWBOX}>
       <rect width="800" height="600" fill={tone} />
       {children}
     </svg>
@@ -484,68 +499,92 @@ function FinishedSkylineArt() {
   );
 }
 
+/**
+ * What the page renders: copy plus a path. No nodes cross into the client
+ * component, which is the entire point — see the note at the top of the file.
+ */
 export const lifecycleStages: LifecycleStage[] = [
   {
     title: 'Modern skyline',
     caption: 'A city decides to grow. Somewhere, a drawing becomes a commitment.',
-    art: <SkylineArt />,
+    src: '/media/scenes/01-modern-skyline.svg',
   },
   {
     title: 'Construction planning',
     caption: 'Loads resolved, sections sized, connections detailed. The steel package takes shape.',
-    art: <BlueprintArt />,
+    src: '/media/scenes/02-construction-planning.svg',
   },
   {
     title: 'Steel manufacturing',
     caption:
       'Scrap becomes molten metal, molten metal becomes a heat with a number and a certificate.',
-    art: <FurnaceArt />,
+    src: '/media/scenes/03-steel-manufacturing.svg',
   },
   {
     title: 'Laser cutting',
     caption:
       'Geometry flows from the model to the machine — no transcription, no misread dimension.',
-    art: <CuttingArt />,
+    src: '/media/scenes/04-laser-cutting.svg',
   },
   {
     title: 'Welding',
     caption: 'Coded welders, qualified procedures, certified supervision. Every joint documented.',
-    art: <WeldingArt />,
+    src: '/media/scenes/05-welding.svg',
   },
   {
     title: 'Fabrication',
     caption: 'Drilled, coped, assembled and marked. What leaves the shop is ready to bolt up.',
-    art: <FabricationArt />,
+    src: '/media/scenes/06-fabrication.svg',
   },
   {
     title: 'Quality inspection',
     caption:
       'Dimensional check, weld inspection, coating thickness. Release is a gate, not a formality.',
-    art: <InspectionArt />,
+    src: '/media/scenes/07-quality-inspection.svg',
   },
   {
     title: 'Transportation',
     caption: 'Routes surveyed, permits secured, loads built in the order the crane will need them.',
-    art: <TransportArt />,
+    src: '/media/scenes/08-transportation.svg',
   },
   {
     title: 'Construction site',
     caption: 'Trailer to crane hook. On the tightest sites, the steel never touches the ground.',
-    art: <SiteArt />,
+    src: '/media/scenes/09-construction-site.svg',
   },
   {
     title: 'Erection',
     caption: 'Bay by bay, floor by floor. A frame rises at the rate its material allows.',
-    art: <ErectionArt />,
+    src: '/media/scenes/10-erection.svg',
   },
   {
     title: 'Completed buildings',
     caption: 'Cladding, services, fit-out. The steel disappears behind everything it holds up.',
-    art: <BuildingArt />,
+    src: '/media/scenes/11-completed-buildings.svg',
   },
   {
     title: 'Finished skyline',
     caption: 'And the city is a little taller than it was. That is the whole job.',
-    art: <FinishedSkylineArt />,
+    src: '/media/scenes/12-finished-skyline.svg',
   },
+];
+
+/**
+ * What the build script renders to files. Kept in the same order and keyed by
+ * the same slugs, so a scene cannot be added to one list and forgotten in the
+ * other without the file 404ing loudly in development.
+ */
+export const lifecycleScenes: LifecycleScene[] = [
+  { slug: '01-modern-skyline', art: <SkylineArt /> },
+  { slug: '02-construction-planning', art: <BlueprintArt /> },
+  { slug: '03-steel-manufacturing', art: <FurnaceArt /> },
+  { slug: '04-laser-cutting', art: <CuttingArt /> },
+  { slug: '05-welding', art: <WeldingArt /> },
+  { slug: '06-fabrication', art: <FabricationArt /> },
+  { slug: '07-quality-inspection', art: <InspectionArt /> },
+  { slug: '08-transportation', art: <TransportArt /> },
+  { slug: '09-construction-site', art: <SiteArt /> },
+  { slug: '10-erection', art: <ErectionArt /> },
+  { slug: '11-completed-buildings', art: <BuildingArt /> },
+  { slug: '12-finished-skyline', art: <FinishedSkylineArt /> },
 ];

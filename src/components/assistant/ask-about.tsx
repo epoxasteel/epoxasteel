@@ -29,7 +29,8 @@ export function AskAbout({
       type="button"
       onClick={() => openAssistant(seed)}
       className={cn(
-        'group inline-flex items-center gap-2 text-[0.875rem] transition-colors duration-300',
+        // min-h keeps the row a legal target without a visible box around it.
+        'group inline-flex min-h-6 items-center gap-2 py-1 text-[0.875rem] transition-colors duration-300',
         'text-ash hover:text-bright',
         className,
       )}

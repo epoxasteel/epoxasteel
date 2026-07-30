@@ -175,18 +175,27 @@ export function Testimonials() {
             <ol className="flex items-center gap-2">
               {testimonials.map((testimonial, position) => (
                 <li key={testimonial.name}>
+                  {/* The visible mark stays a hairline dash; the button around it
+                      is 24px square. As a bare 8×4px element it was well under
+                      the WCAG 2.2 minimum target size — and it only showed up in
+                      testing once the caption stopped covering it. */}
                   <button
                     type="button"
                     onClick={() => go(position, position > index ? 1 : -1)}
                     aria-label={`Show testimonial ${position + 1} of ${testimonials.length}`}
                     aria-current={position === index ? 'true' : undefined}
-                    className={cn(
-                      'h-1 rounded-full transition-all duration-500',
-                      position === index
-                        ? 'bg-arc-bright w-8'
-                        : 'bg-hairline-strong hover:bg-steel w-2',
-                    )}
-                  />
+                    className="group grid h-6 place-items-center px-2"
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'block h-1 rounded-full transition-all duration-500',
+                        position === index
+                          ? 'bg-arc-bright w-8'
+                          : 'bg-hairline-strong group-hover:bg-steel w-2',
+                      )}
+                    />
+                  </button>
                 </li>
               ))}
             </ol>
