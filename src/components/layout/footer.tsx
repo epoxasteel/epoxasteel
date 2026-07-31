@@ -177,12 +177,17 @@ export function Footer() {
 
               `self-start` because a flex child stretches by default, which gave
               the anchor a hit area far wider than its text.
+
+              No font size of its own: it inherits the bar's 0.8125rem, matching
+              the policy links exactly. Setting 0.8125rem here would look the
+              same today and drift the moment the bar's size changes, and the
+              whole point is that the two stay equal.
             */}
             <a
               href="https://yiddiweller.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-mist inline-flex min-h-6 items-center self-start text-[0.6875rem] text-[#5a626e] transition-colors"
+              className="hover:text-mist inline-flex min-h-6 items-center self-start text-[#5a626e] transition-colors"
             >
               Designed by yiddiweller.com
             </a>
