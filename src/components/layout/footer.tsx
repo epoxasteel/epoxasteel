@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Phone, Mail } from 'lucide-react';
 import { socialLinks } from '@/components/visual/social-icons';
-import { footerNav, legalNav, siteConfig } from '@/lib/site';
+import { legalNav, siteConfig } from '@/lib/site';
 import { Wordmark } from '@/components/visual/wordmark';
 import { NewsletterForm } from '@/components/forms/newsletter-form';
 import { cn } from '@/lib/utils';
@@ -122,41 +122,19 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Link columns.
-            Two abreast from the narrowest width rather than one: stacked, the
-            four lists ran the footer to 2,374px on a phone — longer than most of
-            the pages it sits under. */}
-        <div className="container-page border-hairline grid grid-cols-2 gap-x-6 gap-y-10 border-b py-12 lg:grid-cols-4 lg:gap-10">
-          {footerNav.map((column) => (
-            <nav key={column.title} aria-labelledby={`footer-${column.title}`}>
-              <h2
-                id={`footer-${column.title}`}
-                className="text-eyebrow text-steel font-medium uppercase"
-              >
-                {column.title}
-              </h2>
-              <ul className="mt-5 space-y-2.5">
-                {column.items.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        'group text-mist inline-flex items-center gap-2 text-[0.875rem]',
-                        'hover:text-bright transition-colors duration-250',
-                      )}
-                    >
-                      <span
-                        aria-hidden
-                        className="bg-arc-bright h-px w-0 transition-all duration-300 group-hover:w-3"
-                      />
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
+        {/*
+          No link columns.
+
+          Four lists — products, industries, services, company — repeated the
+          navigation a second time at the bottom of every page. With the header
+          down to three entries there is not enough site left for a sitemap in
+          the footer to be doing work; it was just the longest thing on the page.
+
+          The pages themselves are all still reachable and still in
+          `sitemap.xml`: the mega panel covers products, services and
+          industries, and About and Contact are in the bar. `footerNav` is still
+          in `lib/site.ts` if these ever come back.
+        */}
 
         {/* Legal bar */}
         <div className="container-page text-steel flex flex-col gap-4 py-7 text-[0.8125rem] md:flex-row md:items-center md:justify-between">
@@ -174,11 +152,6 @@ export function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/sitemap.xml" className="hover:text-mist transition-colors">
-                Sitemap
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

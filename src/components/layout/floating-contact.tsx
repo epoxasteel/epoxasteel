@@ -116,7 +116,7 @@ export function FloatingContact() {
               className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"
             />
             <Sparkle aria-hidden className="text-arc-glow relative size-4" />
-            <span className="relative">Ask EPOXA</span>
+            <span className="relative">Ask Epoxa</span>
           </button>
         </motion.div>
       ) : null}

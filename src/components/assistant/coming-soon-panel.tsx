@@ -59,7 +59,7 @@ export function AssistantComingSoonPanel() {
 
           <motion.div
             role="dialog"
-            aria-label="Epoxa Steel AI Assistant"
+            aria-label="Epoxa Steel Assistant"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.99 }}
@@ -90,7 +90,7 @@ export function AssistantComingSoonPanel() {
             <div className="border-hairline relative flex items-start justify-between gap-4 border-b px-5 py-4">
               <p className="text-eyebrow text-arc-glow flex items-center gap-2 uppercase">
                 <span aria-hidden className="bg-arc-bright size-1.5 rounded-full" />
-                Epoxa Steel AI
+                Epoxa Steel
               </p>
               <button
                 type="button"
@@ -113,13 +113,12 @@ export function AssistantComingSoonPanel() {
               </motion.span>
 
               <h2 className="font-display text-title text-bright mt-5 font-semibold">
-                Epoxa Steel AI Assistant
+                Epoxa Steel Assistant
               </h2>
 
               <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
-                Our intelligent assistant is currently being prepared to provide instant guidance
-                regarding fabrication services, structural steel, custom projects, and engineering
-                solutions.
+                Our assistant is currently being prepared to provide instant guidance regarding
+                fabrication services, structural steel, custom projects, and engineering solutions.
               </p>
 
               <p className="text-eyebrow text-arc-glow border-arc-bright/30 bg-arc/8 mt-6 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 uppercase">
