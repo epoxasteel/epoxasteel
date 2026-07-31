@@ -68,12 +68,13 @@ public/media/*.mov
 # Kept under 4 MB for that reason. Anything genuinely large belongs on a CDN with
 # NEXT_PUBLIC_HERO_VIDEO_URL pointing at it — see public/media/README.md.
 !public/media/hero.mp4
-# And the VP9 copy alongside it. Not for size — on this footage VP9 and H.264
-# land within 30 KB of each other — but for coverage: Chromium built from source
-# and Firefox on Linux without system codecs cannot decode H.264 at all, and
-# would fall back to the vector scene while every other browser showed video.
-# `resolveHeroVideo` offers this one first; Safari takes the MP4.
-!public/media/hero.webm
+# No WebM alongside it any more. On the first clip VP9 and H.264 landed within
+# 30 KB of each other, so shipping both cost nothing and covered Chromium built
+# from source and Firefox on Linux, neither of which can decode H.264. This
+# footage compresses very differently: 9.9 MB in VP9 against 4.7 in H.264, for
+# the same picture. Doubling the payload for that audience is the wrong trade,
+# and `resolveHeroVideo` already falls back to the vector scene for them.
+# !public/media/hero.webm
 
 # misc
 .vercel
