@@ -311,7 +311,11 @@ function HeroContent() {
         Reinforce Your Dream
       </p>
 
-      <h1 className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7">
+      {/* A step down from `text-display-xl`, which topped out at 8.5rem and had
+          "Service." running most of the way across a laptop. The clamp keeps the
+          same fluid behaviour; `leading` and `tracking` are carried over by hand
+          because an arbitrary size does not inherit the token's pair. */}
+      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[0.94] font-extrabold tracking-[-0.04em] sm:mt-7">
         {/* The trailing spaces are load-bearing. Without them `textContent`
             reads "Trust,Quality,Service.", which is what a crawler indexes and
             what a copy-paste produces, even though it renders correctly. */}
