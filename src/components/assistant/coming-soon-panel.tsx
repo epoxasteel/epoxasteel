@@ -8,6 +8,7 @@ import { siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { EASE_OUT_EXPO } from '@/lib/motion';
 import { useAssistant } from '@/components/assistant/assistant-context';
+import { Wordmark } from '@/components/visual/wordmark';
 
 /**
  * What the dock opens while the assistant is dark.
@@ -88,10 +89,10 @@ export function AssistantComingSoonPanel() {
             />
 
             <div className="border-hairline relative flex items-start justify-between gap-4 border-b px-5 py-4">
-              <p className="text-eyebrow text-arc-glow flex items-center gap-2 uppercase">
-                <span aria-hidden className="bg-arc-bright size-1.5 rounded-full" />
-                Epoxa Steel
-              </p>
+              {/* The lockup, not a label. This was a dot and "EPOXA STEEL" set in
+                  caps, which is the one place on the site that spelled the brand
+                  out instead of drawing it. */}
+              <Wordmark size="sm" />
               <button
                 type="button"
                 onClick={closeAssistant}

@@ -11,7 +11,7 @@ import {
   SteelFrameForeground,
 } from '@/components/visual/city-scene';
 import { resolveHeroVideo } from '@/lib/hero-video';
-import { Certifications, CallToAction, ContactStrip } from '@/components/home/sections';
+import { CallToAction, ContactStrip } from '@/components/home/sections';
 
 export const metadata: Metadata = buildMetadata({
   title: siteConfig.legalName,
@@ -33,9 +33,13 @@ export default function HomePage() {
        * argued from figures, projects and quotes that were written to show the
        * shape of the page rather than to record anything that happened.
        *
-       * What is left is what the business can evidence today: the
-       * certifications it holds, an invitation to ask, and how to reach a
-       * person. When there are real projects and real clients to name, they
+       * The accreditation panel went the same way: six certificates, ISO 9001
+       * through AISC, each with a description of what it covers. A badge is only
+       * worth the certificate behind it, and a visitor who asks for one and
+       * cannot be sent it has learned something worse than nothing.
+       *
+       * What is left is an invitation to ask and a way to reach a person. When
+       * there are real certificates, projects and clients to name, they
        * belong back on this page — the sections still exist in
        * `components/home/` and each one is a single line to restore.
        */}
@@ -53,7 +57,6 @@ export default function HomePage() {
           frame: <SteelFrameForeground />,
         }}
       />
-      <Certifications />
       <CallToAction />
       <ContactStrip />
     </>
