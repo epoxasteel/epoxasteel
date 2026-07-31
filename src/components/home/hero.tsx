@@ -106,9 +106,9 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
       />
 
       {/*
-        Anchored from the top, not centerd.
+        Anchored from the top, not centered.
 
-        Centring the content, whether with `items-center` or auto margins ,
+        Centering the content, whether with `items-center` or auto margins ,
         makes its position a function of its own height. When the web font
         replaces the fallback and the lead paragraph relands on a different
         number of lines, the block re-centers and everything in the hero moves:
@@ -320,13 +320,17 @@ function HeroContent() {
           "Service." running most of the way across a laptop. The clamp keeps the
           same fluid behaviour; `leading` and `tracking` are carried over by hand
           because an arbitrary size does not inherit the token's pair. */}
-      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[1.08] font-extrabold tracking-[-0.04em] sm:mt-7">
-        {/* The trailing spaces are load-bearing. Without them `textContent`
-            reads "Trust,Quality,Service.", which is what a crawler indexes and
-            what a copy-paste produces, even though it renders correctly. */}
-        Trust, <br />
-        Quality, <br />
-        <span className="text-metal">Service.</span>
+      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[1.08] font-bold tracking-[-0.04em] sm:mt-7">
+        {/* No punctuation. Three words stacked on their own lines are already
+            three statements; the commas and the full stop were doing the work
+            the line breaks do, at display size where a comma is a heavy mark.
+
+            The trailing spaces are load-bearing. Without them `textContent`
+            reads "TrustQualityService", which is what a crawler indexes and what
+            a copy-paste produces, even though it renders correctly on screen. */}
+        Trust <br />
+        Quality <br />
+        <span className="text-metal">Service</span>
       </h1>
 
       <p className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
@@ -368,7 +372,7 @@ function HeroContent() {
 /*
  * There is no scroll cue.
  *
- * There was: a centerd "Scroll" label with a mouse graphic and a dot looping
+ * There was: a centered "Scroll" label with a mouse graphic and a dot looping
  * forever. It sat at 50% of the hero, which is inside the proof bar's own
  * width, so on 1280x800 and 1440x900 — the two commonest laptops — the two
  * overlapped. Moving it right would have put it under the floating contact

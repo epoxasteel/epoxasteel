@@ -54,7 +54,7 @@ const BRAND = {
  * no external image means nothing to block, cache or fail to load.
  *
  * Proportions follow `<BeamMark />`: a 24-wide flange, a web a fifth of that
- * centerd beneath it. `font-size:0;line-height:0` keeps the `&nbsp;` spacers
+ * centered beneath it. `font-size:0;line-height:0` keeps the `&nbsp;` spacers
  * from adding height of their own.
  */
 function wordmark() {
