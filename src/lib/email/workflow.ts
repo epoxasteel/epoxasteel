@@ -2,7 +2,7 @@ import { sendEmail, ownerRecipients, replyToAddress } from '@/lib/email';
 import type { EmailAttachment, SendResult } from '@/lib/email/types';
 
 /**
- * The enquiry workflow, in one place.
+ * The inquiry workflow, in one place.
  *
  * Every form on this site does the same two things: tell the owner, and tell the
  * customer. Until now each route assembled that itself, which is how the
@@ -34,37 +34,37 @@ import type { EmailAttachment, SendResult } from '@/lib/email/types';
  * it; the confirmation does not.
  */
 
-export type EnquiryContent = {
+export type InquiryContent = {
   subject: string;
   html: string;
   text: string;
 };
 
-export type EnquiryDelivery = {
+export type InquiryDelivery = {
   /** Threaded into both messages' idempotency keys and the spool. */
   reference: string;
   /** Where the confirmation goes, and what the owner's Reply-To is set to. */
   customerEmail: string;
-  owner: EnquiryContent;
+  owner: InquiryContent;
   /** Omit when a form has nothing to confirm — the owner is still notified. */
-  customer?: EnquiryContent;
+  customer?: InquiryContent;
   /** Drawings and documents, attached to the owner's copy only. */
   attachments?: EmailAttachment[];
 };
 
-export type EnquiryResult = {
+export type InquiryResult = {
   /** The one that decides what the visitor is told. */
   owner: SendResult;
   customer?: SendResult;
 };
 
-export async function deliverEnquiry({
+export async function deliverInquiry({
   reference,
   customerEmail,
   owner,
   customer,
   attachments,
-}: EnquiryDelivery): Promise<EnquiryResult> {
+}: InquiryDelivery): Promise<InquiryResult> {
   const ownerSend = sendEmail({
     to: ownerRecipients(),
     reference,

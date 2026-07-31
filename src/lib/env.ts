@@ -4,7 +4,7 @@
  * Every variable this project reads is optional — the site runs with none of them
  * set, which is what makes a first deploy succeed before email or a database is
  * wired up. The failure mode that creates is silence: a production deployment
- * that looks healthy while every enquiry is being written to a log nobody reads.
+ * that looks healthy while every inquiry is being written to a log nobody reads.
  *
  * So this runs on the server at startup and prints a single, plainly-worded
  * report. It distinguishes three things:
@@ -84,7 +84,7 @@ function collect(): Report {
     }
   } else {
     report.warnings.push(
-      'no email transport configured (RESEND_API_KEY or SMTP_HOST), enquiries will be written to this log and not delivered',
+      'no email transport configured (RESEND_API_KEY or SMTP_HOST), inquiries will be written to this log and not delivered',
     );
   }
 
@@ -115,7 +115,7 @@ function collect(): Report {
    * Every address on this site is resolved from a variable through a chain of
    * fallbacks, which is flexible and completely opaque from the outside. One line
    * in the boot log turns "I think I set that correctly" into a fact, and it is
-   * the single most useful thing here on the day somebody wonders why an enquiry
+   * the single most useful thing here on the day somebody wonders why an inquiry
    * did not arrive.
    */
   if (production || resend || smtpHost) {
@@ -141,10 +141,10 @@ function collect(): Report {
 
   /* --- Database: optional backup ----------------------------------------- */
   if (process.env.DATABASE_URL) {
-    report.notes.push('database: connected (enquiries backed up)');
+    report.notes.push('database: connected (inquiries backed up)');
   } else {
     report.warnings.push(
-      'DATABASE_URL is not set, enquiries are emailed but not stored, so there is no disaster-recovery copy',
+      'DATABASE_URL is not set, inquiries are emailed but not stored, so there is no disaster-recovery copy',
     );
   }
 
@@ -199,7 +199,7 @@ function collect(): Report {
       report.notes.push(`timestamps: ${timezone}`);
     } catch {
       report.errors.push(
-        `TIMEZONE is not a recognised IANA zone: ${timezone} (e.g. "America/New_York")`,
+        `TIMEZONE is not a recognized IANA zone: ${timezone} (e.g. "America/New_York")`,
       );
     }
   }
@@ -208,7 +208,7 @@ function collect(): Report {
   /*
    * Reachability is the one thing on this site that has to be right. A typo in a
    * public contact address does not break a build, does not throw, and does not
-   * show up in testing — it just quietly sends every enquiry nowhere.
+   * show up in testing — it just quietly sends every inquiry nowhere.
    */
   const publicEmails = [
     ['NEXT_PUBLIC_CONTACT_EMAIL', process.env.NEXT_PUBLIC_CONTACT_EMAIL],
@@ -306,7 +306,7 @@ let reported = false;
  *
  * Called from `instrumentation.ts`, which Next runs before the server begins
  * accepting requests — so a misconfigured deployment fails at boot with a
- * readable reason rather than on the first enquiry.
+ * readable reason rather than on the first inquiry.
  */
 export function validateEnv() {
   if (reported) return;

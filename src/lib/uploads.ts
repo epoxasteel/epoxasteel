@@ -14,7 +14,7 @@
  *   design has none of them.
  *
  *   **An allowlist, checked twice.** The declared MIME type and the extension both
- *   have to be recognised. A denylist of dangerous extensions is the classic wrong
+ *   have to be recognized. A denylist of dangerous extensions is the classic wrong
  *   answer — it is a list of everything anyone has thought of so far.
  *
  *   **Magic bytes.** A browser will happily report `application/pdf` for a file
@@ -36,7 +36,7 @@
 /** 10 MB unless `UPLOAD_MAX_MB` says otherwise. Server-authoritative. */
 export const DEFAULT_MAX_MB = 10;
 
-/** Beyond this the request is refused outright — one enquiry, not a bulk transfer. */
+/** Beyond this the request is refused outright — one inquiry, not a bulk transfer. */
 export const MAX_FILES = 5;
 
 export function uploadMaxBytes() {

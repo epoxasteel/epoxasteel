@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Check, Loader2, Send } from 'lucide-react';
-import { contactSchema, enquiryTypes, type ContactInput } from '@/lib/validations';
+import { contactSchema, inquiryTypes, type ContactInput } from '@/lib/validations';
 import { Field, Input, Textarea, Select, Checkbox, Honeypot } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { Alert } from '@/components/ui/misc';
@@ -171,7 +171,7 @@ export function ContactForm({ className }: { className?: string }) {
         <Field
           id="contact-phone"
           label="Phone"
-          hint="Optional, helpful if your enquiry is urgent."
+          hint="Optional, helpful if your inquiry is urgent."
           error={errors.phone?.message}
         >
           {(props) => (
@@ -188,13 +188,13 @@ export function ContactForm({ className }: { className?: string }) {
 
       <Field
         id="contact-project-type"
-        label="What is your enquiry about?"
+        label="What is your inquiry about?"
         error={errors.projectType?.message}
         required
       >
         {(props) => (
           <Select placeholder="Select an option" {...props} {...register('projectType')}>
-            {enquiryTypes.map((type) => (
+            {inquiryTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>
@@ -206,7 +206,7 @@ export function ContactForm({ className }: { className?: string }) {
       <Field id="contact-subject" label="Subject" error={errors.subject?.message} required>
         {(props) => (
           <Input
-            placeholder="Structural steel enquiry, Brooklyn project"
+            placeholder="Structural steel inquiry, Brooklyn project"
             {...props}
             {...register('subject')}
           />

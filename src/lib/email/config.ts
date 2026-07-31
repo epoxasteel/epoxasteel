@@ -19,12 +19,12 @@ import { siteConfig } from '@/lib/site';
  * ## Why Reply-To matters more than it looks
  *
  * The owner notification's Reply-To is the *customer's* address. That single header
- * is the entire "reply to the enquiry" workflow: no dashboard, no copy-paste, no
+ * is the entire "reply to the inquiry" workflow: no dashboard, no copy-paste, no
  * looking up who sent what. Press Reply, type, send.
  *
  * The customer confirmation's Reply-To is the business address, not `no-reply@`.
  * Some people answer a confirmation email with the thing they forgot to mention,
- * and a reply that bounces off a no-reply mailbox is a lost enquiry that both sides
+ * and a reply that bounces off a no-reply mailbox is a lost inquiry that both sides
  * believe was delivered.
  */
 
@@ -60,10 +60,10 @@ export function fromAddress() {
 }
 
 /**
- * Where enquiry notifications go. Comma-separated for several people.
+ * Where inquiry notifications go. Comma-separated for several people.
  *
  * Falls back to the public contact address, which is always a real mailbox — the
- * one failure this must not have is silently sending enquiries nowhere.
+ * one failure this must not have is silently sending inquiries nowhere.
  */
 export function ownerRecipients() {
   const configured =

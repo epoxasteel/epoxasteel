@@ -50,7 +50,7 @@ export default function RouteError({
             >
               {siteConfig.contact.email}
             </a>
-            . We would rather take your enquiry by phone than lose it.
+            . We would rather take your inquiry by phone than lose it.
           </p>
 
           {error.digest ? (

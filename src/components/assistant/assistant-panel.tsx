@@ -12,7 +12,7 @@ import { useAssistant } from '@/components/assistant/assistant-context';
 import { Composer } from '@/components/assistant/composer';
 
 /**
- * The enquiry desk.
+ * The inquiry desk.
  *
  * Built to read as part of the site rather than a widget bolted to the corner of
  * it: the same surfaces, hairlines, grain and arc accent as every other panel,
@@ -203,7 +203,7 @@ export function AssistantPanel() {
               there is nothing to dim. */}
           <motion.button
             type="button"
-            aria-label="Close the enquiry desk"
+            aria-label="Close the inquiry desk"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -214,7 +214,7 @@ export function AssistantPanel() {
 
           <motion.div
             role="dialog"
-            aria-label="EPOXA STEEL enquiry desk"
+            aria-label="EPOXA STEEL inquiry desk"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.99 }}
@@ -240,7 +240,7 @@ export function AssistantPanel() {
               <div>
                 <p className="text-eyebrow text-arc-glow flex items-center gap-2 uppercase">
                   <span aria-hidden className="bg-arc-bright size-1.5 rounded-full" />
-                  Enquiry desk
+                  Inquiry desk
                 </p>
                 <p className="font-display text-bright mt-2 text-[1.0625rem] leading-tight font-semibold">
                   Ask us about steel
@@ -264,7 +264,7 @@ export function AssistantPanel() {
                 <button
                   type="button"
                   onClick={closeAssistant}
-                  aria-label="Close the enquiry desk"
+                  aria-label="Close the inquiry desk"
                   className="text-steel hover:text-bright grid size-9 place-items-center rounded-sm transition-colors duration-200 hover:bg-white/[0.05]"
                 >
                   <X aria-hidden className="size-4" />
@@ -281,7 +281,7 @@ export function AssistantPanel() {
                 <div>
                   <p className="text-ash text-[0.9375rem] leading-relaxed">
                     Tell us what you are building and we will point you at the right sections,
-                    grades and processing. If it turns into a real enquiry, we will get it to the
+                    grades and processing. If it turns into a real inquiry, we will get it to the
                     desk.
                   </p>
 

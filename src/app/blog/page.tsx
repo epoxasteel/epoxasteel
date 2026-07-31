@@ -40,7 +40,7 @@ export default async function BlogPage({
       <PageHero
         eyebrow="Insights"
         title="Written by the people who do the work."
-        description="Grade selection, galvanizing detail, market conditions and the logistics decisions that actually move an erection programme. No announcements dressed up as insight."
+        description="Grade selection, galvanizing detail, market conditions and the logistics decisions that actually move an erection program. No announcements dressed up as insight."
         trail={trail}
       >
         <BlogSearch />

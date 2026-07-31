@@ -51,7 +51,7 @@ export function Header() {
           /*
            * Real glass, not a tinted panel. Three things do the work:
            * a translucent surface light enough to read the page through,
-           * a saturation boost so colour passing underneath stays alive rather
+           * a saturation boost so color passing underneath stays alive rather
            * than turning to grey mush, and the hairline highlight below that
            * gives the pane a lit top edge.
            */
@@ -194,7 +194,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
 
         It used to be `left-1/2 -translate-x-1/2 max-w-6xl` measured from this
         `<nav>`, which sits between the wordmark and the buttons rather than in
-        the middle of the header, so the panel hung off-centre and stopped short
+        the middle of the header, so the panel hung off-center and stopped short
         of both. `fixed` measures against the viewport instead, and
         `container-page` inside it reproduces the header's own content box, so
         the panel starts where the mark starts and ends where Request a Quote

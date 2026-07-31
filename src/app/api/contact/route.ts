@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { contactSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
 import { generateReference } from '@/lib/email';
-import { deliverEnquiry } from '@/lib/email/workflow';
+import { deliverInquiry } from '@/lib/email/workflow';
 import { contactInternalEmail, contactConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
    *
    * A bad or expired token is accepted silently rather than refused. Refusing
    * would mean a visitor who left the tab open over lunch loses a written-out
-   * enquiry to a message about a field they cannot see, and the rate limit,
+   * inquiry to a message about a field they cannot see, and the rate limit,
    * honeypot, timing check and duplicate fingerprint all still apply. What it
    * does is log the reason, so a spike is visible.
    */
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
         },
       });
     } catch (error) {
-      // Persistence must never lose an enquiry that email can still deliver.
+      // Persistence must never lose an inquiry that email can still deliver.
       console.error('[contact] persistence failed', error);
     }
   }
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
   // Owner first with Reply-To set to the customer, then the confirmation. The
   // routing, reply addresses and ordering all live in one place — see
   // lib/email/workflow.ts.
-  const { owner: internalResult } = await deliverEnquiry({
+  const { owner: internalResult } = await deliverInquiry({
     reference,
     customerEmail: data.email,
     owner: internal,
@@ -166,7 +166,7 @@ export async function POST(request: Request) {
    *   Delivered — the desk has it.
    *   Held      — the transport is having a bad few minutes; the message is on the
    *               spool and goes out on the back of the next successful send. The
-   *               enquiry is not lost, so telling someone to phone instead would
+   *               inquiry is not lost, so telling someone to phone instead would
    *               be wrong. We do say the confirmation may be slow, because it will.
    *   Lost      — nothing captured it: no delivery, no spool, no database. Say so.
    */
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message:
-          'We could not deliver your message. Please email us directly or call. We do not want to lose your enquiry.',
+          'We could not deliver your message. Please email us directly or call. We do not want to lose your inquiry.',
       },
       { status: 502 },
     );

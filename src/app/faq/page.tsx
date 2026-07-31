@@ -32,7 +32,7 @@ export default function FaqPage() {
       <PageHero
         eyebrow="FAQ"
         title="The questions we are asked most."
-        description="Ordering, delivery, certification, payment and technical support. If your question is not here, our team answers enquiries within one business day, and we would rather you asked than guessed."
+        description="Ordering, delivery, certification, payment and technical support. If your question is not here, our team answers inquiries within one business day, and we would rather you asked than guessed."
         trail={trail}
       />
 

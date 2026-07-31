@@ -106,12 +106,12 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
       />
 
       {/*
-        Anchored from the top, not centred.
+        Anchored from the top, not centerd.
 
         Centring the content, whether with `items-center` or auto margins ,
         makes its position a function of its own height. When the web font
         replaces the fallback and the lead paragraph relands on a different
-        number of lines, the block re-centres and everything in the hero moves:
+        number of lines, the block re-centers and everything in the hero moves:
         0.187 of cumulative layout shift, measured, on the most important screen
         of the site.
 
@@ -332,7 +332,7 @@ function HeroContent() {
       <p className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
         Premium reinforcing steel for commercial, industrial and residential construction, supplied
         with mill-traceable certification, cut and bent to schedule, and delivered sequenced to your
-        pour programme.
+        pour program.
       </p>
 
       {/* Full width on a phone. Side by side they are within three pixels of
@@ -368,7 +368,7 @@ function HeroContent() {
 /*
  * There is no scroll cue.
  *
- * There was: a centred "Scroll" label with a mouse graphic and a dot looping
+ * There was: a centerd "Scroll" label with a mouse graphic and a dot looping
  * forever. It sat at 50% of the hero, which is inside the proof bar's own
  * width, so on 1280x800 and 1440x900 — the two commonest laptops — the two
  * overlapped. Moving it right would have put it under the floating contact

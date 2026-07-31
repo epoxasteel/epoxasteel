@@ -4,10 +4,10 @@ import { extendTailwindMerge } from 'tailwind-merge';
 /**
  * tailwind-merge has to be told about our custom scales.
  *
- * Without this it parses `text-display` as a *colour* (`text-{color}`), decides
+ * Without this it parses `text-display` as a *color* (`text-{color}`), decides
  * it conflicts with `text-bright`, and silently drops the font size — so every
  * heading built through `cn()` renders at body size. Registering the custom
- * font sizes and text shadows as literals makes them win over the colour
+ * font sizes and text shadows as literals makes them win over the color
  * validator. The same applies to the shadow and radius scales.
  */
 const twMerge = extendTailwindMerge({

@@ -5,7 +5,7 @@ export const faqs: Faq[] = [
     category: 'Ordering',
     question: 'How quickly will I receive a quotation?',
     answer:
-      'Standard enquiries are quoted within 48 hours. Complex packages involving fabrication, non-standard grades or mill-direct sourcing typically take three to five working days, and we confirm the expected turnaround within four business hours of receiving your enquiry so you always know when to expect it.',
+      'Standard inquiries are quoted within 48 hours. Complex packages involving fabrication, non-standard grades or mill-direct sourcing typically take three to five working days, and we confirm the expected turnaround within four business hours of receiving your inquiry so you always know when to expect it.',
   },
   {
     category: 'Ordering',
@@ -41,7 +41,7 @@ export const faqs: Faq[] = [
     category: 'Products',
     question: 'Do you supply galvanized or coated steel?',
     answer:
-      'Yes. Hot-dip galvanizing to ASTM A123 and ISO 1461 is available on sections, plate, fabricated assemblies and reinforcement, with a maximum single-dip length of 15.5 metres. We also apply blast-and-prime, full epoxy systems and duplex coatings in our climate-controlled coating bay, with dry film thickness verified and recorded.',
+      'Yes. Hot-dip galvanizing to ASTM A123 and ISO 1461 is available on sections, plate, fabricated assemblies and reinforcement, with a maximum single-dip length of 15.5 meters. We also apply blast-and-prime, full epoxy systems and duplex coatings in our climate-controlled coating bay, with dry film thickness verified and recorded.',
   },
   {
     category: 'Products',
@@ -81,7 +81,7 @@ export const faqs: Faq[] = [
   },
   {
     category: 'Quality',
-    question: 'Are you certified to recognised quality standards?',
+    question: 'Are you certified to recognized quality standards?',
     answer:
       'We hold ISO 9001 for quality management, ISO 14001 for environmental management and ISO 45001 for occupational health and safety. Our fabrication operation is certified to EN 1090 for execution classes EXC1 to EXC3 and to EN ISO 3834-2 for welding quality, and we are AISC certified for building structures.',
   },
@@ -119,7 +119,7 @@ export const faqs: Faq[] = [
     category: 'Support',
     question: 'Who do I contact once my order is placed?',
     answer:
-      'Every order is assigned a named account manager who owns it from enquiry through to proof of delivery, supported by a technical contact for material and welding questions. You will have direct dial and email for both, and you will never be routed through a general enquiries line.',
+      'Every order is assigned a named account manager who owns it from inquiry through to proof of delivery, supported by a technical contact for material and welding questions. You will have direct dial and email for both, and you will never be routed through a general inquiries line.',
   },
   {
     category: 'Support',

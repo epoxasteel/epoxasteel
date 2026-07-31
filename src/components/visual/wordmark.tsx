@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
  * Typographic placeholder wordmark.
  *
  * Built from type and one drawn glyph rather than an image, so it stays sharp
- * at every size and inherits colour from context. When the final logo arrives,
+ * at every size and inherits color from context. When the final logo arrives,
  * replace the internals of this component — every usage across the site points
  * here, so nothing else needs touching. See docs/BRANDING.md.
  */

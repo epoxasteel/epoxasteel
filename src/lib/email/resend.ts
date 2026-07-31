@@ -8,9 +8,9 @@ import { fromAddress } from '@/lib/email/config';
  * do with the rest of the mail layer, and putting them in the generic sender would
  * make it Resend-shaped.
  *
- * ## 1. Pacing, because two emails per enquiry is already the rate limit
+ * ## 1. Pacing, because two emails per inquiry is already the rate limit
  *
- * Resend allows two requests per second by default. Every enquiry sends two emails
+ * Resend allows two requests per second by default. Every inquiry sends two emails
  * — the owner notification and the customer confirmation — and a successful send
  * also triggers a drain of any spooled backlog. Fired in parallel that is two to
  * five requests inside the same tick, and the surplus comes back `429`.
@@ -28,10 +28,10 @@ import { fromAddress } from '@/lib/email/config';
  *
  * A request that times out has an unknown outcome: the API may have accepted the
  * message before the connection dropped. Retrying it blind is how a customer gets
- * two confirmations and an owner gets two copies of the same enquiry.
+ * two confirmations and an owner gets two copies of the same inquiry.
  *
- * Resend accepts an idempotency key. Ours is the enquiry's reference plus which of
- * the two emails this is, so a retry of the same message is recognised and
+ * Resend accepts an idempotency key. Ours is the inquiry's reference plus which of
+ * the two emails this is, so a retry of the same message is recognized and
  * collapsed server-side while a genuinely different message is unaffected.
  *
  * ## 3. Error classification, because retrying a bad API key is pointless
@@ -131,7 +131,7 @@ export async function sendWithResend(message: EmailMessage): Promise<SendResult>
           contentType: attachment.contentType,
         })),
       },
-      // Same enquiry, same email, same key — so a retry after an ambiguous
+      // Same inquiry, same email, same key — so a retry after an ambiguous
       // timeout is collapsed rather than delivered twice.
       message.idempotencyKey ? { idempotencyKey: message.idempotencyKey } : undefined,
     ),
@@ -144,10 +144,10 @@ export async function sendWithResend(message: EmailMessage): Promise<SendResult>
       return { ok: false, provider: 'resend', error: error.message, permanent: true };
     }
 
-    // Transient: rate limit, internal error, anything unrecognised. Unrecognised
+    // Transient: rate limit, internal error, anything unrecognized. Unrecognized
     // counts as transient on purpose — a new error code we have never seen is more
     // likely a hiccup than a permanent misconfiguration, and treating it as
-    // retryable errs towards delivering the enquiry.
+    // retryable errs towards delivering the inquiry.
     return { ok: false, provider: 'resend', error: `${error.name}: ${error.message}` };
   }
 

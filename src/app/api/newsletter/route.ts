@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { newsletterSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validations';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
 import { verifyFormToken, sameOrigin } from '@/lib/form-token';
-import { deliverEnquiry } from '@/lib/email/workflow';
+import { deliverInquiry } from '@/lib/email/workflow';
 import { newsletterConfirmationEmail, newsletterInternalEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
    */
   const reference = `EPX-N-${createHash('sha256').update(email).digest('hex').slice(0, 10).toUpperCase()}`;
 
-  await deliverEnquiry({
+  await deliverInquiry({
     reference,
     customerEmail: email,
     owner: internal,

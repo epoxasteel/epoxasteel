@@ -16,8 +16,8 @@ import { DEFAULT_MAX_MB, MAX_FILES, acceptLabel } from '@/lib/uploads';
  * being refused.
  *
  * If the request fails the form still submits — with no token. That is a
- * deliberate choice: the endpoint's other defences (rate limit, honeypot, timing,
- * duplicate fingerprint) still apply, and a genuine enquiry lost to a blip on one
+ * deliberate choice: the endpoint's other defenses (rate limit, honeypot, timing,
+ * duplicate fingerprint) still apply, and a genuine inquiry lost to a blip on one
  * auxiliary request would be a far worse failure than a spam message getting
  * through. The server logs the absence.
  *

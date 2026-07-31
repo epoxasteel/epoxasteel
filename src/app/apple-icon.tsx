@@ -14,7 +14,7 @@ export const contentType = 'image/png';
  * The web used to be white against blue flanges, and there was a 9px gap
  * splitting the three pieces apart. That made the home-screen icon a different
  * logo from the one in the header: a beam is one piece of rolled steel, so it is
- * one colour and one shape.
+ * one color and one shape.
  */
 const UNIT = 4.5;
 

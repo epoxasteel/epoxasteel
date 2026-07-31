@@ -6,20 +6,20 @@ export const services: Service[] = [
     name: 'Steel Supply',
     tagline: 'Certified material, on the date you were promised.',
     summary:
-      'Direct mill relationships and deep local inventory, so your material arrives when the programme says it should, with the certificates to match.',
+      'Direct mill relationships and deep local inventory, so your material arrives when the program says it should, with the certificates to match.',
     overview: [
       'Supply is a promise about time as much as it is about metal. We hold inventory in the sizes and grades that specifications actually call for, and we buy directly from mills we have audited rather than through layers of traders who add margin and remove accountability.',
-      'Every order is assigned to a named account manager who owns it from enquiry to proof of delivery. You are never explaining your project to a call centre, and you always know who to call when something changes.',
+      'Every order is assigned to a named account manager who owns it from inquiry to proof of delivery. You are never explaining your project to a call center, and you always know who to call when something changes.',
       'Documentation travels with the steel. Mill certificates matched to heat numbers, delivery notes referencing your purchase order lines, and a project file that stays complete for the full defects liability period.',
     ],
     process: [
       {
-        title: 'Enquiry and take-off',
+        title: 'Inquiry and take-off',
         body: 'Send drawings, a bill of quantities or a simple list. We check availability, flag substitutions worth considering, and price against real stock rather than an indicative rate.',
       },
       {
         title: 'Quotation',
-        body: 'A line-by-line quotation within 48 hours for standard enquiries, showing grade, size, quantity, lead time and delivery terms with nothing buried in a footnote.',
+        body: 'A line-by-line quotation within 48 hours for standard inquiries, showing grade, size, quantity, lead time and delivery terms with nothing buried in a footnote.',
       },
       {
         title: 'Order confirmation',
@@ -118,7 +118,7 @@ export const services: Service[] = [
       'Laser, plasma, oxy-fuel, saw and shear processing driven directly from DXF, DWG and DSTV files, to tolerance, first time.',
     overview: [
       'Cutting is where errors are cheapest to prevent and most expensive to discover. We drive every machine directly from your CAD files, so what you drew is what gets cut, no transcription, no interpretation, no misread dimension.',
-      'Fibre laser handles fine work to ±0.5 mm; CNC plasma covers heavy plate to 60 mm; oxy-fuel takes the very thick sections; and bandsaws, shears and press brakes complete the process. Nesting is optimised across your order to minimise the material you pay for and never use.',
+      'Fiber laser handles fine work to ±0.5 mm; CNC plasma covers heavy plate to 60 mm; oxy-fuel takes the very thick sections; and bandsaws, shears and press brakes complete the process. Nesting is optimised across your order to minimise the material you pay for and never use.',
     ],
     process: [
       {
@@ -139,7 +139,7 @@ export const services: Service[] = [
       },
     ],
     capabilities: [
-      'Fibre laser to 25 mm, ±0.5 mm tolerance',
+      'Fiber laser to 25 mm, ±0.5 mm tolerance',
       'CNC plasma to 60 mm, 3,000 × 12,000 mm bed',
       'Oxy-fuel for heavy plate to 200 mm',
       'Bandsaw cutting to ±1 mm on section and bar',
@@ -163,7 +163,7 @@ export const services: Service[] = [
       'Non-standard grades, unusual sizes, special lengths and mill-direct orders sourced and managed end to end.',
     overview: [
       "Some projects need steel that is not sitting in anyone's yard: a grade with specific impact toughness at low temperature, a length nobody stocks, a section rolled to an obsolete standard for a heritage repair.",
-      'We handle mill-direct enquiries as a managed process rather than a hopeful email. We know which mills roll what, when their rolling windows fall, and what minimum tonnage each will accept, so we can tell you quickly whether an order is viable and what it will actually cost.',
+      'We handle mill-direct inquiries as a managed process rather than a hopeful email. We know which mills roll what, when their rolling windows fall, and what minimum tonnage each will accept, so we can tell you quickly whether an order is viable and what it will actually cost.',
       'For repeat non-standard requirements we hold consignment stock against your forecast, converting a twelve-week mill lead time into a two-day call-off.',
     ],
     process: [
@@ -172,8 +172,8 @@ export const services: Service[] = [
         body: 'We review the requirement against available standards and suggest equivalents where a specified grade is unnecessarily restrictive or commercially punishing.',
       },
       {
-        title: 'Mill enquiry',
-        body: 'Enquiries placed with mills capable of the specification, with rolling windows and minimum quantities confirmed before you commit.',
+        title: 'Mill inquiry',
+        body: 'Inquiries placed with mills capable of the specification, with rolling windows and minimum quantities confirmed before you commit.',
       },
       {
         title: 'Order placement',
@@ -181,7 +181,7 @@ export const services: Service[] = [
       },
       {
         title: 'Production monitoring',
-        body: 'Progress tracked against the rolling programme with milestone updates, so a slipped window is known weeks ahead rather than on the delivery date.',
+        body: 'Progress tracked against the rolling program with milestone updates, so a slipped window is known weeks ahead rather than on the delivery date.',
       },
       {
         title: 'Inspection and release',
@@ -259,42 +259,42 @@ export const services: Service[] = [
     name: 'Project Consultation',
     tagline: 'Planning the steel package before it becomes a problem.',
     summary:
-      'Early-stage advice on procurement strategy, packaging, programme and risk, brought in when it can still change the outcome.',
+      'Early-stage advice on procurement strategy, packaging, program and risk, brought in when it can still change the outcome.',
     overview: [
       'Steel is usually one of the first packages procured and one of the last to be forgiven for slipping. Bringing a supplier in during design rather than at tender lets decisions be made when they are still cheap.',
-      'We work with clients, contractors and design teams at feasibility and design stage: advising on procurement route, package boundaries, market conditions, lead times and the risks that most commonly derail steel programmes.',
+      'We work with clients, contractors and design teams at feasibility and design stage: advising on procurement route, package boundaries, market conditions, lead times and the risks that most commonly derail steel programs.',
       'This is advisory work, offered without obligation to purchase. Clients who use it usually do buy from us, but they buy a better-planned package.',
     ],
     process: [
       {
         title: 'Briefing',
-        body: 'We take the project brief, programme and current design status, and agree what decisions the consultation needs to inform.',
+        body: 'We take the project brief, program and current design status, and agree what decisions the consultation needs to inform.',
       },
       {
         title: 'Market and options analysis',
-        body: 'Current pricing, mill capacity, lead times and procurement route options assessed against your programme.',
+        body: 'Current pricing, mill capacity, lead times and procurement route options assessed against your program.',
       },
       {
         title: 'Package strategy',
-        body: 'Recommended package boundaries, release sequence and procurement milestones documented against the construction programme.',
+        body: 'Recommended package boundaries, release sequence and procurement milestones documented against the construction program.',
       },
       {
         title: 'Risk register',
-        body: 'The steel-specific risks that could affect programme or cost, with mitigation and ownership assigned.',
+        body: 'The steel-specific risks that could affect program or cost, with mitigation and ownership assigned.',
       },
     ],
     capabilities: [
       'Feasibility and early-stage cost advice',
       'Procurement route and package strategy',
       'Market condition and lead time briefing',
-      'Programme risk identification',
+      'Program risk identification',
       'Design team workshops and CPD sessions',
       'Tender documentation review',
     ],
     deliverables: [
       'Procurement strategy report',
       'Indicative budget with basis clearly stated',
-      'Package release programme',
+      'Package release program',
       'Steel-specific risk register',
     ],
     relatedProducts: ['structural-steel', 'custom-fabrication', 'reinforcing-steel'],

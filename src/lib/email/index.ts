@@ -18,7 +18,7 @@ export { emailProvider, fromAddress, ownerRecipients, replyToAddress };
  *   3. **Console** — neither configured. Prints what it would have sent.
  *
  * The console transport is why a first deploy succeeds before email exists: every
- * form works, every validation runs, and the enquiry is printed rather than
+ * form works, every validation runs, and the inquiry is printed rather than
  * delivered. It is also how the whole pipeline is testable with no credentials.
  */
 
@@ -27,7 +27,7 @@ export { emailProvider, fromAddress, ownerRecipients, replyToAddress };
  *
  * A carriage return inside a header value is how header injection works:
  * everything after it is parsed as a new header, so a contact-form subject of
- * `"Enquiry\r\nBcc: attacker@example.com"` becomes a blind copy to an address
+ * `"Inquiry\r\nBcc: attacker@example.com"` becomes a blind copy to an address
  * the sender chose. Confirmed reachable from the contact form before this
  * existed — the schema caps the subject's length but said nothing about newlines.
  *
@@ -48,7 +48,7 @@ function headerSafe(value: string) {
 /**
  * A stable idempotency key for one message.
  *
- * The reference identifies the enquiry; the recipient distinguishes the owner
+ * The reference identifies the inquiry; the recipient distinguishes the owner
  * notification from the customer confirmation, which share it. Retries of the same
  * message reuse the key and are collapsed by the provider; two different messages
  * never collide.
@@ -115,7 +115,7 @@ function wait(ms: number) {
  * Three attempts with growing gaps, because the overwhelming majority of transport
  * failures are a provider having a bad few seconds. If all three fail the message
  * is spooled to disk and retried on the back of later traffic — the customer has
- * already been told their enquiry arrived, and it has to be true.
+ * already been told their inquiry arrived, and it has to be true.
  *
  * A failure the transport reports as *permanent* skips both the retries and the
  * spool. Trying an invalid API key three more times costs the visitor six seconds

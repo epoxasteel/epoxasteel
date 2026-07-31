@@ -37,7 +37,7 @@ For a statically loaded column in a heated building, carrying axial load with bo
 
 The picture changes in four situations:
 
-- **Welding across a corner.** If a weld crosses or terminates in a cold-formed corner, it is being deposited into work-hardened, residually stressed material. In heavier walls this is a recognised cracking risk, and design codes place restrictions on it.
+- **Welding across a corner.** If a weld crosses or terminates in a cold-formed corner, it is being deposited into work-hardened, residually stressed material. In heavier walls this is a recognized cracking risk, and design codes place restrictions on it.
 - **Fatigue loading.** Cyclic loading interacts badly with residual stress. For bridges, crane structures and supports carrying vibrating equipment, hot-finished is the safer selection.
 - **Low temperature service.** Reduced corner toughness matters where the structure sees genuinely low temperatures. Impact-tested hot-finished material is the straightforward answer.
 - **Architecturally exposed work.** The tighter corner radius of hot-finished sections reads as a crisper line. Where the steel is the architecture, this is a visible difference, not a technicality.
@@ -200,7 +200,7 @@ We will also tell you when a lower-carbon option is available and when it is not
 
 Structural section prices have moved within a comparatively narrow band through the first half of the year, welcome after the swings of the preceding period, though the stability is more balanced weakness than genuine strength. Demand is soft in some segments and capacity is ample.
 
-Plate has behaved differently. Energy infrastructure and defence demand have kept heavy plate tighter than sections, and lead times on thicker gauges have extended. Buyers treating plate and section as one market are being surprised.
+Plate has behaved differently. Energy infrastructure and defense demand have kept heavy plate tighter than sections, and lead times on thicker gauges have extended. Buyers treating plate and section as one market are being surprised.
 
 Reinforcement tracks construction activity closely and regionally. It is the product where local conditions matter most and where a national average tells you least.
 
@@ -219,11 +219,11 @@ Reinforcement tracks construction activity closely and regionally. It is the pro
 
 ## Practical advice
 
-**Fix your price when the programme is fixed, not before.** A twelve-week price hold on material you cannot yet take delivery of transfers risk to your supplier, and they will charge for that. If your programme is genuinely certain, fix. If it is not, a shorter validity with an agreed adjustment mechanism usually costs less.
+**Fix your price when the program is fixed, not before.** A twelve-week price hold on material you cannot yet take delivery of transfers risk to your supplier, and they will charge for that. If your program is genuinely certain, fix. If it is not, a shorter validity with an agreed adjustment mechanism usually costs less.
 
 **Separate plate from section in your risk register.** They are not moving together and they should not be planned together.
 
-**Confirm lead times rather than assuming them.** The gap between a standard section and a heavy plate has widened substantially. A programme built on last year's lead times will find out about that late.
+**Confirm lead times rather than assuming them.** The gap between a standard section and a heavy plate has widened substantially. A program built on last year's lead times will find out about that late.
 
 **Consider consignment for repeat requirements.** Where you have visibility of demand, consignment stock converts a mill lead time into a call-off. It costs something. It costs less than a stopped site.
 
@@ -284,7 +284,7 @@ Zinc adds thickness, and threads are the place where that thickness has nowhere 
 
 Every galvanizing plant has a maximum single-dip envelope. Exceeding it means double-dipping, which leaves a visible line where the two dips meet. On concealed steelwork that is cosmetic. On architecturally exposed steelwork it is a defect.
 
-Our kettle takes 15.5 metres in a single dip. If your assembly exceeds that, we would rather discuss splice positions at drawing stage than explain a witness line afterwards.
+Our kettle takes 15.5 meters in a single dip. If your assembly exceeds that, we would rather discuss splice positions at drawing stage than explain a witness line afterwards.
 
 ## 6. Faying surfaces in slip-critical connections
 
@@ -306,7 +306,7 @@ It has caught vent problems on roughly one job in four. That figure has not impr
       'Steel arriving on the right day in the wrong order still costs you a day. What sequenced delivery involves, and what it requires from you.',
     published: '2026-04-30',
     author: { name: 'Daniel Okoro', role: 'Commercial Director' },
-    tags: ['logistics', 'erection', 'programme', 'delivery'],
+    tags: ['logistics', 'erection', 'program', 'delivery'],
     body: `Ask a steel erector what slows them down and very few will say the steel arrived late. What they will describe is a trailer arriving with the right tonnage in the wrong order, and a crane standing idle while a bundle is unstrapped to reach the piece underneath.
 
 Sequenced delivery fixes that. It is not complicated, but it does require both sides to do something.
@@ -331,7 +331,7 @@ Sequenced delivery requires an **erection sequence that exists before the steel 
 
 It requires that sequence to be **shared early enough** to influence loading, which means weeks rather than the afternoon before.
 
-It requires **someone on site who owns the schedule** and can confirm or change a window when the programme moves.
+It requires **someone on site who owns the schedule** and can confirm or change a window when the program moves.
 
 And it requires **honesty about slippage**. A supplier who is told on Monday that Thursday has moved can re-plan. A supplier who finds out when the driver arrives cannot.
 
@@ -345,9 +345,9 @@ The erector's own figure was a 19% improvement in pieces erected per crane hour 
 
 ## Where it does not work
 
-Sequenced delivery suits projects with a defined erection sequence and a stable programme. It suits city-centre sites where storage does not exist. It suits frames where erection is on the critical path.
+Sequenced delivery suits projects with a defined erection sequence and a stable program. It suits city-center sites where storage does not exist. It suits frames where erection is on the critical path.
 
-It suits far less well where the programme is genuinely uncertain, where the site has ample laydown and prefers a buffer, or where the frame is simple enough that sorting a bundle costs minutes rather than hours.
+It suits far less well where the program is genuinely uncertain, where the site has ample laydown and prefers a buffer, or where the frame is simple enough that sorting a bundle costs minutes rather than hours.
 
 We will tell you which category your project falls into. Selling a sequenced service to a project that would be better served by a bulk delivery and a laydown area helps nobody.
 
@@ -355,7 +355,7 @@ We will tell you which category your project falls into. Selling a sequenced ser
 
 Three things, in our experience, separate projects where this works from projects where it does not:
 
-**Involve the erector in the delivery plan.** They know the sequence. Building a delivery schedule without them produces a plan that reflects the programme rather than the crane.
+**Involve the erector in the delivery plan.** They know the sequence. Building a delivery schedule without them produces a plan that reflects the program rather than the crane.
 
 **Agree the marking convention before fabrication.** Piece marks that match the erection drawing are worth more than any tracking system.
 
@@ -378,13 +378,13 @@ None of this is sophisticated. All of it is the difference between a frame that 
 
 **A second CNC beam line** now handles sections up to 1,100 mm deep, drilling, sawing and marking in a single pass. It runs alongside the existing line rather than replacing it, which means heavy sections and lighter work no longer compete for the same machine — the constraint that had been shaping our lead times for two years.
 
-**An extended coating bay** adds 40 metres of climate-controlled throughput, taking the maximum coated length to 24 metres. Environmental conditions and dry film thickness are logged automatically against each item, so the coating record is generated by the process rather than compiled afterwards.
+**An extended coating bay** adds 40 meters of climate-controlled throughput, taking the maximum coated length to 24 meters. Environmental conditions and dry film thickness are logged automatically against each item, so the coating record is generated by the process rather than compiled afterwards.
 
 **Automated in-process measurement** on the profiling floor now checks critical dimensions during cutting rather than after it. Parts outside tolerance are flagged while the sheet is still on the bed.
 
 ## Why capacity, and why now
 
-Our on-time delivery figure has held above 99% for two years, and holding it was becoming harder. Lead times were extending on complex work, and we were beginning to decline enquiries we would rather have taken.
+Our on-time delivery figure has held above 99% for two years, and holding it was becoming harder. Lead times were extending on complex work, and we were beginning to decline inquiries we would rather have taken.
 
 Declining work you can deliver well is a defensible position. Accepting work you will deliver late is not. The expansion was the alternative to a slow drift toward the second.
 
@@ -392,7 +392,7 @@ Declining work you can deliver well is a defensible position. Accepting work you
 
 A portion of the new capacity is reserved rather than sold. Framework clients now have guaranteed monthly tonnage available on call-off, which converts a lead time into a booking.
 
-This is a deliberate choice against maximising utilisation. A shop running at 100% has no ability to absorb a client's programme change, and absorbing programme changes is a significant part of what our clients actually buy from us.
+This is a deliberate choice against maximising utilisation. A shop running at 100% has no ability to absorb a client's program change, and absorbing program changes is a significant part of what our clients actually buy from us.
 
 ## What has not changed
 
@@ -404,7 +404,7 @@ We have also not increased headcount proportionally to throughput. The expansion
 
 A second fabrication facility is in planning, targeting monthly capacity beyond 1,400 tonnes and located to shorten delivery distances to our largest regional markets. We expect to confirm the site within twelve months.
 
-In the meantime, lead times on fabricated packages have come in by an average of eleven days, and enquiries we would have declined six months ago are ones we can now take.`,
+In the meantime, lead times on fabricated packages have come in by an average of eleven days, and inquiries we would have declined six months ago are ones we can now take.`,
   },
   {
     slug: 'reading-a-steel-quotation-properly',
@@ -421,7 +421,7 @@ Here is what to check before comparing two of them.
 
 ## 1. What is the price actually for?
 
-Steel is quoted per tonne, per metre or per piece, and the three are not interchangeable. A per-tonne rate that looks competitive can conceal a heavier section being offered against a lighter specification, more steel, more cost, same rate.
+Steel is quoted per tonne, per meter or per piece, and the three are not interchangeable. A per-tonne rate that looks competitive can conceal a heavier section being offered against a lighter specification, more steel, more cost, same rate.
 
 Check that the **section sizes quoted match the sizes specified**, line by line. A substitution to a heavier available section is often perfectly reasonable and occasionally the only option. It should be visible, not buried.
 
@@ -445,7 +445,7 @@ If the specification calls for EN 10204 3.1 certification, confirm every line ca
 
 Steel prices move. A quotation valid for 14 days with a clear escalation mechanism is often better value than one valid for 90 days with conditions permitting withdrawal.
 
-Read what happens **if your programme slips**. Who carries the price movement between the original delivery date and the actual one? Silence on this point is not neutral; it means it will be argued later.
+Read what happens **if your program slips**. Who carries the price movement between the original delivery date and the actual one? Silence on this point is not neutral; it means it will be argued later.
 
 ## 6. What is explicitly excluded
 

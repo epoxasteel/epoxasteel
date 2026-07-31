@@ -23,12 +23,12 @@ const trail = [
 
 const process = [
   {
-    title: 'Enquiry',
+    title: 'Inquiry',
     body: 'Send drawings, a bill of quantities or a list. We check availability against real stock and flag anything worth reconsidering.',
   },
   {
     title: 'Quotation',
-    body: 'Line by line within 48 hours for standard enquiries, grade, size, quantity, processing and delivery all priced separately.',
+    body: 'Line by line within 48 hours for standard inquiries, grade, size, quantity, processing and delivery all priced separately.',
   },
   {
     title: 'Order',
@@ -40,7 +40,7 @@ const process = [
   },
   {
     title: 'Delivery',
-    body: 'Sequenced to your erection programme, timed to your window, evidenced with photographs and a signed delivery note.',
+    body: 'Sequenced to your erection program, timed to your window, evidenced with photographs and a signed delivery note.',
   },
 ];
 

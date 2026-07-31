@@ -17,7 +17,7 @@ import { siteConfig } from '@/lib/site';
  * the layout that just failed, and a recovery page that needs the broken thing to
  * work is not a recovery page. It will render on a blank slate.
  *
- * The colours are the brand's own hex values rather than CSS variables for the same
+ * The colors are the brand's own hex values rather than CSS variables for the same
  * reason. They are duplicated from `globals.css` on purpose; if the palette changes
  * this page looking slightly dated is a much smaller problem than it not rendering.
  *
@@ -77,7 +77,7 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
 
           <p style={{ margin: '1.5rem 0 0', fontSize: '1.0625rem' }}>
             This is our fault, not yours. Reloading usually fixes it. If it does not, we would much
-            rather take your enquiry by phone than lose it.
+            rather take your inquiry by phone than lose it.
           </p>
 
           <p style={{ margin: '1.75rem 0 0', fontSize: '1.0625rem' }}>

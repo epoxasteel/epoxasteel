@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 /**
  * Technical cross-sections drawn as SVG rather than shipped as photography.
  *
- * They render crisply at any size, weigh almost nothing, inherit colour from
+ * They render crisply at any size, weigh almost nothing, inherit color from
  * context and — unlike stock imagery — are actually accurate. Each profile is
  * drawn on a 120×120 grid so they sit consistently in a card.
  */

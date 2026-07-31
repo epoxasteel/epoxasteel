@@ -20,10 +20,10 @@ export type EmailMessage = {
   text: string;
   replyTo?: string;
   attachments?: EmailAttachment[];
-  /** The enquiry's reference, carried so a spooled failure can be traced to it. */
+  /** The inquiry's reference, carried so a spooled failure can be traced to it. */
   reference?: string;
   /**
-   * Stable per message, so a retry after an ambiguous timeout is recognised by the
+   * Stable per message, so a retry after an ambiguous timeout is recognized by the
    * provider and collapsed instead of delivered twice. Built from the reference
    * plus which email this is — see `messageKey()` in `index.ts`.
    */
@@ -41,9 +41,9 @@ export type SendResult = {
    * Delivery failed but the message is on disk and will be retried.
    *
    * The distinction matters to the caller: `ok: false` alone used to mean the
-   * enquiry was gone, and a route seeing it told the customer to phone instead.
+   * inquiry was gone, and a route seeing it told the customer to phone instead.
    * A held message has not been lost, so that would now be a lie in the
-   * pessimistic direction — which costs a real enquiry just as surely.
+   * pessimistic direction — which costs a real inquiry just as surely.
    */
   held?: boolean;
   /**

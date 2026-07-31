@@ -97,9 +97,9 @@ const phone = text(process.env.NEXT_PUBLIC_CONTACT_PHONE, '(212) 763-8921');
  * The one published address. Everything else falls back to it.
  *
  * A business with one mailbox should publish one mailbox. Departmental addresses
- * — sales@, quotes@, careers@ — read as a larger organisation and cost nothing
+ * — sales@, quotes@, careers@ — read as a larger organization and cost nothing
  * while they resolve, but each is a promise that somebody is reading it. Pointing
- * them at an address nobody collects loses the enquiry *and* the sender's belief
+ * them at an address nobody collects loses the inquiry *and* the sender's belief
  * that it arrived, which is the worst outcome a contact page can produce.
  *
  * The separate fields below stay, because splitting the routing later should be
@@ -182,7 +182,7 @@ export const siteConfig = {
    * cannot — see `description` above for the one that crawlers get.
    */
   overview:
-    'EPOXA STEEL supplies certified structural steel, plate, tube and reinforcement to commercial, residential and infrastructure projects worldwide, backed by in-house fabrication, mill-traceable documentation and schedule-driven logistics.',
+    'Epoxa Steel supplies reinforcing steel to commercial, industrial and infrastructure projects: cut and bent to schedule, certified to the heat it came from, and delivered in the order you need to place it.',
   founded: text(process.env.NEXT_PUBLIC_COMPANY_FOUNDED, '2009'),
   locale: text(process.env.NEXT_PUBLIC_SITE_LOCALE, 'en_US'),
 
@@ -226,7 +226,7 @@ export const siteConfig = {
    *
    * Empty is the documented way to hide a profile: `socialLinks` drops it, the
    * footer and contact page hide their whole panel when nothing survives, and
-   * `sameAs` is omitted from the organisation schema rather than published empty.
+   * `sameAs` is omitted from the organization schema rather than published empty.
    * Nothing here renders until there is a real account to point at, because a
    * link to a handle the business does not own is worse than no link.
    *
@@ -252,7 +252,7 @@ export const siteConfig = {
     { value: 1400000, suffix: '+', display: '1.4M+', label: 'Tonnes supplied', hint: 'Since 2009' },
     { value: 2600, suffix: '+', label: 'Projects delivered', hint: 'Across 34 countries' },
     { value: 99.4, suffix: '%', label: 'On-time delivery', hint: 'Rolling 24 months', decimals: 1 },
-    { value: 48, suffix: 'h', label: 'Quote turnaround', hint: 'Standard enquiries' },
+    { value: 48, suffix: 'h', label: 'Quote turnaround', hint: 'Standard inquiries' },
   ],
 } as const;
 

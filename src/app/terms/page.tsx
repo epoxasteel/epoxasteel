@@ -116,7 +116,7 @@ All content on this website, text, design, artwork, code, layout and marks, is o
 
 You may view, download and print pages for your own internal business use. You may not republish, redistribute, or use our content commercially without our written permission.
 
-Drawings, models and specifications **you** send us remain yours. We use them only to quote and fulfil your enquiry, and we do not share them outside our supply chain for that order.
+Drawings, models and specifications **you** send us remain yours. We use them only to quote and fulfil your inquiry, and we do not share them outside our supply chain for that order.
 
 ## 11. Liability
 

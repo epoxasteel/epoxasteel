@@ -4,7 +4,7 @@ import { quoteSchema, MIN_FORM_ELAPSED_MS, safeFieldErrors } from '@/lib/validat
 import { checkUpload, uploadMaxBytes, MAX_FILES } from '@/lib/uploads';
 import { rateLimit, clientIdentifier, globalLimit } from '@/lib/rate-limit';
 import { generateReference } from '@/lib/email';
-import { deliverEnquiry } from '@/lib/email/workflow';
+import { deliverInquiry } from '@/lib/email/workflow';
 import { quoteInternalEmail, quoteConfirmationEmail } from '@/lib/email/templates';
 import { getPrisma } from '@/lib/db';
 import { fingerprint, findDuplicate, remember } from '@/lib/idempotency';
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
    *
    * A bad or expired token is accepted silently rather than refused. Refusing
    * would mean a visitor who left the tab open over lunch loses a written-out
-   * enquiry to a message about a field they cannot see, and the rate limit,
+   * inquiry to a message about a field they cannot see, and the rate limit,
    * honeypot, timing check and duplicate fingerprint all still apply. What it
    * does is log the reason, so a spike is visible.
    */
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Request received.', reference: 'received' });
   }
 
-  /* A repeat of the same enquiry inside ten minutes is answered with the
+  /* A repeat of the same inquiry inside ten minutes is answered with the
      original reference and not sent again, the visitor sees success either way,
      and the desk sees one project rather than two. */
   const print = fingerprint(identifier, 'quote', [
@@ -235,7 +235,7 @@ export async function POST(request: Request) {
   const confirmation = quoteConfirmationEmail(emailData);
 
   // Same workflow as every other form; the drawings ride with the owner's copy.
-  const { owner: internalResult } = await deliverEnquiry({
+  const { owner: internalResult } = await deliverInquiry({
     reference,
     customerEmail: data.email,
     owner: internal,
@@ -251,7 +251,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message:
-          'We could not submit your request. Please email or call us directly. We do not want to lose your enquiry.',
+          'We could not submit your request. Please email or call us directly. We do not want to lose your inquiry.',
       },
       { status: 502 },
     );

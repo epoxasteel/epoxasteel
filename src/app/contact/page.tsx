@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Contact',
   description:
-    'Office address, business hours, phone and email for Epoxa Steel, and an enquiry form answered within one business day.',
+    'Office address, business hours, phone and email for Epoxa Steel, and an inquiry form answered within one business day.',
   path: '/contact',
 });
 
@@ -30,7 +30,7 @@ const channels = [
   },
   {
     icon: Mail,
-    label: 'General enquiries',
+    label: 'General inquiries',
     value: siteConfig.contact.email,
     href: `mailto:${siteConfig.contact.email}`,
     hint: 'Answered within one business day.',
@@ -47,7 +47,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Talk to someone who knows steel."
-        description="No routing menus, no ticket queue. Every enquiry reaches a person who can actually answer it, and we respond within one business day, usually much faster."
+        description="No routing menus, no ticket queue. Every inquiry reaches a person who can actually answer it, and we respond within one business day, usually much faster."
         trail={trail}
       />
 

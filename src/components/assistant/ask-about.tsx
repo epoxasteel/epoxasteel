@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useAssistant } from '@/components/assistant/assistant-context';
 
 /**
- * Opens the enquiry desk with a question already framed.
+ * Opens the inquiry desk with a question already framed.
  *
  * Placed where a buyer's questions actually occur — beside a product's
  * specification, not in a corner of the screen. The question lands in the

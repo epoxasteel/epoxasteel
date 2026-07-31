@@ -161,10 +161,10 @@ export default async function JobPage({ params }: { params: Promise<{ slug: stri
                     {/*
                       Underlined, not just a lighter grey.
 
-                      This link sits inside a sentence, and its colour was only
+                      This link sits inside a sentence, and its color was only
                       1.88:1 against the text around it, WCAG 1.4.1 wants a link
                       in a text block to be distinguishable by something other
-                      than colour unless it clears 3:1. Anyone who cannot separate
+                      than color unless it clears 3:1. Anyone who cannot separate
                       those two greys had no way to tell there was a number to tap.
                     */}
                     <a

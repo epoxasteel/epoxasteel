@@ -4,17 +4,17 @@ export const industries: Industry[] = [
   {
     slug: 'construction',
     name: 'Construction',
-    tagline: 'Steel that keeps the programme honest.',
+    tagline: 'Steel that keeps the program honest.',
     summary:
       'General contractors rely on us for predictable delivery, complete documentation and the flexibility to absorb the changes every build produces.',
     overview: [
-      'Construction runs on sequence. A frame is only as fast as the material feeding it, and a single late trailer can push a crane hire, a concrete pour and a trade handover in one afternoon. We build our supply commitments around your programme rather than our yard convenience.',
+      'Construction runs on sequence. A frame is only as fast as the material feeding it, and a single late trailer can push a crane hire, a concrete pour and a trade handover in one afternoon. We build our supply commitments around your program rather than our yard convenience.',
       'That means delivery windows measured in hours, loads bundled in erection sequence, and a named account manager who knows which package is critical this week. When drawings change, and they do. We re-cut, re-schedule and re-issue documentation without turning it into a procurement event.',
     ],
     challenges: [
       {
-        title: 'Programme volatility',
-        body: 'Sequences move. We hold buffer stock against your critical packages and re-plan deliveries within 24 hours of a revised programme, at no re-scheduling charge.',
+        title: 'Program volatility',
+        body: 'Sequences move. We hold buffer stock against your critical packages and re-plan deliveries within 24 hours of a revised program, at no re-scheduling charge.',
       },
       {
         title: 'Documentation for sign-off',
@@ -46,7 +46,7 @@ export const industries: Industry[] = [
     name: 'Commercial',
     tagline: 'Office, retail and hospitality structures with no visible compromise.',
     summary:
-      'Long spans, exposed steelwork and finish quality that survives the architect walkthrough, supplied to programmes that cannot slip.',
+      'Long spans, exposed steelwork and finish quality that survives the architect walkthrough, supplied to programs that cannot slip.',
     overview: [
       'Commercial buildings are judged twice: once by the structural engineer and once by everyone who walks through the lobby. We supply the sections that carry the loads and the architecturally exposed steelwork that people actually touch, with the surface quality and consistency that exposed work demands.',
       'For tenant-driven schedules where the lease start date is fixed, we work backwards from handover: steel released in packages, fabricated in parallel, and delivered to a crane schedule agreed months in advance.',
@@ -62,7 +62,7 @@ export const industries: Industry[] = [
       },
       {
         title: 'Fixed handover dates',
-        body: 'Package-based release with agreed milestone dates and weekly progress reporting against the erection programme.',
+        body: 'Package-based release with agreed milestone dates and weekly progress reporting against the erection program.',
       },
     ],
     products: [
@@ -165,10 +165,10 @@ export const industries: Industry[] = [
     name: 'Warehousing & Logistics',
     tagline: 'Portal frames and racking steel, up fast and built to work.',
     summary:
-      'High-volume structural packages for distribution centres, cold stores and fulfilment facilities where speed to operation is everything.',
+      'High-volume structural packages for distribution centers, cold stores and fulfilment facilities where speed to operation is everything.',
     overview: [
-      'A distribution centre is a machine for moving goods, and every week it is not operating is revenue that never arrives. Warehouse steel is high volume, highly repetitive and utterly schedule-driven.',
-      'We supply complete portal frame packages, columns, rafters, purlins, side rails, bracing and cladding rails, batch-fabricated and delivered in erection bays. Repetition is an advantage we pass back as price, and volume is planned months ahead against your programme.',
+      'A distribution center is a machine for moving goods, and every week it is not operating is revenue that never arrives. Warehouse steel is high volume, highly repetitive and utterly schedule-driven.',
+      'We supply complete portal frame packages, columns, rafters, purlins, side rails, bracing and cladding rails, batch-fabricated and delivered in erection bays. Repetition is an advantage we pass back as price, and volume is planned months ahead against your program.',
     ],
     challenges: [
       {
@@ -325,12 +325,12 @@ export const industries: Industry[] = [
       'Substation steel, turbine foundations, solar mounting and process structures for conventional and renewable energy projects.',
     overview: [
       'Energy infrastructure spans a wider range of steel requirements than almost any other sector: galvanized lattice for transmission, heavy plate for pressure equipment, precision mounting systems for solar, and enormous embedded reinforcement cages for turbine foundations.',
-      'We supply across that range with the certification each application demands, and we understand the grid connection deadlines that drive renewable programmes, where a delayed structure means a missed energisation window and a year of lost generation revenue.',
+      'We supply across that range with the certification each application demands, and we understand the grid connection deadlines that drive renewable programs, where a delayed structure means a missed energisation window and a year of lost generation revenue.',
     ],
     challenges: [
       {
         title: 'Grid connection deadlines',
-        body: 'Programme-critical supply planned against energisation dates, with escalation routes agreed before they are needed.',
+        body: 'Program-critical supply planned against energisation dates, with escalation routes agreed before they are needed.',
       },
       {
         title: 'Remote site logistics',
@@ -439,7 +439,7 @@ export const industries: Industry[] = [
     name: 'Government Projects',
     tagline: 'Compliance-first supply for the public sector.',
     summary:
-      'Pre-qualified supply for defence, education, healthcare and civic projects, with the certification and reporting public contracts demand.',
+      'Pre-qualified supply for defense, education, healthcare and civic projects, with the certification and reporting public contracts demand.',
     overview: [
       'Public sector work rewards suppliers who understand that compliance is not paperwork bolted onto a delivery. It is part of the delivery. Social value commitments, local content reporting, modern slavery declarations and prompt payment obligations are contractual, and failing them is as serious as failing a spec.',
       'We are pre-qualified across public frameworks and maintain the accreditation, insurance and reporting capability that government contracts require. Our project reporting is built around the metrics that public clients actually ask for.',

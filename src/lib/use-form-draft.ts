@@ -7,14 +7,14 @@ import type { FieldValues, UseFormReturn } from 'react-hook-form';
  * Keeps what someone has typed.
  *
  * A quote request asks for a project description, tonnages and a delivery
- * programme. People write that over several minutes, in another tab, with a
+ * program. People write that over several minutes, in another tab, with a
  * drawing open beside them — and then follow a link, or reload, and lose the lot.
  * There is no reason for a form to be that fragile.
  *
  * Values are mirrored into `sessionStorage` as they change and restored on mount.
  * Session, not local: the draft belongs to this visit. It is cleared the moment
  * the form submits successfully, so a returning visitor never finds a stale
- * enquiry waiting for them.
+ * inquiry waiting for them.
  *
  * Two fields never persist, whatever is passed in:
  *

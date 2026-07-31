@@ -58,7 +58,7 @@ export default async function OpengraphImage() {
         and STEEL in `mist` at a light weight.
 
         It used to draw a white web between blue flanges and set both words in
-        the same colour, a third version of the logo, different from both the
+        the same color, a third version of the logo, different from both the
         header and the favicon.
       */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative' }}>

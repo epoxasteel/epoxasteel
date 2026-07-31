@@ -15,7 +15,7 @@ export const benefits = [
   },
   {
     title: 'Certification paid in full',
-    body: 'Welding tickets, NDT qualifications, plant licences and professional chartership funded and supported with paid study time.',
+    body: 'Welding tickets, NDT qualifications, plant licenses and professional chartership funded and supported with paid study time.',
   },
   {
     title: 'Health cover from day one',
@@ -61,7 +61,7 @@ export const jobs: Job[] = [
     ],
     benefits: [
       'Hybrid working after probation',
-      'Software training and licence provided',
+      'Software training and license provided',
       'Support toward professional qualification',
     ],
   },
@@ -106,7 +106,7 @@ export const jobs: Job[] = [
     responsibilities: [
       'Manage the technical delivery of assigned projects from award to completion',
       'Review consultant designs for buildability and identify value engineering opportunities',
-      'Coordinate detailing, fabrication and delivery programmes against client requirements',
+      'Coordinate detailing, fabrication and delivery programs against client requirements',
       'Chair technical coordination meetings with clients and design teams',
       'Resolve technical queries and non-conformances, and attend site as required',
     ],
@@ -115,7 +115,7 @@ export const jobs: Job[] = [
       'Three or more years in structural steel fabrication, contracting or consultancy',
       'Working knowledge of AISC 360, EN 1090 and EN 1993',
       'Confident client-facing communication under commercial pressure',
-      'Valid driving licence and willingness to travel to site',
+      'Valid driving license and willingness to travel to site',
     ],
     benefits: [
       'Chartership support with mentoring and paid fees',
@@ -143,12 +143,12 @@ export const jobs: Job[] = [
       'Two or more years operating CNC machinery in a metal processing environment',
       'Confident interpreting engineering drawings and CAD files',
       'Comfortable with measurement and dimensional inspection',
-      'Overhead crane and forklift licences advantageous',
+      'Overhead crane and forklift licenses advantageous',
       'Methodical, safety-focused approach to machine setup',
     ],
     benefits: [
       'Structured skills-based pay progression',
-      'Licence training provided',
+      'License training provided',
       'Shift premium for evening work',
     ],
   },
@@ -171,7 +171,7 @@ export const jobs: Job[] = [
     requirements: [
       'Two or more years in transport planning, ideally with heavy or abnormal loads',
       'Understanding of transport regulations and permit processes',
-      'Strong organisation under competing priorities',
+      'Strong organization under competing priorities',
       'Confident communicator with drivers, sites and hauliers',
       'Export documentation experience advantageous',
     ],

@@ -110,7 +110,7 @@ export const leadership = [
   {
     name: 'Priya Raghunathan',
     role: 'Quality & Compliance Director',
-    bio: 'Lead auditor for ISO 9001 and EN 1090. Owns the quality management system, supplier audit programme and certification portfolio.',
+    bio: 'Lead auditor for ISO 9001 and EN 1090. Owns the quality management system, supplier audit program and certification portfolio.',
     focus: 'Quality systems, audit, certification',
     initials: 'PR',
   },

@@ -4,7 +4,7 @@ import { rateLimit, clientIdentifier } from '@/lib/rate-limit';
 import { streamAssistant, AssistantError, assistantConfigured } from '@/lib/assistant/provider';
 import { createLeadExtractor } from '@/lib/assistant/lead';
 import { generateReference } from '@/lib/email';
-import { deliverEnquiry } from '@/lib/email/workflow';
+import { deliverInquiry } from '@/lib/email/workflow';
 import { assistantLeadEmail } from '@/lib/email/templates';
 
 export const runtime = 'nodejs';
@@ -136,7 +136,7 @@ export async function POST(request: Request) {
          * The owner notification goes through the same workflow as every form, so
          * the reference, the Reply-To and the routing cannot drift from them.
          */
-        void deliverEnquiry({
+        void deliverInquiry({
           reference,
           customerEmail: lead.email,
           owner: message,

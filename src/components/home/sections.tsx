@@ -298,7 +298,7 @@ export function CallToAction({
 
           <Reveal delay={0.24}>
             <p className="text-steel mt-8 text-[0.8125rem]">
-              Standard enquiries quoted within 48 hours · No obligation · Named account manager on
+              Standard inquiries quoted within 48 hours · No obligation · Named account manager on
               every order
             </p>
           </Reveal>

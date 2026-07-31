@@ -28,7 +28,7 @@ export default function IndustriesPage() {
       <PageHero
         eyebrow="Industries"
         title="Twelve sectors, each with its own definition of 'on time'."
-        description="A distribution centre measures success in weeks to operation. A bridge measures it in decades of service. We have learned what each sector actually needs from a steel supplier, usually while standing on somebody's critical path."
+        description="A distribution center measures success in weeks to operation. A bridge measures it in decades of service. We have learned what each sector actually needs from a steel supplier, usually while standing on somebody's critical path."
         trail={trail}
       >
         <Button href="/quote" size="lg" sheen>

@@ -74,7 +74,7 @@ export async function* streamAssistant(
   if (!response.ok || !response.body) {
     const detail = await response.text().catch(() => '');
     // Surface the class of failure, never the provider's message — it can carry
-    // account and organisation details.
+    // account and organization details.
     const status = response.status === 429 ? 429 : 502;
     console.error(`[assistant] upstream ${response.status}: ${detail.slice(0, 400)}`);
     throw new AssistantError(

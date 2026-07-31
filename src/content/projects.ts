@@ -19,24 +19,24 @@ export const projects: Project[] = [
     timeline: '19 months',
     scale: '4,850 tonnes',
     summary:
-      'A 41-storey mixed-use tower framed in structural steel, delivered on a fixed handover date with zero programme slip on the steel package.',
+      'A 41-storey mixed-use tower framed in structural steel, delivered on a fixed handover date with zero program slip on the steel package.',
     overview: [
-      "Meridian Tower replaced a surface car park in Newark's central business district with 41 storeys of office, retail and amenity space. The developer had pre-let six floors before ground was broken, which fixed the handover date twenty-two months out and made the steel programme the single largest schedule risk on the job.",
+      "Meridian Tower replaced a surface car park in Newark's central business district with 41 storeys of office, retail and amenity space. The developer had pre-let six floors before ground was broken, which fixed the handover date twenty-two months out and made the steel program the single largest schedule risk on the job.",
       'We were appointed at design stage rather than at tender, which gave the engineering team room to revisit the floor framing before it was frozen. Cellular beams with designed-in service penetrations replaced the original solid-web scheme, removing 180 mm from every floor-to-floor dimension and returning almost a full storey of height within the same planning envelope.',
       'Steel was released in eight packages tracking the erection sequence. Every trailer arrived inside a two-hour window agreed the previous afternoon, on a site with no laydown area whatsoever, material went from trailer to crane hook.',
     ],
     challenge:
-      'A fixed pre-let handover date, a city-centre site with no storage, and a floor-to-floor dimension that would not accommodate the originally specified framing depth alongside the services zone.',
+      'A fixed pre-let handover date, a city-center site with no storage, and a floor-to-floor dimension that would not accommodate the originally specified framing depth alongside the services zone.',
     solution:
       'Early-stage value engineering replaced solid-web beams with cellular sections carrying designed-in service openings, recovering height. The steel package was split into eight sequence-aligned releases, delivered just-in-time in two-hour windows straight to the crane.',
     outcome:
-      'The steel frame topped out eleven days ahead of the programme. The height recovered by the cellular beam redesign allowed an additional lettable floor within the approved envelope, and the developer handed over on the contracted date.',
+      'The steel frame topped out eleven days ahead of the program. The height recovered by the cellular beam redesign allowed an additional lettable floor within the approved envelope, and the developer handed over on the contracted date.',
     productsUsed: ['steel-beams', 'structural-steel', 'steel-plates', 'custom-fabrication'],
     servicesUsed: ['steel-supply', 'fabrication', 'engineering-support', 'delivery'],
     metrics: [
       { value: '4,850t', label: 'Steel supplied' },
       { value: '41', label: 'Storeys' },
-      { value: '11 days', label: 'Ahead of programme' },
+      { value: '11 days', label: 'Ahead of program' },
       { value: '+1', label: 'Floor recovered' },
     ],
     gallery: [
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     timeline: '26 months',
     scale: '3,200 tonnes',
     summary:
-      'A 340-metre four-span plate girder crossing fabricated to fracture-critical procedures, with 100% ultrasonic testing on tension welds.',
+      'A 340-meter four-span plate girder crossing fabricated to fracture-critical procedures, with 100% ultrasonic testing on tension welds.',
     overview: [
       'Harbour Crossing carries four lanes and a segregated cycleway over a working shipping channel, with a 120-year design life and a fracture-critical designation on the main girders. The specification left no room for interpretation: every tension weld ultrasonically tested, every welder individually qualified, every plate traceable to a heat with through-thickness properties.',
       'We supplied and fabricated the plate girders under a dedicated fracture-critical quality plan, with an independent inspection agency present throughout. Weathering steel was selected after a whole-life cost comparison showed it saving 38% against a painted alternative once maintenance access over a shipping channel was priced honestly.',
@@ -88,7 +88,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'northgate-distribution',
-    name: 'Northgate Distribution Centre',
+    name: 'Northgate Distribution Center',
     client: 'National logistics operator',
     location: 'Columbus, Ohio',
     country: 'United States',
@@ -99,9 +99,9 @@ export const projects: Project[] = [
     summary:
       "A 1.2 million square foot fulfilment facility framed, clad and operational eleven weeks faster than the operator's previous build of comparable size.",
     overview: [
-      "Northgate is a single-storey fulfilment centre of 1.2 million square feet under one roof, with 40-metre clear spans and a 14-metre haunch height. The operator's business case depended on the building accepting inventory before the peak season, which meant the frame had to be complete in a window that left no contingency.",
+      "Northgate is a single-storey fulfilment center of 1.2 million square feet under one roof, with 40-meter clear spans and a 14-meter haunch height. The operator's business case depended on the building accepting inventory before the peak season, which meant the frame had to be complete in a window that left no contingency.",
       'Repetition was the opportunity. With 96 near-identical frames, we batch-fabricated columns and rafters in production runs rather than as individual pieces, cutting shop hours per tonne by 31% against a one-off approach, a saving reflected directly in the package price.',
-      'Delivery ran bay by bay. Erection began on frame one while frame twenty was still in the shop, and the two processes ran in parallel for the whole programme.',
+      'Delivery ran bay by bay. Erection began on frame one while frame twenty was still in the shop, and the two processes ran in parallel for the whole program.',
     ],
     challenge:
       'A fixed operational date driven by peak season, 96 portal frames to fabricate and erect, and a site remote enough that a failed delivery could not be recovered the same day.',
@@ -120,7 +120,7 @@ export const projects: Project[] = [
     gallery: [
       { caption: 'Portal frames in batch production', seed: 5 },
       { caption: 'Rafter lift, bay 34', seed: 21 },
-      { caption: '40-metre clear span interior', seed: 47 },
+      { caption: '40-meter clear span interior', seed: 47 },
       { caption: 'Completed facility, aerial', seed: 71 },
     ],
     featured: true,
@@ -147,7 +147,7 @@ export const projects: Project[] = [
     solution:
       "Cut-and-bent reinforcement produced directly from the bar bending schedules, tagged by pour and bundled by position within each pour. Deliveries were timed to the deck rather than the week, with nothing stored on site beyond a single pour's worth.",
     outcome:
-      'The five-day cycle held on 77 of 79 pours, with no delay attributable to reinforcement. The podium and all three towers topped out within the original programme.',
+      'The five-day cycle held on 77 of 79 pours, with no delay attributable to reinforcement. The podium and all three towers topped out within the original program.',
     productsUsed: ['reinforcing-steel', 'structural-steel', 'steel-beams', 'galvanized-steel'],
     servicesUsed: ['steel-supply', 'custom-orders', 'delivery', 'logistics'],
     metrics: [
@@ -212,14 +212,14 @@ export const projects: Project[] = [
     timeline: '31 months',
     scale: '2,750 tonnes',
     summary:
-      'A 96-metre clear-span station roof erected over live platforms during weekend possessions, with no service disruption across the entire programme.',
+      'A 96-meter clear-span station roof erected over live platforms during weekend possessions, with no service disruption across the entire program.',
     overview: [
-      'Westfield serves 140,000 passengers a day and could not close. The new concourse roof, a 96-metre clear span of tubular trusses, had to be built above operating platforms, with erection confined to weekend possessions of roughly thirty hours each.',
+      'Westfield serves 140,000 passengers a day and could not close. The new concourse roof, a 96-meter clear span of tubular trusses, had to be built above operating platforms, with erection confined to weekend possessions of roughly thirty hours each.',
       'The steel was architecturally exposed throughout, visible to every passenger, which set a finish standard far above ordinary structural work. We supplied matched heat numbers across each truss so surface texture stayed consistent after blasting and coating, and controlled weld profiles to AESS category 4.',
       'Trusses were assembled at ground level in a compound beside the station and lifted complete during possessions. Each lift was rehearsed against a 3D model of the crane envelope before the possession began.',
     ],
     challenge:
-      'A 96-metre clear span erected above live platforms serving 140,000 daily passengers, restricted to thirty-hour weekend possessions, with architecturally exposed steelwork visible to the public.',
+      'A 96-meter clear span erected above live platforms serving 140,000 daily passengers, restricted to thirty-hour weekend possessions, with architecturally exposed steelwork visible to the public.',
     solution:
       'Trusses were shop-fabricated to AESS category 4 with matched heat numbers per truss, assembled complete at ground level, and lifted during possessions after rehearsal against a 3D crane envelope model.',
     outcome:
@@ -261,7 +261,7 @@ export const projects: Project[] = [
     solution:
       'Material was staged at a regional yard and shuttled daily into the advancing installation front on self-offload vehicles. Weekly bulk deliveries kept the yard replenished, insulating the site from any single transport failure.',
     outcome:
-      'The array energised four days ahead of its grid connection date. No installation crew was ever held for material across the seven-month programme.',
+      'The array energised four days ahead of its grid connection date. No installation crew was ever held for material across the seven-month program.',
     productsUsed: ['galvanized-steel', 'structural-steel', 'steel-tubes', 'steel-bars'],
     servicesUsed: ['steel-supply', 'logistics', 'delivery', 'custom-orders'],
     metrics: [
@@ -278,8 +278,8 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'st-alban-civic-centre',
-    name: 'St Alban Civic Centre',
+    slug: 'st-alban-civic-center',
+    name: 'St Alban Civic Center',
     client: 'Municipal authority',
     location: 'Providence, Rhode Island',
     country: 'United States',
@@ -299,7 +299,7 @@ export const projects: Project[] = [
     solution:
       "Connections were detailed from a point-cloud survey rather than record drawings. Obsolete sections were matched through mill-direct sourcing, and social value data was captured through production and reported monthly in the authority's format.",
     outcome:
-      'The frame was installed without disturbing the retained façade, and the building opened on programme. The project achieved 71% local content and supported 4,200 apprenticeship hours.',
+      'The frame was installed without disturbing the retained façade, and the building opened on program. The project achieved 71% local content and supported 4,200 apprenticeship hours.',
     productsUsed: ['structural-steel', 'steel-plates', 'steel-beams', 'custom-fabrication'],
     servicesUsed: ['fabrication', 'engineering-support', 'custom-orders', 'project-consultation'],
     metrics: [
@@ -312,7 +312,7 @@ export const projects: Project[] = [
       { caption: 'Façade retention temporary works', seed: 12 },
       { caption: 'New frame threading the retained wall', seed: 29 },
       { caption: 'Matched obsolete section tie-in', seed: 41 },
-      { caption: 'Completed civic centre', seed: 69 },
+      { caption: 'Completed civic center', seed: 69 },
     ],
   },
 ];

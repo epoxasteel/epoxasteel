@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <!--
     The same mark as <BeamMark /> in src/components/visual/wordmark.tsx, drawn to
-    the identical geometry and in one colour.
+    the identical geometry and in one color.
 
     It used to have blue flanges and a white web, which made the favicon a
     different logo from the one in the header. The beam is a single piece of
-    rolled steel; splitting it into two colours reads as two shapes.
+    rolled steel; splitting it into two colors reads as two shapes.
 
     Background is `void` (#060709) — the page background itself, so the tab icon
     matches what opens when you click it.

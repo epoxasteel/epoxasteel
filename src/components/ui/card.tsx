@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
  * The surface every listing on the site is built from.
  *
  * `interactive` adds the hover treatment used on linked cards: a hairline that
- * brightens, a one-pixel lift, and a soft arc-coloured glow. It stays subtle on
+ * brightens, a one-pixel lift, and a soft arc-colored glow. It stays subtle on
  * purpose — twelve cards all lifting at once would look like a toy.
  */
 export function Card({

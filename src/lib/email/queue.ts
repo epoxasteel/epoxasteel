@@ -3,11 +3,11 @@ import path from 'node:path';
 import type { EmailMessage } from '@/lib/email/types';
 
 /**
- * The place an enquiry goes when email delivery fails.
+ * The place an inquiry goes when email delivery fails.
  *
  * The brief's requirement is "never lose the inquiry", and until now a transport
  * failure meant exactly that: the customer saw success, the error was logged, and
- * the enquiry existed nowhere but in a log line. The database backup covers the
+ * the inquiry existed nowhere but in a log line. The database backup covers the
  * *content* of a submission, but not the fact that nobody was told about it.
  *
  * So a message that exhausts its retries is appended to a JSONL spool on disk and
@@ -64,10 +64,10 @@ export async function spool(message: EmailMessage, reference?: string) {
     );
     return true;
   } catch (error) {
-    // The last line of defence has itself failed. Log the whole thing so the
-    // enquiry is at least recoverable from the platform's log retention.
+    // The last line of defense has itself failed. Log the whole thing so the
+    // inquiry is at least recoverable from the platform's log retention.
     console.error(
-      '[email] SPOOL FAILED, enquiry recorded here only:',
+      '[email] SPOOL FAILED, inquiry recorded here only:',
       JSON.stringify({ reference, subject: message.subject, text: message.text }),
       error,
     );
@@ -149,7 +149,7 @@ export async function drainSpool(send: (message: EmailMessage) => Promise<{ ok: 
       const attempts = entry.attempts + 1;
       if (attempts >= 5) {
         console.error(
-          `[email] giving up after ${attempts} attempts, enquiry recorded here only:`,
+          `[email] giving up after ${attempts} attempts, inquiry recorded here only:`,
           JSON.stringify({
             reference: entry.reference,
             subject: entry.message.subject,

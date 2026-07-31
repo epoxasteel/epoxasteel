@@ -31,13 +31,13 @@ const staticPages: { title: string; description: string; href: string; keywords:
   },
   {
     title: 'Request a Quote',
-    description: 'Send a full enquiry and receive a line-by-line quotation within 48 hours.',
+    description: 'Send a full inquiry and receive a line-by-line quotation within 48 hours.',
     href: '/quote',
-    keywords: 'quotation rfq enquiry pricing estimate request tender',
+    keywords: 'quotation rfq inquiry pricing estimate request tender',
   },
   {
     title: 'Contact',
-    description: 'Office details, business hours, direct lines and our enquiry form.',
+    description: 'Office details, business hours, direct lines and our inquiry form.',
     href: '/contact',
     keywords: 'contact phone email address office hours location',
   },

@@ -15,7 +15,7 @@ import { useAssistant } from '@/components/assistant/assistant-context';
  * pulled the eye away from whatever they were reading, and it took two taps to
  * reach anything.
  *
- * Now it is one labelled action — the enquiry desk — with the phone and quote
+ * Now it is one labelled action — the inquiry desk — with the phone and quote
  * routes living inside the panel it opens. Back to top sits beside it
  * and only appears once there is enough page behind you to want it.
  *
@@ -110,7 +110,7 @@ export function FloatingContact() {
               'hover:border-arc-bright hover:text-bright hover:-translate-y-px',
             )}
           >
-            {/* A slow arc wash rather than a colour change, reads as lit metal. */}
+            {/* A slow arc wash rather than a color change, reads as lit metal. */}
             <span
               aria-hidden
               className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"

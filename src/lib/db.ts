@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 /**
  * Prisma is optional at runtime.
  *
- * The site is fully functional without a database — enquiries are still
+ * The site is fully functional without a database — inquiries are still
  * validated and emailed. Persistence switches on the moment `DATABASE_URL` is
  * present, which means the first Railway deploy works before Postgres is
  * attached, and adding Postgres later needs no code change.

@@ -49,9 +49,9 @@ The site is built so that analytics *can* be switched on later. If that happens,
     ga &&
       `- **Google Analytics 4** (property \`${ga}\`), which pages are visited, how people arrive, and where they leave. IP addresses are anonymised.`,
     meta &&
-      `- **Meta Pixel** (ID \`${meta}\`), measures whether visits from Facebook or Instagram lead to an enquiry.`,
+      `- **Meta Pixel** (ID \`${meta}\`), measures whether visits from Facebook or Instagram lead to an inquiry.`,
     linkedin &&
-      `- **LinkedIn Insight Tag** (partner ID \`${linkedin}\`), measures whether visits from LinkedIn lead to an enquiry.`,
+      `- **LinkedIn Insight Tag** (partner ID \`${linkedin}\`), measures whether visits from LinkedIn lead to an inquiry.`,
   ].filter(Boolean);
 
   return `## Analytics cookies
@@ -81,7 +81,7 @@ What follows is the complete list of what we store in your browser and why.
 Two things, neither of which is a cookie and neither of which is ever transmitted to us. Both are readable and clearable from your browser's developer tools or by clearing site data.
 
 - **\`epoxa:overture-played\`** (session storage), remembers that you have already seen the homepage opening animation, so it does not replay every time you return to the homepage in the same visit. Cleared when you close the tab.
-- **\`epoxa:draft:contact\` / \`epoxa:draft:quote\`** (session storage), keeps what you have typed into a form so a stray click, a back button or an accidental refresh does not lose a half-written enquiry. Cleared when the form is submitted, or when you close the tab.
+- **\`epoxa:draft:contact\` / \`epoxa:draft:quote\`** (session storage), keeps what you have typed into a form so a stray click, a back button or an accidental refresh does not lose a half-written inquiry. Cleared when the form is submitted, or when you close the tab.
 - **\`epoxa:assistant\`** (session storage), the transcript of a conversation with our assistant, so it survives moving between pages. Cleared when you close the tab.
 - **\`epoxa:recently-viewed\`** (session storage), the products you have looked at, so we can show them again at the foot of a product page. Cleared when you close the tab.
 

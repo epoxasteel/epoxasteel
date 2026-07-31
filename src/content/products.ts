@@ -13,7 +13,7 @@ export const products: Product[] = [
     category: 'Structural',
     tagline: 'The load-bearing backbone of modern construction.',
     summary:
-      'Mill-certified structural sections supplied to ASTM and EN standards, cut to length and sequenced to your erection programme.',
+      'Mill-certified structural sections supplied to ASTM and EN standards, cut to length and sequenced to your erection program.',
     overview: [
       'Structural steel is where a drawing becomes a building. Every section we supply arrives with full mill traceability, tested chemistry and mechanical properties you can hand straight to your inspector, because the paperwork matters as much as the metal when a certificate of occupancy is on the line.',
       'We hold wide-flange, channel, angle and hollow section inventory across the most requested grades, and we buy directly from mills we have audited. That combination lets us commit to delivery dates on fast-track projects where a two-week float on steel is the difference between a bonus and a penalty.',
@@ -70,7 +70,7 @@ export const products: Product[] = [
       'W-shapes, universal beams and IPE sections in A992 and S355, held in depth so your frame is never waiting on a rolling window.',
     overview: [
       'Beams carry the floor, and the floor carries the schedule. We stock wide-flange sections in the sizes that specifications actually call for, which means most orders ship from inventory instead of waiting for the next mill rolling window.',
-      'Every beam is supplied with heat-number traceability and can be cambered, cut, coped and pre-drilled to your connection details. For long-span work we source lengths up to 18 metres and coordinate transport permits as part of the delivery package.',
+      'Every beam is supplied with heat-number traceability and can be cambered, cut, coped and pre-drilled to your connection details. For long-span work we source lengths up to 18 meters and coordinate transport permits as part of the delivery package.',
       'Where erection sequencing is critical, we deliver in shipping marks and bundle order defined by your steel erector, trailers arrive in the order the crane needs them, not the order the yard found them.',
     ],
     keyFacts: [
@@ -230,7 +230,7 @@ export const products: Product[] = [
     summary:
       'Hot-rolled plate from 5 mm to 200 mm in structural, pressure vessel and abrasion-resistant grades, profiled to your DXF.',
     overview: [
-      'Plate is where structural steel meets precision. Base plates, splice plates, gussets, stiffeners and shear tabs all begin as a flat sheet and end as a part that must fit within millimetres. Our profiling floor runs CNC plasma and oxy-fuel for heavy sections and high-definition laser for fine work, all driven straight from your DXF or DSTV files.',
+      'Plate is where structural steel meets precision. Base plates, splice plates, gussets, stiffeners and shear tabs all begin as a flat sheet and end as a part that must fit within millimeters. Our profiling floor runs CNC plasma and oxy-fuel for heavy sections and high-definition laser for fine work, all driven straight from your DXF or DSTV files.',
       'We carry structural grades for everyday connection work, pressure-vessel grades for tanks and vessels, and abrasion-resistant plate for chutes, liners and buckets. Where a project needs certified flatness or through-thickness properties, we source plate with the required Z-grade testing and supply the documentation to prove it.',
     ],
     keyFacts: [
@@ -328,7 +328,7 @@ export const products: Product[] = [
     downloads: [
       {
         label: 'Sheet & Coil Specification',
-        description: 'Grades, tolerances, coating weights and colour range.',
+        description: 'Grades, tolerances, coating weights and color range.',
         size: '3.1 MB',
         format: 'PDF',
         href: '/downloads/epoxa-sheet-coil.pdf',
@@ -346,7 +346,7 @@ export const products: Product[] = [
       'Cold-formed and hot-finished SHS and RHS for exposed structures, frames and architectural steelwork.',
     overview: [
       'Hollow sections give designers strength in every direction and a finished edge that needs no cladding. We stock square and rectangular tube across the full size range, in both cold-formed and hot-finished condition, including grades suited to architecturally exposed structural steel where the weld and the corner radius are part of the design.',
-      'For visible steelwork we can supply matched heat numbers across a bay so colour and surface texture stay consistent after blasting and coating, a detail that separates a considered building from a compromised one.',
+      'For visible steelwork we can supply matched heat numbers across a bay so color and surface texture stay consistent after blasting and coating, a detail that separates a considered building from a compromised one.',
     ],
     keyFacts: [
       { label: 'Sizes', value: '20×20 mm – 500×500 mm SHS' },
@@ -501,7 +501,7 @@ export const products: Product[] = [
     category: 'Bar & Reinforcement',
     tagline: 'Rebar, mesh and cut-and-bent schedules, delivered to pour.',
     summary:
-      'Deformed reinforcing bar, welded mesh and made-to-schedule cut-and-bent assemblies sequenced to your concrete programme.',
+      'Deformed reinforcing bar, welded mesh and made-to-schedule cut-and-bent assemblies sequenced to your concrete program.',
     overview: [
       'Concrete only works because of what is inside it. We supply deformed reinforcing bar from Ø8 to Ø40, welded wire mesh in standard and bespoke sheet sizes, and full cut-and-bent schedules produced directly from your bar bending schedules.',
       'Cut-and-bent reinforcement arrives tagged by pour, bundled by location and delivered in the order the site needs it, which removes the sorting time that quietly consumes a rebar gang. Every bundle carries a tag traceable to a mill certificate and a bending schedule line.',
@@ -694,7 +694,7 @@ export const products: Product[] = [
       rows: [
         ['CNC beam line', 'Up to 1,100 mm depth', '±1.0 mm', 'Drill, saw, mark'],
         ['Plasma profiling', 'Up to 60 mm plate', '±1.5 mm', '3,000 × 12,000 mm bed'],
-        ['Laser profiling', 'Up to 25 mm plate', '±0.5 mm', 'Fibre laser'],
+        ['Laser profiling', 'Up to 25 mm plate', '±0.5 mm', 'Fiber laser'],
         ['Press brake', '640 tonne, 6 m', '±0.5°', 'CNC back gauge'],
         ['Blast & paint', '1.6 × 12 m throughput', 'DFT verified', 'Climate controlled'],
       ],

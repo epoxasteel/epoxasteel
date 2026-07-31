@@ -21,13 +21,13 @@ export type SubmissionContext = {
 };
 
 /**
- * The site's own colour tokens, copied out of `globals.css` because an email
+ * The site's own color tokens, copied out of `globals.css` because an email
  * cannot read a stylesheet, let alone a CSS variable.
  *
  * Every value here is one of those tokens exactly — `void` for the page,
  * `charcoal` for the panel sitting on it, `hairline` for the rules, and so on —
  * so a notification looks like a piece of the website rather than something that
- * merely refers to it. `muted` was #78828f, which is not a colour the site uses
+ * merely refers to it. `muted` was #78828f, which is not a color the site uses
  * anywhere; it is `steel` now.
  */
 const BRAND = {
@@ -48,13 +48,13 @@ const BRAND = {
  * is blue and STEEL is grey. Emails now carry the same lockup as the header:
  * one blue I-beam, EPOXA in `bright`, STEEL lighter and in `mist`.
  *
- * Drawn with nested tables and background colours rather than an SVG or an
+ * Drawn with nested tables and background colors rather than an SVG or an
  * image, because Gmail strips inline SVG and Outlook's rendering engine is Word.
- * Coloured table cells are the one drawing primitive every client agrees on, and
+ * Colored table cells are the one drawing primitive every client agrees on, and
  * no external image means nothing to block, cache or fail to load.
  *
  * Proportions follow `<BeamMark />`: a 24-wide flange, a web a fifth of that
- * centred beneath it. `font-size:0;line-height:0` keeps the `&nbsp;` spacers
+ * centerd beneath it. `font-size:0;line-height:0` keeps the `&nbsp;` spacers
  * from adding height of their own.
  */
 function wordmark() {
@@ -162,9 +162,9 @@ function detailTable(rows: [string, string][]) {
 }
 
 /**
- * Where and when the enquiry came from.
+ * Where and when the inquiry came from.
  *
- * Rendered at the foot of an owner notification, below the enquiry itself,
+ * Rendered at the foot of an owner notification, below the inquiry itself,
  * because it is context rather than content: useful before you call someone back,
  * never the thing you read first.
  *
@@ -318,7 +318,7 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
   const content = `
     ${heading('We have your request')}
     ${paragraph(`Thank you, ${data.fullName.split(' ')[0]}. Your quotation request has been received and assigned reference ${data.reference}.`)}
-    ${paragraph('A member of our commercial team will review the details and respond within one business day. Standard enquiries are quoted within 48 hours; where a package needs mill-direct sourcing or fabrication we will confirm the expected turnaround first, so you always know when to expect our number.')}
+    ${paragraph('A member of our commercial team will review the details and respond within one business day. Standard inquiries are quoted within 48 hours; where a package needs mill-direct sourcing or fabrication we will confirm the expected turnaround first, so you always know when to expect our number.')}
     ${detailTable(
       [
         ['Reference', data.reference],
@@ -338,7 +338,7 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
           : null,
       ].filter((row): row is [string, string] => row !== null),
     )}
-    ${paragraph('If anything changes in the meantime, quantities, dates or specification, reply to this email with your reference and we will update the enquiry.')}
+    ${paragraph('If anything changes in the meantime, quantities, dates or specification, reply to this email with your reference and we will update the inquiry.')}
     ${button('Explore our products', `${siteConfig.url}/products`)}
   `;
 
@@ -384,14 +384,14 @@ export type ContactEmailData = {
 
 export function contactInternalEmail(data: ContactEmailData) {
   const content = `
-    ${heading(`New enquiry, ${data.subject}`)}
+    ${heading(`New inquiry, ${data.subject}`)}
     ${detailTable([
       ['Reference', data.reference],
       ['Name', data.name],
       ['Email', data.email],
       ['Phone', data.phone ?? ''],
       ['Company', data.company ?? ''],
-      ['Enquiry about', data.projectType],
+      ['Inquiry about', data.projectType],
       ['Subject', data.subject],
     ])}
     <div style="color:${BRAND.muted};font-size:12px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Message</div>
@@ -400,10 +400,10 @@ export function contactInternalEmail(data: ContactEmailData) {
   `;
 
   return {
-    subject: `Website enquiry: ${data.subject}, ${data.name}`,
-    html: shell(`Enquiry from ${data.name}`, data.subject, content),
+    subject: `Website inquiry: ${data.subject}, ${data.name}`,
+    html: shell(`Inquiry from ${data.name}`, data.subject, content),
     text: [
-      `NEW ENQUIRY, ${data.reference}`,
+      `NEW INQUIRY, ${data.reference}`,
       '',
       `Name:     ${data.name}`,
       `Email:    ${data.email}`,
@@ -422,7 +422,7 @@ export function contactConfirmationEmail(data: ContactEmailData) {
   const content = `
     ${heading('Message received')}
     ${paragraph(`Thank you, ${data.name.split(' ')[0]}. We have your message and it is with the right team.`)}
-    ${paragraph('We respond to enquiries within one business day. If your message is urgent, a delivery in progress or a site issue, please call us directly rather than waiting for a reply.')}
+    ${paragraph('We respond to inquiries within one business day. If your message is urgent, a delivery in progress or a site issue, please call us directly rather than waiting for a reply.')}
     ${detailTable([
       ['Reference', data.reference],
       ['Subject', data.subject],
@@ -493,7 +493,7 @@ export type AssistantLeadEmailData = {
 };
 
 /**
- * Sent to the desk when the assistant qualifies an enquiry.
+ * Sent to the desk when the assistant qualifies an inquiry.
  *
  * The transcript is included in full and deliberately last. Whoever picks this
  * up needs to know what was already said before they call back — a lead that
@@ -502,7 +502,7 @@ export type AssistantLeadEmailData = {
  */
 export function assistantLeadEmail(data: AssistantLeadEmailData) {
   const content = `
-    ${heading('Enquiry from the site assistant')}
+    ${heading('Inquiry from the site assistant')}
     ${paragraph(`${data.name} was talking to the assistant on the website and left contact details. Reference ${data.reference}.`)}
     ${detailTable([
       ['Name', data.name],
@@ -516,7 +516,7 @@ export function assistantLeadEmail(data: AssistantLeadEmailData) {
       ['Preferred callback', data.callback ?? ''],
       ['What they need', data.summary ?? ''],
     ])}
-    ${button('Reply to the enquiry', `mailto:${data.email}`)}
+    ${button('Reply to the inquiry', `mailto:${data.email}`)}
     <div style="margin-top:26px;padding-top:20px;border-top:1px solid ${BRAND.line};">
       <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};margin-bottom:10px;">Conversation</div>
       <pre style="margin:0;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.7;color:${BRAND.text};">${escapeHtml(data.transcript)}</pre>
@@ -524,10 +524,10 @@ export function assistantLeadEmail(data: AssistantLeadEmailData) {
   `;
 
   return {
-    subject: `Assistant enquiry ${data.reference}, ${data.name}${data.company ? ` (${data.company})` : ''}`,
-    html: shell('Assistant enquiry', data.summary ?? `${data.name} left contact details.`, content),
+    subject: `Assistant inquiry ${data.reference}, ${data.name}${data.company ? ` (${data.company})` : ''}`,
+    html: shell('Assistant inquiry', data.summary ?? `${data.name} left contact details.`, content),
     text: [
-      `Enquiry from the site assistant, ${data.reference}`,
+      `Inquiry from the site assistant, ${data.reference}`,
       '',
       `Name: ${data.name}`,
       `Email: ${data.email}`,

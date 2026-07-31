@@ -287,7 +287,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       <CallToAction
         title="Have a project like this?"
-        description="Send us the drawings and the programme. We will tell you honestly what is achievable, including the parts that are not."
+        description="Send us the drawings and the program. We will tell you honestly what is achievable, including the parts that are not."
         primary={{ label: 'Request a Quote', href: '/quote' }}
         secondary={{ label: 'Speak to an engineer', href: '/contact' }}
       />

@@ -137,7 +137,7 @@ export const timelines = [
 export const quantityUnits = [
   'Tonnes',
   'Kilograms',
-  'Metres',
+  'Meters',
   'Pieces',
   'To be confirmed',
 ] as const;
@@ -145,7 +145,7 @@ export const quantityUnits = [
 /**
  * Surface treatments, in the order a buyer thinks about them: bare, prepared,
  * protected, coated. "To be advised" is first-class rather than an afterthought —
- * at enquiry stage the finish is frequently still with the engineer, and forcing a
+ * at inquiry stage the finish is frequently still with the engineer, and forcing a
  * guess produces a quotation against the wrong specification.
  */
 export const finishes = [
@@ -164,12 +164,12 @@ export const fulfilment = ['Delivery to site', 'Collection from works'] as const
 /**
  * The contact form's version of project type.
  *
- * The general enquiry option comes first and exists because most people who use a
+ * The general inquiry option comes first and exists because most people who use a
  * contact form rather than the quote form do not have a project — they have a
  * question. A required dropdown with no honest answer for them is how a form
  * teaches visitors to pick something untrue.
  */
-export const enquiryTypes = ['General enquiry, no specific project', ...projectTypes] as const;
+export const inquiryTypes = ['General inquiry, no specific project', ...projectTypes] as const;
 
 export const quoteSchema = z.object({
   fullName: requiredText('Enter your full name', NAME_MAX, NAME_MIN),
@@ -182,7 +182,7 @@ export const quoteSchema = z.object({
   product: requiredText('Select a steel product', 120),
   /**
    * Sections, grades and lengths, as free text. Deliberately not a set of numeric
-   * fields: a real enquiry is "UB 305x165x40, 8no. at 6.2m and 4no. at 4.8m",
+   * fields: a real inquiry is "UB 305x165x40, 8no. at 6.2m and 4no. at 4.8m",
    * which no dimension form survives, and forcing one produces a note in the
    * description saying "see attached" — which is where we started.
    */
@@ -195,7 +195,7 @@ export const quoteSchema = z.object({
   quantityUnit: z.enum(quantityUnits, { message: 'Select a unit' }),
   finish: z.enum(finishes, { message: 'Select a required finish' }),
   fulfilment: z.enum(fulfilment, { message: 'Tell us whether you need delivery or collection' }),
-  /** Optional by design — many enquiries arrive before a budget exists. */
+  /** Optional by design — many inquiries arrive before a budget exists. */
   budget: z.union([z.enum(budgetRanges), z.literal('')]).optional(),
   timeline: z.enum(timelines, { message: 'Select a timeline' }),
   description: z
@@ -217,7 +217,7 @@ export const contactSchema = z.object({
   email,
   phone: optionalPhone,
   company: z.string().trim().max(120).optional(),
-  projectType: z.enum(enquiryTypes, { message: 'Select what your enquiry is about' }),
+  projectType: z.enum(inquiryTypes, { message: 'Select what your inquiry is about' }),
   subject: requiredText('Enter a subject', 160, 3),
   message: z
     .string({ error: 'Please tell us a little more so we can route your message correctly' })

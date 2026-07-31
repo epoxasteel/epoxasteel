@@ -82,7 +82,7 @@ export function QuoteForm({
     formState: { errors, isSubmitting },
   } = form;
 
-  /* A quote request asks for a project description, tonnages and a programme.
+  /* A quote request asks for a project description, tonnages and a program.
      People write that over several minutes with a drawing open beside them. */
   const clearDraft = useFormDraft('epoxa:draft:quote', form);
   const { prime, token, upload } = useFormToken('quote');
@@ -169,7 +169,7 @@ export function QuoteForm({
   async function onSubmit(values: QuoteInput) {
     setServerError(null);
 
-    // Multipart, so the drawings travel with the enquiry in one request.
+    // Multipart, so the drawings travel with the inquiry in one request.
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (value === undefined || value === null || value === '') return;
@@ -635,7 +635,7 @@ export function QuoteForm({
             )}
           </Button>
           <p className="text-steel text-[0.8125rem] leading-relaxed">
-            Standard enquiries are quoted within 48 hours. You will receive a confirmation email
+            Standard inquiries are quoted within 48 hours. You will receive a confirmation email
             with your reference immediately.
           </p>
         </div>
@@ -797,7 +797,7 @@ function QuoteSuccess({
         </h2>
 
         <p className="text-lead text-ash mt-4 max-w-xl">
-          Thank you. Your enquiry is with our commercial team and a confirmation has been sent to
+          Thank you. Your inquiry is with our commercial team and a confirmation has been sent to
           your email address.
         </p>
 
@@ -839,7 +839,7 @@ function QuoteSuccess({
             {
               step: '02',
               title: 'Quotation',
-              body: 'A line-by-line quotation within 48 hours for standard enquiries.',
+              body: 'A line-by-line quotation within 48 hours for standard inquiries.',
             },
             {
               step: '03',

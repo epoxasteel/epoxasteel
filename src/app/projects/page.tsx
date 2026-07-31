@@ -13,7 +13,7 @@ import { Alert } from '@/components/ui/misc';
 export const metadata: Metadata = buildMetadata({
   title: 'Projects',
   description:
-    'Structural steel case studies: commercial towers, fracture-critical bridges, distribution centres, transit hubs, energy terminals and civic buildings.',
+    'Structural steel case studies: commercial towers, fracture-critical bridges, distribution centers, transit hubs, energy terminals and civic buildings.',
   path: '/projects',
 });
 
@@ -100,7 +100,7 @@ export default function ProjectsPage() {
 
       <CallToAction
         title="Your project could be the next one here."
-        description="Send us the drawings and the programme. We will tell you what we can commit to, and if the schedule is not achievable, we will say so before you rely on it."
+        description="Send us the drawings and the program. We will tell you what we can commit to, and if the schedule is not achievable, we will say so before you rely on it."
       />
     </>
   );

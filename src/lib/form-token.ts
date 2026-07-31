@@ -99,7 +99,7 @@ export function verifyFormToken(token: unknown, kind: FormKind): TokenCheck {
 /**
  * Rejects a cross-site POST outright.
  *
- * Defence in depth beside the token: a same-site form always sends an Origin (or
+ * Defense in depth beside the token: a same-site form always sends an Origin (or
  * at least a Referer) matching the host it was served from. Anything else is not
  * one of our forms, whatever it is carrying.
  *

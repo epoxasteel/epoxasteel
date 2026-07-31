@@ -134,7 +134,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <SteelProfileFigure profile={product.profile} label={product.name} />
 
               <div className="border-hairline bg-charcoal mt-6 rounded-md border p-6">
-                <p className="text-eyebrow text-steel uppercase">Quick enquiry</p>
+                <p className="text-eyebrow text-steel uppercase">Quick inquiry</p>
                 <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
                   Send sizes and quantities and we will come back with a line-by-line quotation
                   within 48 hours.

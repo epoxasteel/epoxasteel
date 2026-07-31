@@ -14,7 +14,7 @@ import * as React from 'react';
  * over a phone connection waits the better part of a minute. Without a number
  * moving, the honest reading of that screen is that it has hung — and they click the
  * button again, or leave. A progress bar is not decoration here; it is the
- * difference between a submitted enquiry and an abandoned one.
+ * difference between a submitted inquiry and an abandoned one.
  *
  * `phase` distinguishes the two halves of the wait, because they feel different and
  * take different amounts of time:

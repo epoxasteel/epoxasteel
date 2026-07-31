@@ -10,7 +10,7 @@ import { QuoteFormShell } from '@/components/forms/quote-form-shell';
 export const metadata: Metadata = buildMetadata({
   title: 'Request a Quote',
   description:
-    'Request a quotation for structural steel, plate, tube, bar, reinforcement or fabrication. Line-by-line pricing within 48 hours for standard enquiries.',
+    'Request a quotation for structural steel, plate, tube, bar, reinforcement or fabrication. Line-by-line pricing within 48 hours for standard inquiries.',
   path: '/quote',
 });
 
@@ -23,7 +23,7 @@ const assurances = [
   {
     icon: Clock,
     title: '48-hour turnaround',
-    body: 'Standard enquiries quoted within two business days. Complex packages get a confirmed turnaround within four business hours.',
+    body: 'Standard inquiries quoted within two business days. Complex packages get a confirmed turnaround within four business hours.',
   },
   {
     icon: FileCheck,
@@ -33,7 +33,7 @@ const assurances = [
   {
     icon: UserCheck,
     title: 'A named contact',
-    body: 'One account manager owns your enquiry from first email to proof of delivery. No call centre, ever.',
+    body: 'One account manager owns your inquiry from first email to proof of delivery. No call center, ever.',
   },
   {
     icon: ShieldCheck,
@@ -91,7 +91,7 @@ export default function QuotePage() {
                 <div className="border-hairline bg-graphite mt-6 rounded-lg border p-7">
                   <p className="text-eyebrow text-steel uppercase">Prefer to talk?</p>
                   <p className="text-ash mt-4 text-[0.9375rem] leading-relaxed">
-                    Some enquiries are faster explained than typed. Call us and you will be speaking
+                    Some inquiries are faster explained than typed. Call us and you will be speaking
                     to someone who knows steel within a minute.
                   </p>
                   <div className="mt-6 space-y-3 text-[0.9375rem]">
