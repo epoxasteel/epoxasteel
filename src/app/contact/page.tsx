@@ -124,12 +124,10 @@ export default function ContactPage() {
             <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start">
               <Reveal direction="left">
                 <div className="border-hairline bg-charcoal rounded-lg border p-7">
-                  {/* No "Head office" label. There is one office, so naming it
-                      the head one implies branches that do not exist, and the
-                      company name below already says whose address this is. The
-                      top margin moves onto the address now that nothing sits
-                      above it. */}
-                  <address className="text-mist text-[0.9375rem] leading-relaxed not-italic">
+                  {/* "Address", not "Head office". There is one office, so
+                      naming it the head one implied branches that do not exist. */}
+                  <p className="text-eyebrow text-steel uppercase">Address</p>
+                  <address className="text-mist mt-5 text-[0.9375rem] leading-relaxed not-italic">
                     <span className="text-bright block font-medium">{siteConfig.legalName}</span>
                     {address.line1} <br />
                     {address.line2} <br />
