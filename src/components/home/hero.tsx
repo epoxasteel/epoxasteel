@@ -1,15 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { AnimatePresence, motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { siteConfig } from '@/lib/site';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Magnetic } from '@/components/motion/magnetic';
-import { Wordmark } from '@/components/visual/wordmark';
 import { EASE_OUT_EXPO } from '@/lib/motion';
-import { OVERTURE_KEY } from '@/components/home/overture-script';
 
 /**
  * The hero.
@@ -19,34 +15,11 @@ import { OVERTURE_KEY } from '@/components/home/overture-script';
  * browser confirms it can play — so the opening is cinematic on the very first
  * deploy and gets better when footage arrives, without a code change.
  *
- * The **overture** is the scripted opening: "Reinforce Your Dream." resolves
- * into the wordmark and then hands over to the hero content. It plays once per
- * browsing session, is skippable at any moment, and is bypassed entirely for
- * reduced-motion users — who go straight to the settled hero.
+ * The **opening** is a plate of the page background laid over the top of it and
+ * faded away in CSS on the first view of a session. There is no intro to sit
+ * through and nothing to skip: the hero is fully rendered underneath from the
+ * first frame, and the plate simply lifts off it.
  */
-
-/**
- * Reads "has the overture already played this session?" from sessionStorage.
- *
- * `useSyncExternalStore` is the sanctioned way to read a browser-only value in
- * a server-rendered component: the server snapshot reports "already played", so
- * the HTML that ships (and that search engines and the LCP measurement see) is
- * the settled hero with its real heading. React then swaps to the client
- * snapshot after hydration, with no mismatch warning and no flash.
- */
-function subscribeToOverture(onChange: () => void) {
-  window.addEventListener('storage', onChange);
-  return () => window.removeEventListener('storage', onChange);
-}
-
-function readOverturePlayed() {
-  try {
-    return window.sessionStorage.getItem(OVERTURE_KEY) === '1';
-  } catch {
-    // Private browsing or blocked storage — treat it as unplayed.
-    return false;
-  }
-}
 
 /**
  * The parallax layers, rendered on the server and handed in as nodes.
@@ -68,40 +41,7 @@ export type HeroLayers = {
 };
 
 export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroVideoSource[] }) {
-  const reduce = useReducedMotion();
   const containerRef = React.useRef<HTMLDivElement>(null);
-
-  const alreadyPlayed = React.useSyncExternalStore(
-    subscribeToOverture,
-    readOverturePlayed,
-    () => true,
-  );
-
-  const [finished, setFinished] = React.useState(false);
-
-  // Reduced motion skips the overture entirely and goes straight to the hero.
-  const phase: 'overture' | 'settled' =
-    !reduce && !alreadyPlayed && !finished ? 'overture' : 'settled';
-
-  /*
-   * Is the overture part of *this* page view?
-   *
-   * False on the server and for anyone returning within the session, and that
-   * is the point: when there is no intro to hand over from, the hero content is
-   * rendered as plain, fully-visible markup rather than a Framer tree waiting at
-   * `opacity: 0`. The headline is in the HTML, so it paints with the document.
-   */
-  const entrance = !reduce && !alreadyPlayed;
-
-  const finishOverture = React.useCallback(() => {
-    setFinished(true);
-    document.documentElement.removeAttribute('data-overture');
-    try {
-      window.sessionStorage.setItem(OVERTURE_KEY, '1');
-    } catch {
-      /* Storage unavailable — the overture simply plays again next time. */
-    }
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -142,18 +82,28 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
       />
       <div aria-hidden className="bg-grain pointer-events-none absolute inset-0" />
 
-      {/* The blackout the overture opens from. Server-rendered so it is already
-          on screen at first paint; styled in `globals.css` and shown only while
-          `data-overture` is set on the root element. */}
+      {/*
+        The opening.
+
+        A plate of the page's own background, laid over the hero and animated
+        away in CSS — see `globals.css`. The site used to open on a scripted
+        intro instead: "Reinforce Your Dream." resolving into the wordmark over
+        two beats, with a Skip button. It was a title card in front of the door,
+        and the visitor had to wait through it or dismiss it before the site
+        would show them anything.
+
+        This does the same work in one gesture and asks nothing: the footage
+        lifts out of black over a second and a bit, and the page is already
+        there underneath. It is CSS rather than JavaScript so it runs before
+        hydration, cannot get stuck part-way if a script fails, and costs
+        nothing on the main thread. The inline bootstrap in the head decides
+        whether it is due at all — once per session, never under reduced motion.
+      */}
       <div
         data-overture-cover
         aria-hidden
         className="bg-void pointer-events-none absolute inset-0 z-30"
       />
-
-      <AnimatePresence mode="wait">
-        {phase === 'overture' ? <Overture key="overture" onDone={finishOverture} /> : null}
-      </AnimatePresence>
 
       {/*
         Anchored from the top, not centred.
@@ -176,7 +126,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         className="relative flex min-h-dvh w-full items-start"
       >
         <div className="container-page w-full pt-[calc(var(--header-h)+5vh)] pb-12 sm:pt-[calc(var(--header-h)+6vh)] sm:pb-8">
-          <HeroContent entrance={entrance} active={phase === 'settled'} />
+          <HeroContent />
         </div>
       </motion.div>
     </section>
@@ -329,142 +279,21 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Overture                                                                   */
-/* -------------------------------------------------------------------------- */
-
-function Overture({ onDone }: { onDone: () => void }) {
-  const [beat, setBeat] = React.useState<0 | 1>(0);
-
-  React.useEffect(() => {
-    const toWordmark = window.setTimeout(() => setBeat(1), 2000);
-    const toHero = window.setTimeout(onDone, 4400);
-
-    function skip(event: KeyboardEvent) {
-      if (event.key === 'Escape' || event.key === ' ' || event.key === 'Enter') onDone();
-    }
-
-    window.addEventListener('keydown', skip);
-
-    return () => {
-      window.clearTimeout(toWordmark);
-      window.clearTimeout(toHero);
-      window.removeEventListener('keydown', skip);
-    };
-  }, [onDone]);
-
-  return (
-    <motion.div
-      // aria-hidden: the same words are in the hero heading underneath, so
-      // screen readers get the content once, not twice.
-      aria-hidden
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.9, ease: EASE_OUT_EXPO }}
-      // Fully opaque, not a scrim: the settled hero is now painted underneath
-      // from the very first frame, and the intro should read as a proper cut to
-      // black rather than a blur over content the visitor has already glimpsed.
-      className="bg-void absolute inset-0 z-40 flex items-center justify-center"
-      onClick={onDone}
-    >
-      <AnimatePresence mode="wait">
-        {beat === 0 ? (
-          <motion.p
-            key="line"
-            className="font-display text-display-lg text-bright px-6 text-center font-semibold"
-            initial={{ opacity: 0, filter: 'blur(14px)', scale: 1.04 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
-            exit={{ opacity: 0, filter: 'blur(10px)', scale: 0.985 }}
-            transition={{ duration: 1.3, ease: EASE_OUT_EXPO }}
-          >
-            Reinforce Your Dream.
-          </motion.p>
-        ) : (
-          <motion.div
-            key="mark"
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 1.1, ease: EASE_OUT_EXPO }}
-            className="px-6"
-          >
-            {/*
-              The header's lockup, at display size — not a second, stacked
-              treatment of it.
-
-              The intro used to draw its own version: EPOXA over a rule over
-              STEEL, no beam mark. So the first thing a visitor ever saw of the
-              brand was a logo they would then never see again, and the header
-              they landed on looked like a different company's. One mark.
-            */}
-            <Wordmark size="xl" />
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.9 }}
-              className="text-eyebrow text-steel mt-6 text-center uppercase"
-            >
-              Established {siteConfig.founded}
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <button
-        type="button"
-        onClick={(event) => {
-          event.stopPropagation();
-          onDone();
-        }}
-        className={cn(
-          'border-hairline-strong bg-void/75 absolute right-6 bottom-8 rounded-sm border px-4 py-2.5',
-          'text-mist text-[0.75rem] tracking-[0.16em] uppercase backdrop-blur-md',
-          'hover:border-arc-bright hover:text-bright transition-colors duration-300',
-        )}
-      >
-        Skip intro
-      </button>
-    </motion.div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
 /* Hero content                                                               */
 /* -------------------------------------------------------------------------- */
 
 /**
- * `entrance` decides whether this is animated at all.
+ * The hero content: eyebrow, headline, lead, actions.
  *
- * When the overture is not part of this page view there is nothing to hand over
- * from, so the content renders as ordinary markup with no motion styles — which
- * is what lets the headline appear in the server HTML and be counted as the
- * largest contentful paint immediately. When the overture *is* running, the
- * same tree becomes a staggered entrance, played out of sight behind the plate
- * and revealed as it lifts.
+ * Plain, fully-visible markup with no entrance animation. It used to be a
+ * Framer variant tree staggered in behind the intro plate, which meant the
+ * headline — the page's largest contentful paint — waited on hydration before
+ * it was allowed to appear. With the intro gone there is nothing to hand over
+ * from, so it ships painted.
  */
-function HeroContent({ entrance, active }: { entrance: boolean; active: boolean }) {
-  const reduce = useReducedMotion();
-
-  const container = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } },
-  };
-
-  const item = reduce
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }
-    : {
-        hidden: { opacity: 0, y: 26 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.95, ease: EASE_OUT_EXPO } },
-      };
-
-  // `initial={false}` tells Framer to render the resting state and skip the
-  // entrance outright, leaving the markup free of inline opacity.
-  const group = entrance
-    ? ({ variants: container, initial: 'hidden', animate: active ? 'visible' : 'hidden' } as const)
-    : ({ initial: false } as const);
-  const line = entrance ? { variants: item } : { initial: false as const };
-
+function HeroContent() {
   return (
-    <motion.div {...group} className="max-w-3xl">
+    <div className="max-w-3xl">
       {/*
         The tagline leads, quietly, and the promise carries the size.
 
@@ -477,36 +306,30 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
         in the overture and in the email header, and dropping it here alone
         would be the one place the brand does not say its own line.
       */}
-      <motion.p {...line} className="text-eyebrow text-arc-glow flex items-center gap-3 uppercase">
+      <p className="text-eyebrow text-arc-glow flex items-center gap-3 uppercase">
         <span aria-hidden className="bg-arc h-px w-10" />
         Reinforce Your Dream
-      </motion.p>
+      </p>
 
-      <motion.h1
-        {...line}
-        className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7"
-      >
+      <h1 className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7">
         {/* The trailing spaces are load-bearing. Without them `textContent`
             reads "Trust,Quality,Service." — which is what a crawler indexes and
             what a copy-paste produces, even though it renders correctly. */}
         Trust, <br />
         Quality, <br />
         <span className="text-metal">Service.</span>
-      </motion.h1>
+      </h1>
 
-      <motion.p {...line} className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
+      <p className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
         Premium structural steel for commercial, industrial and residential construction — supplied
         with mill-traceable certification, in-house fabrication, and delivery sequenced to your
         erection programme.
-      </motion.p>
+      </p>
 
       {/* Full width on a phone. Side by side they are within three pixels of
           each other's width, which reads as a mistake rather than a rhythm —
           and edge-to-edge targets are easier to hit anyway. */}
-      <motion.div
-        {...line}
-        className="mt-8 flex flex-col items-stretch gap-3 sm:mt-11 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-      >
+      <div className="mt-8 flex flex-col items-stretch gap-3 sm:mt-11 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
         <Magnetic className="max-sm:w-full">
           <Button href="/quote" size="lg" sheen className="max-sm:w-full">
             Request a Quote
@@ -517,7 +340,7 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
         <Button href="/contact" size="lg" variant="outline" className="max-sm:w-full">
           Contact
         </Button>
-      </motion.div>
+      </div>
 
       {/*
         No proof bar.
@@ -529,7 +352,7 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
         worth less than no claim at all. When there are audited figures they
         belong here; until then the page says what it can prove.
       */}
-    </motion.div>
+    </div>
   );
 }
 

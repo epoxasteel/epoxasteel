@@ -529,22 +529,45 @@
   }
 
   /* ------------------------------------------------------------------------
-     The hero overture's opening plate
+     The hero's opening
 
-     Server-rendered so the blackout is on screen from the first frame, but only
-     shown when the inline bootstrap in the head has confirmed the intro is
-     actually due — see `overture-script.tsx`. React's overture takes over the
-     same area at hydration and clears the attribute when the sequence ends, at
-     which point this fades out on the same curve as the overture above it.
+     A plate of the page background over the hero, server-rendered so it is on
+     screen from the very first frame, then animated away. The site used to open
+     on a two-beat title card instead; this is the same "arrive out of black"
+     idea with nothing to wait through.
+
+     A CSS animation rather than a transition driven from React: it starts on
+     first paint, before hydration, and `forwards` means a failed or slow bundle
+     leaves the plate cleared rather than stuck over the hero. The attribute is
+     set by the inline bootstrap in the head, which is also what limits this to
+     the first view of a session — see `overture-script.tsx`.
+
+     Default is transparent. No script, no attribute, no plate.
      ------------------------------------------------------------------------ */
 
   [data-overture-cover] {
     opacity: 0;
-    transition: opacity 900ms var(--ease-out-expo);
   }
 
   html[data-overture] [data-overture-cover] {
-    opacity: 1;
+    animation: hero-open 1400ms var(--ease-out-quint) forwards;
+  }
+
+  @keyframes hero-open {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion gets the page, immediately. */
+  @media (prefers-reduced-motion: reduce) {
+    html[data-overture] [data-overture-cover] {
+      animation: none;
+      opacity: 0;
+    }
   }
 
   /* ------------------------------------------------------------------------
