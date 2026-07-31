@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
-import { ChevronDown, ArrowUpRight } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { mainNav, siteConfig } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Wordmark } from '@/components/visual/wordmark';
@@ -167,7 +167,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
                   'data-[motion=to-end]:animate-[nav-out-right_240ms_var(--ease-out-quint)]',
                 )}
               >
-                <MegaPanel item={item} pathname={pathname} />
+                <MegaPanel item={item} />
               </NavigationMenu.Content>
             </NavigationMenu.Item>
           );
@@ -189,16 +189,29 @@ function DesktopNav({ pathname }: { pathname: string }) {
         glass and belongs to the page, the panel sits above the page and is
         solid. A menu has to be readable before it is atmospheric.
       */}
-      <div className="absolute top-full left-1/2 flex w-screen max-w-6xl -translate-x-1/2 justify-center pt-3">
-        <NavigationMenu.Viewport
-          className={cn(
-            'relative h-(--radix-navigation-menu-viewport-height) w-full origin-top overflow-hidden',
-            'border-hairline-strong bg-graphite shadow-raised rounded-lg border',
-            'transition-[width,height] duration-350 [transition-timing-function:var(--ease-out-quint)]',
-            'data-[state=closed]:animate-[nav-scale-out_200ms_ease-in]',
-            'data-[state=open]:animate-[nav-scale-in_260ms_var(--ease-out-quint)]',
-          )}
-        />
+      {/*
+        Pinned to the page container, not to the navigation.
+
+        It used to be `left-1/2 -translate-x-1/2 max-w-6xl` measured from this
+        `<nav>`, which sits between the wordmark and the buttons rather than in
+        the middle of the header, so the panel hung off-centre and stopped short
+        of both. `fixed` measures against the viewport instead, and
+        `container-page` inside it reproduces the header's own content box, so
+        the panel starts where the mark starts and ends where Request a Quote
+        ends.
+      */}
+      <div className="fixed inset-x-0 top-(--header-h) flex justify-center pt-2">
+        <div className="container-page flex justify-center">
+          <NavigationMenu.Viewport
+            className={cn(
+              'relative h-(--radix-navigation-menu-viewport-height) w-full origin-top overflow-hidden',
+              'border-hairline-strong bg-graphite shadow-raised rounded-2xl border',
+              'transition-[width,height] duration-350 [transition-timing-function:var(--ease-out-quint)]',
+              'data-[state=closed]:animate-[nav-scale-out_200ms_ease-in]',
+              'data-[state=open]:animate-[nav-scale-in_260ms_var(--ease-out-quint)]',
+            )}
+          />
+        </div>
       </div>
     </NavigationMenu.Root>
   );
@@ -225,7 +238,7 @@ function NavUnderline({ active }: { active: boolean }) {
   );
 }
 
-function MegaPanel({ item, pathname }: { item: (typeof mainNav)[number]; pathname: string }) {
+function MegaPanel({ item }: { item: (typeof mainNav)[number] }) {
   const columns = item.columns ?? [];
 
   return (
@@ -250,35 +263,22 @@ function MegaPanel({ item, pathname }: { item: (typeof mainNav)[number]; pathnam
         {columns.map((column) => (
           <div key={column.title}>
             <p className="text-eyebrow text-steel mb-4 uppercase">{column.title}</p>
+            {/*
+              Labels, not links.
+
+              These were anchors into a product, service and industry catalogue
+              describing capabilities the business cannot currently stand behind.
+              A menu that lists what we can talk about is honest; one that
+              promises a page per line and delivers invented detail is not. The
+              panel is a contents page now, and the routes it used to point at
+              are no longer reachable by clicking.
+            */}
             <ul className="space-y-0.5">
-              {column.items.map((link) => {
-                const active = pathname === link.href;
-                return (
-                  <li key={link.href}>
-                    <NavigationMenu.Link asChild>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          'group/link -mx-2.5 flex items-center justify-between gap-3 rounded-sm px-2.5 py-2',
-                          'text-[0.875rem] transition-colors duration-250',
-                          active
-                            ? 'text-bright bg-white/[0.04]'
-                            : 'text-mist hover:text-bright hover:bg-white/[0.03]',
-                        )}
-                      >
-                        {link.label}
-                        <ArrowUpRight
-                          aria-hidden
-                          className={cn(
-                            'text-steel size-3.5 opacity-0 transition-all duration-250',
-                            'group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 group-hover/link:opacity-100',
-                          )}
-                        />
-                      </Link>
-                    </NavigationMenu.Link>
-                  </li>
-                );
-              })}
+              {column.items.map((link) => (
+                <li key={link.href} className="text-mist -mx-2.5 px-2.5 py-2 text-[0.875rem]">
+                  {link.label}
+                </li>
+              ))}
             </ul>
           </div>
         ))}

@@ -367,7 +367,6 @@ export const mainNav: NavGroup[] = [
           { label: 'Steel Beams', href: '/products/steel-beams' },
           { label: 'Steel Channels', href: '/products/steel-channels' },
           { label: 'Steel Angles', href: '/products/steel-angles' },
-          { label: 'All products', href: '/products' },
         ],
       },
       {
@@ -406,7 +405,6 @@ export const mainNav: NavGroup[] = [
           { label: 'Project Consultation', href: '/services/project-consultation' },
           { label: 'Technical Assistance', href: '/services/technical-assistance' },
           { label: 'Custom Orders', href: '/services/custom-orders' },
-          { label: 'All services', href: '/services' },
         ],
       },
     ],
