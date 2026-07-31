@@ -35,7 +35,7 @@ export function BeamMark({ className }: { className?: string }) {
       <rect x="13.8" y="9.4" width="4.4" height="13.2" fill="currentColor" />
       {/* Bottom flange */}
       <rect x="4" y="22.6" width="24" height="4.4" fill="currentColor" />
-      {/* Fillets — the detail that makes it read as rolled steel, not a letter H */}
+      {/* Fillets, the detail that makes it read as rolled steel, not a letter H */}
       <path d="M13.8 9.4h-1.6c0 .9.7 1.6 1.6 1.6V9.4Z" fill="currentColor" opacity="0.55" />
       <path d="M18.2 9.4h1.6c0 .9-.7 1.6-1.6 1.6V9.4Z" fill="currentColor" opacity="0.55" />
       <path d="M13.8 22.6h-1.6c0-.9.7-1.6 1.6-1.6v1.6Z" fill="currentColor" opacity="0.55" />
@@ -59,7 +59,7 @@ export function Wordmark({
   /*
     One step larger across the board, and the mark is no longer sized here.
 
-    It carries `h-[0.72em]` — roughly the cap height of the display face — and
+    It carries `h-[0.72em]`, roughly the cap height of the display face, and
     `em` resolves against the font size on the container below, so the beam is
     the height of the letters beside it at every size by construction rather
     than by a table of pixel values that had to be kept in agreement.

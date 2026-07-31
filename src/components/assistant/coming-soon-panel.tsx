@@ -79,7 +79,7 @@ export function AssistantComingSoonPanel() {
               aria-hidden
               className="via-arc-bright/50 pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
             />
-            {/* A single soft arc bloom behind the mark. Static, not animated —
+            {/* A single soft arc bloom behind the mark. Static, not animated ,
                 a permanently moving glow in a fixed corner panel is the kind of
                 thing that reads as expensive once and as restless thereafter. */}
             <div

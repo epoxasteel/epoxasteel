@@ -110,7 +110,7 @@ export function FloatingContact() {
               'hover:border-arc-bright hover:text-bright hover:-translate-y-px',
             )}
           >
-            {/* A slow arc wash rather than a colour change — reads as lit metal. */}
+            {/* A slow arc wash rather than a colour change, reads as lit metal. */}
             <span
               aria-hidden
               className="from-arc/0 via-arc/25 to-arc/0 absolute inset-0 -translate-x-full bg-linear-to-r transition-transform duration-[1100ms] ease-out group-hover:translate-x-full"

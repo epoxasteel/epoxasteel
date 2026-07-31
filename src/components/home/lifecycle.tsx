@@ -154,7 +154,7 @@ export function Lifecycle({ stages }: { stages: LifecycleStage[] }) {
                       meaning, so an alt text would say everything twice.
 
                       A plain <img> on purpose. These are SVG, so there is no
-                      raster for next/image's optimizer to resize or re-encode —
+                      raster for next/image's optimizer to resize or re-encode ,
                       it would proxy each file through a serverless route to hand
                       back the same bytes, and serving SVG through the optimizer
                       needs `dangerouslyAllowSVG`, which we will not turn on for

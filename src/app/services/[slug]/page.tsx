@@ -113,7 +113,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <Reveal direction="left" className="lg:sticky lg:top-32 lg:self-start">
               <div className="border-hairline bg-charcoal rounded-lg border p-7">
                 {/* An h2 set at 11px in dim grey reads as decoration, not as a
-                    heading — and it heads a real list of content. Sized like
+                    heading, and it heads a real list of content. Sized like
                     every other card heading on the site. */}
                 <h2 className="font-display text-title text-bright font-semibold">Capabilities</h2>
                 <Checklist items={service.capabilities} className="mt-6" />
@@ -250,7 +250,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <CallToAction
         title={`Need ${service.name.toLowerCase()}?`}
-        description="Send us the scope. We will tell you what it takes, what it costs and when we can do it — and if we are not the right supplier for it, we will tell you that too."
+        description="Send us the scope. We will tell you what it takes, what it costs and when we can do it, and if we are not the right supplier for it, we will tell you that too."
       />
     </>
   );

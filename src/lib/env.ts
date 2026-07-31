@@ -61,13 +61,13 @@ function collect(): Report {
     const from = process.env.FROM_EMAIL || process.env.EMAIL_FROM;
     if (!from) {
       report.warnings.push(
-        `FROM_EMAIL is not set — falling back to noreply@${siteDomain()}, which must be a verified Resend sender`,
+        `FROM_EMAIL is not set, falling back to noreply@${siteDomain()}, which must be a verified Resend sender`,
       );
     } else {
       const domain = from.split('@').pop()?.replace(/>$/, '').trim().toLowerCase();
       if (domain && domain !== siteDomain()) {
         report.warnings.push(
-          `FROM_EMAIL sends from @${domain} but the site is ${siteDomain()} — make sure @${domain} is verified in Resend`,
+          `FROM_EMAIL sends from @${domain} but the site is ${siteDomain()}, make sure @${domain} is verified in Resend`,
         );
       }
     }
@@ -75,7 +75,7 @@ function collect(): Report {
     report.notes.push(`email: SMTP via ${smtpHost}`);
     if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
       report.warnings.push(
-        'SMTP_HOST is set without SMTP_USER/SMTP_PASSWORD — most providers will refuse to relay',
+        'SMTP_HOST is set without SMTP_USER/SMTP_PASSWORD, most providers will refuse to relay',
       );
     }
     const port = process.env.SMTP_PORT;
@@ -84,7 +84,7 @@ function collect(): Report {
     }
   } else {
     report.warnings.push(
-      'no email transport configured (RESEND_API_KEY or SMTP_HOST) — enquiries will be written to this log and not delivered',
+      'no email transport configured (RESEND_API_KEY or SMTP_HOST), enquiries will be written to this log and not delivered',
     );
   }
 
@@ -95,7 +95,7 @@ function collect(): Report {
 
   const to = process.env.OWNER_EMAIL || process.env.EMAIL_TO;
   if (process.env.OWNER_EMAIL && process.env.EMAIL_TO) {
-    report.notes.push('OWNER_EMAIL and EMAIL_TO are both set — OWNER_EMAIL wins');
+    report.notes.push('OWNER_EMAIL and EMAIL_TO are both set, OWNER_EMAIL wins');
   }
   if (to) {
     const bad = to
@@ -105,7 +105,7 @@ function collect(): Report {
     if (bad.length) report.errors.push(`OWNER_EMAIL contains invalid addresses: ${bad.join(', ')}`);
   } else {
     report.warnings.push(
-      'OWNER_EMAIL is not set — notifications go to the public contact address in lib/site.ts',
+      'OWNER_EMAIL is not set, notifications go to the public contact address in lib/site.ts',
     );
   }
 
@@ -129,14 +129,14 @@ function collect(): Report {
   const formSecret = process.env.FORM_TOKEN_SECRET;
   if (!formSecret) {
     report.warnings.push(
-      'FORM_TOKEN_SECRET is not set — form tokens are signed with a per-process key, so they stop validating across a restart or a second replica',
+      'FORM_TOKEN_SECRET is not set, form tokens are signed with a per-process key, so they stop validating across a restart or a second replica',
     );
   } else if (formSecret.length < 16) {
     report.errors.push('FORM_TOKEN_SECRET is shorter than 16 characters');
   }
 
   if (production && !process.env.IP_HASH_SALT) {
-    report.warnings.push('IP_HASH_SALT is not set — stored submitter hashes use a default salt');
+    report.warnings.push('IP_HASH_SALT is not set, stored submitter hashes use a default salt');
   }
 
   /* --- Database: optional backup ----------------------------------------- */
@@ -144,7 +144,7 @@ function collect(): Report {
     report.notes.push('database: connected (enquiries backed up)');
   } else {
     report.warnings.push(
-      'DATABASE_URL is not set — enquiries are emailed but not stored, so there is no disaster-recovery copy',
+      'DATABASE_URL is not set, enquiries are emailed but not stored, so there is no disaster-recovery copy',
     );
   }
 
@@ -154,16 +154,16 @@ function collect(): Report {
 
   if (aiEnabled && !openai) {
     report.errors.push(
-      'AI_ENABLED is true but OPENAI_API_KEY is not set — the assistant would be offered and then fail',
+      'AI_ENABLED is true but OPENAI_API_KEY is not set, the assistant would be offered and then fail',
     );
   } else if (aiEnabled) {
     report.notes.push(`assistant: live (${process.env.OPENAI_MODEL || 'gpt-4.1-mini'})`);
   } else if (openai) {
     report.notes.push(
-      'assistant: Coming Soon — key present, set AI_ENABLED=true and redeploy to go live',
+      'assistant: Coming Soon, key present, set AI_ENABLED=true and redeploy to go live',
     );
   } else {
-    report.notes.push('assistant: Coming Soon — set OPENAI_API_KEY and AI_ENABLED=true to go live');
+    report.notes.push('assistant: Coming Soon, set OPENAI_API_KEY and AI_ENABLED=true to go live');
   }
 
   if (process.env.OPENAI_BASE_URL && !isUrl(process.env.OPENAI_BASE_URL)) {
@@ -177,7 +177,7 @@ function collect(): Report {
   }
   if (production && !siteUrl) {
     report.warnings.push(
-      'NEXT_PUBLIC_SITE_URL is not set — canonical URLs and sitemap entries fall back to the value in lib/site.ts',
+      'NEXT_PUBLIC_SITE_URL is not set, canonical URLs and sitemap entries fall back to the value in lib/site.ts',
     );
   }
 
@@ -188,7 +188,7 @@ function collect(): Report {
 
   if (process.env.EMAIL_INCLUDE_IP === 'true') {
     report.notes.push(
-      'owner emails include the submitter IP — the privacy policy says so automatically',
+      'owner emails include the submitter IP, the privacy policy says so automatically',
     );
   }
 
@@ -233,7 +233,7 @@ function collect(): Report {
 
   if (Boolean(lat) !== Boolean(lon)) {
     report.warnings.push(
-      'NEXT_PUBLIC_ADDRESS_LATITUDE and NEXT_PUBLIC_ADDRESS_LONGITUDE must both be set — geo coordinates are omitted from the schema until they are',
+      'NEXT_PUBLIC_ADDRESS_LATITUDE and NEXT_PUBLIC_ADDRESS_LONGITUDE must both be set, geo coordinates are omitted from the schema until they are',
     );
   }
 
@@ -285,14 +285,14 @@ function collect(): Report {
   }
 
   if (active.length) {
-    report.notes.push(`analytics: ${active.join(', ')} — loaded only after consent`);
+    report.notes.push(`analytics: ${active.join(', ')}, loaded only after consent`);
     if (process.env.NEXT_PUBLIC_GTM_ID && process.env.NEXT_PUBLIC_GA_ID) {
       report.notes.push(
         'Google Analytics will be loaded inside the Tag Manager container, not separately',
       );
     }
   } else {
-    report.notes.push('analytics: none — no cookies set, no consent banner');
+    report.notes.push('analytics: none, no cookies set, no consent banner');
   }
 
   return report;
@@ -315,7 +315,7 @@ export function validateEnv() {
   const { errors, warnings, notes } = collect();
 
   const line = '─'.repeat(72);
-  console.log(`\n${line}\n  EPOXA STEEL — environment\n${line}`);
+  console.log(`\n${line}\n  EPOXA STEEL, environment\n${line}`);
   for (const note of notes) console.log(`  · ${note}`);
   for (const warning of warnings) console.warn(`  ! ${warning}`);
   for (const error of errors) console.error(`  ✗ ${error}`);
@@ -324,7 +324,7 @@ export function validateEnv() {
   if (errors.length && process.env.NODE_ENV === 'production') {
     throw new Error(
       `Refusing to start: ${errors.length} environment problem${errors.length === 1 ? '' : 's'} above. ` +
-        'Fix the variables and redeploy — see .env.example.',
+        'Fix the variables and redeploy, see .env.example.',
     );
   }
 }

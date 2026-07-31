@@ -47,14 +47,14 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Talk to someone who knows steel."
-        description="No routing menus, no ticket queue. Every enquiry reaches a person who can actually answer it, and we respond within one business day — usually much faster."
+        description="No routing menus, no ticket queue. Every enquiry reaches a person who can actually answer it, and we respond within one business day, usually much faster."
         trail={trail}
       />
 
       {/* Channels */}
       <Section tone="void" size="sm">
         <div className="container-page">
-          {/* Two channels, two columns — the grid is a hairline panel, so any
+          {/* Two channels, two columns, the grid is a hairline panel, so any
               cell without a card in it shows as a lighter block. */}
           <RevealGroup className="bg-hairline grid gap-px overflow-hidden rounded-lg sm:grid-cols-2">
             {channels.map((channel) => (
@@ -111,8 +111,8 @@ export default function ContactPage() {
                   <a href="/quote" className="text-arc-glow underline underline-offset-4">
                     quote request form
                   </a>{' '}
-                  captures everything we need in one go. For anything else — a technical question, a
-                  delivery in progress, a supplier application — this is the right place.
+                  captures everything we need in one go. For anything else, a technical question, a
+                  delivery in progress, a supplier application. This is the right place.
                 </p>
               </Reveal>
 
@@ -152,7 +152,7 @@ export default function ContactPage() {
                 </div>
               </Reveal>
 
-              {/* Not rendered at all until a social account is configured — see
+              {/* Not rendered at all until a social account is configured, see
                   the note on `siteConfig.social`. An empty "Follow us" card is
                   worse than no card. */}
               {socialLinks.length ? (
@@ -203,11 +203,11 @@ export default function ContactPage() {
               A static map placeholder rather than an embedded iframe: an embed
               would load third-party scripts and cookies on every page view, and
               the CSP here is deliberately strict. Swapping in a real embed is a
-              one-line change — see docs/DEPLOYMENT.md.
+              one-line change, see docs/DEPLOYMENT.md.
             */}
             {/* The letterbox ratio only works once there is width to spend on
                 it. At 390px a 21:9 box is 167px tall and the address card
-                inside is 232px — it was being cut off at "Get directions". */}
+                inside is 232px. It was being cut off at "Get directions". */}
             <div className="border-hairline bg-void relative mt-10 aspect-4/3 overflow-hidden rounded-lg border sm:aspect-16/9 lg:aspect-21/9">
               <MapArtwork />
 

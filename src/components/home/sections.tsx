@@ -25,7 +25,7 @@ export function Introduction() {
         {/*
           The thesis runs the full measure rather than sitting in a half-width
           column. At display scale "Steel is a commodity" needs roughly 660px and
-          the column gave it 560, so it broke after "a" — the site's own argument,
+          the column gave it 560, so it broke after "a", the site's own argument,
           in three ragged lines. Full width it sets as the two lines it was
           written as, and what follows reads in a cleaner order: label, claim,
           then the evidence for it.
@@ -43,7 +43,7 @@ export function Introduction() {
             <Reveal delay={0.24}>
               <p className="text-ash mt-6 text-[1.0625rem] leading-relaxed">
                 We have supplied {siteConfig.stats[0].value.toLocaleString('en-US')} tonnes across
-                34 countries since {siteConfig.founded} — from single lengths delivered the same
+                34 countries since {siteConfig.founded}, from single lengths delivered the same
                 afternoon to multi-year framework packages for public infrastructure. The difference
                 between those two jobs is scale. The standard is the same.
               </p>
@@ -124,7 +124,7 @@ export function WhyChooseUs() {
                 {pad(index + 1)}
               </span>
               {/* Two lines of headroom so a title that wraps does not push its
-                  own body copy out of line with its neighbours' — three cards
+                  own body copy out of line with its neighbours', three cards
                   sit side by side and the ragged baselines were the first thing
                   the eye caught. */}
               <h3 className="font-display text-title text-bright mt-5 font-semibold lg:min-h-[2.48em]">
@@ -161,8 +161,8 @@ export function QualityCommitment() {
 
             <Reveal delay={0.12}>
               <p className="text-lead text-ash mt-6">
-                Quality in steel is not a promise made at tender. It is a chain of records — heat
-                number to piece mark, procedure to welder, blast profile to film thickness — that
+                Quality in steel is not a promise made at tender. It is a chain of records, heat
+                number to piece mark, procedure to welder, blast profile to film thickness. That
                 either exists or does not when an inspector asks for it.
               </p>
             </Reveal>
@@ -212,7 +212,7 @@ export function Certifications() {
               Independently audited, continuously.
             </h2>
             <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
-              Certificates and audit reports are available to clients on request — including the
+              Certificates and audit reports are available to clients on request, including the
               findings, not just the badge.
             </p>
           </Reveal>

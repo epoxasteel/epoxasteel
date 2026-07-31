@@ -182,7 +182,7 @@ export const siteConfig = {
    * cannot — see `description` above for the one that crawlers get.
    */
   overview:
-    'EPOXA STEEL supplies certified structural steel, plate, tube and reinforcement to commercial, residential and infrastructure projects worldwide — backed by in-house fabrication, mill-traceable documentation and schedule-driven logistics.',
+    'EPOXA STEEL supplies certified structural steel, plate, tube and reinforcement to commercial, residential and infrastructure projects worldwide, backed by in-house fabrication, mill-traceable documentation and schedule-driven logistics.',
   founded: text(process.env.NEXT_PUBLIC_COMPANY_FOUNDED, '2009'),
   locale: text(process.env.NEXT_PUBLIC_SITE_LOCALE, 'en_US'),
 
@@ -307,14 +307,14 @@ export function openingHours() {
   const specs: { days: string[]; opens: string; closes: string }[] = [];
 
   for (const { days, time } of siteConfig.contact.hours) {
-    const [openText, closeText] = time.split(/[–—-]/);
+    const [openText, closeText] = time.split(/[–,-]/);
     if (!openText || !closeText) continue;
 
     const opens = to24Hour(openText);
     const closes = to24Hour(closeText);
     if (!opens || !closes) continue;
 
-    const parts = days.split(/[–—-]/).map((part) => part.trim().toLowerCase());
+    const parts = days.split(/[–,-]/).map((part) => part.trim().toLowerCase());
     const first = DAYS.findIndex((day) => day.toLowerCase() === parts[0]);
     if (first < 0) continue;
 

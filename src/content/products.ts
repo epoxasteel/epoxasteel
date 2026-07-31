@@ -15,7 +15,7 @@ export const products: Product[] = [
     summary:
       'Mill-certified structural sections supplied to ASTM and EN standards, cut to length and sequenced to your erection programme.',
     overview: [
-      'Structural steel is where a drawing becomes a building. Every section we supply arrives with full mill traceability, tested chemistry and mechanical properties you can hand straight to your inspector — because the paperwork matters as much as the metal when a certificate of occupancy is on the line.',
+      'Structural steel is where a drawing becomes a building. Every section we supply arrives with full mill traceability, tested chemistry and mechanical properties you can hand straight to your inspector, because the paperwork matters as much as the metal when a certificate of occupancy is on the line.',
       'We hold wide-flange, channel, angle and hollow section inventory across the most requested grades, and we buy directly from mills we have audited. That combination lets us commit to delivery dates on fast-track projects where a two-week float on steel is the difference between a bonus and a penalty.',
       'For projects with complex geometry, our fabrication division takes the same sections through cutting, coping, drilling and welding, so the material that leaves our facility is ready to bolt up rather than ready to rework.',
     ],
@@ -71,7 +71,7 @@ export const products: Product[] = [
     overview: [
       'Beams carry the floor, and the floor carries the schedule. We stock wide-flange sections in the sizes that specifications actually call for, which means most orders ship from inventory instead of waiting for the next mill rolling window.',
       'Every beam is supplied with heat-number traceability and can be cambered, cut, coped and pre-drilled to your connection details. For long-span work we source lengths up to 18 metres and coordinate transport permits as part of the delivery package.',
-      'Where erection sequencing is critical, we deliver in shipping marks and bundle order defined by your steel erector — trailers arrive in the order the crane needs them, not the order the yard found them.',
+      'Where erection sequencing is critical, we deliver in shipping marks and bundle order defined by your steel erector, trailers arrive in the order the crane needs them, not the order the yard found them.',
     ],
     keyFacts: [
       { label: 'Depth range', value: '100 mm – 1,100 mm (W6 – W44)' },
@@ -125,7 +125,7 @@ export const products: Product[] = [
     summary:
       'Hot-rolled channel in imperial and European profiles, ideal for bracing, purlins, edge beams and equipment frames.',
     overview: [
-      'Channel sections earn their place wherever a flat back needs to sit against another surface — stair stringers, lintels, edge angles, machine bases and bracing runs. We carry both American Standard C-shapes and European UPN/UPE profiles so specifications drafted anywhere in the world can be filled without substitution requests.',
+      'Channel sections earn their place wherever a flat back needs to sit against another surface, stair stringers, lintels, edge angles, machine bases and bracing runs. We carry both American Standard C-shapes and European UPN/UPE profiles so specifications drafted anywhere in the world can be filled without substitution requests.',
       'Because channel is so often used in repetitive assemblies, we process it in volume: batch cutting to fixed lengths, punching hole patterns and stamping piece marks so your fitters spend their time assembling rather than measuring.',
     ],
     keyFacts: [
@@ -175,7 +175,7 @@ export const products: Product[] = [
     category: 'Structural',
     tagline: 'Equal and unequal leg angle for bracing and connection.',
     summary:
-      'Hot-rolled angle in a full range of leg sizes and thicknesses — the connection detail that holds every frame together.',
+      'Hot-rolled angle in a full range of leg sizes and thicknesses, the connection detail that holds every frame together.',
     overview: [
       'Angle is the quiet workhorse of structural steel. It braces frames, forms connection cleats, trims openings, carries masonry and protects corners. We stock equal and unequal leg angle across the full thickness range so a designer never has to round up to the next available size and carry the weight penalty.',
       'Short-run and cut-to-length orders are handled the same day for stocked sizes, which matters when a site discovers a missing cleat at 3pm and needs it before the next pour.',
@@ -290,7 +290,7 @@ export const products: Product[] = [
       'Sheet stock from 0.5 mm to 6 mm in hot-rolled, cold-rolled and pre-coated finishes, slit and blanked to size.',
     overview: [
       'Sheet is the skin of a building and the body of a machine. We supply hot-rolled sheet for structural decking and general fabrication, cold-rolled for close-tolerance forming work, and pre-coated coil for cladding and roofing where finish quality is visible in the completed project.',
-      'Slitting, blanking and levelling are handled in-house, so material arrives flat, square and in the exact blank size your press or folder expects — which removes the scrap and the second handling that eat margin on sheet metal work.',
+      'Slitting, blanking and levelling are handled in-house, so material arrives flat, square and in the exact blank size your press or folder expects, which removes the scrap and the second handling that eat margin on sheet metal work.',
     ],
     keyFacts: [
       { label: 'Thickness', value: '0.5 mm – 6.0 mm' },
@@ -346,7 +346,7 @@ export const products: Product[] = [
       'Cold-formed and hot-finished SHS and RHS for exposed structures, frames and architectural steelwork.',
     overview: [
       'Hollow sections give designers strength in every direction and a finished edge that needs no cladding. We stock square and rectangular tube across the full size range, in both cold-formed and hot-finished condition, including grades suited to architecturally exposed structural steel where the weld and the corner radius are part of the design.',
-      'For visible steelwork we can supply matched heat numbers across a bay so colour and surface texture stay consistent after blasting and coating — a detail that separates a considered building from a compromised one.',
+      'For visible steelwork we can supply matched heat numbers across a bay so colour and surface texture stay consistent after blasting and coating, a detail that separates a considered building from a compromised one.',
     ],
     keyFacts: [
       { label: 'Sizes', value: '20×20 mm – 500×500 mm SHS' },
@@ -401,7 +401,7 @@ export const products: Product[] = [
     summary:
       'Seamless and welded pipe for structural, conveyance and pressure duty, with NDT documentation and coating options.',
     overview: [
-      'Pipe carries loads and it carries contents, and the two duties demand different evidence. We supply structural pipe for columns, piles and frames, and pressure-rated line pipe for conveyance — each with the testing regime its service requires, from hydrostatic test reports to full ultrasonic and radiographic records.',
+      'Pipe carries loads and it carries contents, and the two duties demand different evidence. We supply structural pipe for columns, piles and frames, and pressure-rated line pipe for conveyance, each with the testing regime its service requires, from hydrostatic test reports to full ultrasonic and radiographic records.',
       'Coating and lining are handled through our qualified partners: fusion-bonded epoxy, three-layer polyethylene, cement mortar lining and galvanizing are all available with inspection release documentation.',
     ],
     keyFacts: [
@@ -559,7 +559,7 @@ export const products: Product[] = [
       'Hot-dip galvanized sections, plate, sheet and fabrications with certified coating thickness to ASTM A123 and ISO 1461.',
     overview: [
       'Galvanizing is the most reliable corrosion protection available for structural steel, and its economics improve the longer a structure stands. A properly specified hot-dip coating delivers decades of maintenance-free service in most atmospheric environments.',
-      'We galvanize sections, plate, fabricated assemblies and reinforcement through kettles long enough to take full-length beams in a single dip — avoiding the double-dip line that spoils the appearance of exposed steelwork. Coating thickness is verified and reported against the applicable standard on every batch.',
+      'We galvanize sections, plate, fabricated assemblies and reinforcement through kettles long enough to take full-length beams in a single dip, avoiding the double-dip line that spoils the appearance of exposed steelwork. Coating thickness is verified and reported against the applicable standard on every batch.',
       'Design guidance is part of the service: vent and drain hole placement, distortion control and the treatment of faying surfaces all affect the outcome, and we review drawings before galvanizing rather than after.',
     ],
     keyFacts: [
@@ -610,7 +610,7 @@ export const products: Product[] = [
     summary:
       'Stainless plate, sheet, bar, tube and sections in 304, 316 and duplex grades with architectural and process finishes.',
     overview: [
-      'Where chlorides, chemicals, hygiene requirements or a hundred-year design life rule out coated carbon steel, stainless is the answer. We supply the austenitic workhorses — 304/304L and 316/316L — alongside duplex grades that offer roughly twice the strength at lower nickel content.',
+      'Where chlorides, chemicals, hygiene requirements or a hundred-year design life rule out coated carbon steel, stainless is the answer. We supply the austenitic workhorses, 304/304L and 316/316L, alongside duplex grades that offer roughly twice the strength at lower nickel content.',
       'Architectural work is handled with care: we control finish direction, protect surfaces through fabrication and transport, and keep stainless processing physically separated from carbon steel to prevent iron contamination that would show as rust bleed months after handover.',
     ],
     keyFacts: [
@@ -665,11 +665,11 @@ export const products: Product[] = [
     category: 'Fabrication',
     tagline: 'From model to erected steel, under one certificate.',
     summary:
-      'Full-service fabrication — cutting, drilling, coping, welding, blasting and coating — delivered erection-ready and sequenced.',
+      'Full-service fabrication, cutting, drilling, coping, welding, blasting and coating, delivered erection-ready and sequenced.',
     overview: [
       'Buying steel and buying a fabricated structure are different purchases. Fabrication is where tolerances, weld procedures, inspection and sequencing determine whether a frame goes up in a week or fights you for a month.',
       'Our shop runs CNC beam lines, plasma and laser profiling, robotic and manual welding to qualified procedures, automated blasting and a controlled coating bay. Certified welding supervision and third-party inspection are available on every job, and we issue a single set of release documentation covering material, welding and coating.',
-      'Detailing is supported directly from Tekla, Advance Steel and SDS/2 models. We take your model, resolve fabrication-level detail, and return approved shop drawings — so the geometry that leaves the office is the geometry that arrives on site.',
+      'Detailing is supported directly from Tekla, Advance Steel and SDS/2 models. We take your model, resolve fabrication-level detail, and return approved shop drawings, so the geometry that leaves the office is the geometry that arrives on site.',
     ],
     keyFacts: [
       { label: 'Capacity', value: '850 tonnes per month' },

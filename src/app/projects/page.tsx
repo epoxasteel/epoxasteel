@@ -91,7 +91,7 @@ export default function ProjectsPage() {
             >
               The case studies above are illustrative examples showing the level of detail we
               publish. Real projects are added once the client has approved naming and figures in
-              writing — we do not publish a client&rsquo;s project without their permission, and we
+              writing. We do not publish a client&rsquo;s project without their permission, and we
               would not want a supplier publishing yours.
             </Alert>
           </Reveal>
@@ -100,7 +100,7 @@ export default function ProjectsPage() {
 
       <CallToAction
         title="Your project could be the next one here."
-        description="Send us the drawings and the programme. We will tell you what we can commit to — and if the schedule is not achievable, we will say so before you rely on it."
+        description="Send us the drawings and the programme. We will tell you what we can commit to, and if the schedule is not achievable, we will say so before you rely on it."
       />
     </>
   );

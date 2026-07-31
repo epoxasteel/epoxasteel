@@ -52,14 +52,14 @@ ${shared}`;
  */
 function trackingParagraph() {
   return analyticsEnabled()
-    ? 'This deployment has analytics configured. **Nothing loads until you accept the cookie notice** — no script is requested and no cookie is set before then, and declining leaves the site working exactly as it does now. Our [Cookie Notice](/cookies) lists each provider by name, and you can change your answer there at any time. We do not use retargeting cookies or behavioural profiling in any configuration.'
+    ? 'This deployment has analytics configured. **Nothing loads until you accept the cookie notice**, no script is requested and no cookie is set before then, and declining leaves the site working exactly as it does now. Our [Cookie Notice](/cookies) lists each provider by name, and you can change your answer there at any time. We do not use retargeting cookies or behavioural profiling in any configuration.'
     : 'We do **not** use advertising cookies, tracking pixels, cross-site trackers or behavioural profiling on this website. There is no analytics script running on this deployment. If that ever changes, the [Cookie Notice](/cookies) will name every provider and you will be asked before any of it runs.';
 }
 
 function cookieParagraph() {
   return analyticsEnabled()
     ? 'This website sets no advertising cookies. Analytics cookies are configured but load only after you accept the cookie notice; your answer is remembered in your browser, not in a cookie sent to us.'
-    : 'This website sets no cookies at all — not for advertising, not for analytics, and not for its own operation.';
+    : 'This website sets no cookies at all, not for advertising, not for analytics, and not for its own operation.';
 }
 
 const body = `
@@ -75,10 +75,10 @@ We only collect information you choose to give us, plus a minimal amount of tech
 
 **Information you provide**
 
-- **Quotation requests** — your name, company, email address, phone number, country, city, project type, product, quantity, budget range, timeline, project description and any file you attach.
-- **Contact enquiries** — your name, email address, and optionally your phone number and company, plus your subject and message.
-- **Newsletter subscriptions** — your email address.
-- **Job applications** — the information you include in your application email, including any attached CV.
+- **Quotation requests**, your name, company, email address, phone number, country, city, project type, product, quantity, budget range, timeline, project description and any file you attach.
+- **Contact enquiries**, your name, email address, and optionally your phone number and company, plus your subject and message.
+- **Newsletter subscriptions**, your email address.
+- **Job applications**, the information you include in your application email, including any attached CV.
 
 **Information collected automatically**
 
@@ -111,17 +111,17 @@ We may also disclose information where we are legally required to do so, or wher
 
 ## How long we keep it
 
-- **Quotation requests and enquiries** — retained for the duration of the commercial relationship and for **seven years** afterwards, to satisfy the record-keeping obligations attached to certified steel supply and any warranty period.
-- **Newsletter subscriptions** — retained until you unsubscribe, then removed within 30 days.
-- **Job applications** — retained for **12 months** from the date of application unless you ask us to remove them sooner.
-- **Abuse-prevention data** (hashed IP, user-agent) — retained for **90 days**.
+- **Quotation requests and enquiries**, retained for the duration of the commercial relationship and for **seven years** afterwards, to satisfy the record-keeping obligations attached to certified steel supply and any warranty period.
+- **Newsletter subscriptions**, retained until you unsubscribe, then removed within 30 days.
+- **Job applications**, retained for **12 months** from the date of application unless you ask us to remove them sooner.
+- **Abuse-prevention data** (hashed IP, user-agent), retained for **90 days**.
 
 ## How we protect it
 
 - All traffic to this site is encrypted in transit using TLS.
 - Access to enquiry data is restricted to staff who need it to do their job.
 - IP addresses are hashed before storage, never stored in the clear.
-- The site enforces a strict Content Security Policy, and its allowance for third-party hosts is widened only for services actually configured — never in anticipation of one.
+- The site enforces a strict Content Security Policy, and its allowance for third-party hosts is widened only for services actually configured, never in anticipation of one.
 - File attachments you send with a quotation request are transmitted directly to our commercial team; they are not published or made publicly accessible.
 
 ## Your rights
@@ -132,7 +132,7 @@ Depending on where you live, you may have the right to:
 - **Correct** information that is inaccurate or incomplete
 - **Delete** your information, where we have no overriding obligation to keep it
 - **Restrict or object** to how we process it
-- **Portability** — receive your information in a machine-readable format
+- **Portability**, receive your information in a machine-readable format
 - **Withdraw consent** at any time, where processing is based on consent
 
 To exercise any of these, email **${siteConfig.contact.email}**. We respond within 30 days. If you are not satisfied with our response, you have the right to complain to your local data protection authority.
@@ -141,7 +141,7 @@ To exercise any of these, email **${siteConfig.contact.email}**. We respond with
 
 ${cookieParagraph()}
 
-We also use **session storage** — not a cookie — for a handful of small conveniences: remembering that you have already seen the homepage opening animation, keeping a half-written form from being lost to a stray click, and holding a conversation with our assistant across pages. All of it stays in your browser, is never transmitted to us, and clears when you close the tab.
+We also use **session storage**, not a cookie, for a handful of small conveniences: remembering that you have already seen the homepage opening animation, keeping a half-written form from being lost to a stray click, and holding a conversation with our assistant across pages. All of it stays in your browser, is never transmitted to us, and clears when you close the tab.
 
 Our [Cookie Notice](/cookies) lists every item individually, with what each one is for and how long it lasts.
 
@@ -173,7 +173,7 @@ export default function PrivacyPage() {
       <PageHero
         eyebrow="Legal"
         title="Privacy Policy"
-        description="What we collect, why we collect it, how long we keep it and what rights you have over it — written to be read rather than to be defensible."
+        description="What we collect, why we collect it, how long we keep it and what rights you have over it, written to be read rather than to be defensible."
         trail={trail}
         meta={
           <p className="text-steel text-[0.875rem]">
@@ -197,7 +197,7 @@ export default function PrivacyPage() {
               <Reveal direction="none">
                 <Alert tone="info" title="This is a template" className="mb-10 max-w-3xl">
                   This policy describes how the website as built actually behaves, and is a solid
-                  starting point — but it is not legal advice. Have it reviewed by a qualified
+                  starting point, but it is not legal advice. Have it reviewed by a qualified
                   adviser against the jurisdictions you operate in before you rely on it.
                 </Alert>
               </Reveal>

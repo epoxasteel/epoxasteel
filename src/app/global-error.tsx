@@ -105,7 +105,7 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
 
           {/* A plain <a>, not a button calling `reset()` and not next/link.
               Whatever broke happened above this component, so re-rendering the
-              same tree — which is what both of those do — would most likely break
+              same tree, which is what both of those do, would most likely break
               again in the same place. A full document request is the point: it
               gets a fresh server render and a fresh client runtime. It also works
               with JavaScript disabled, which neither alternative does. */}

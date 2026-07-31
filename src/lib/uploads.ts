@@ -92,7 +92,7 @@ export const ACCEPT_ATTRIBUTE = ALLOWED_EXTENSIONS.map((extension) => `.${extens
 
 /** The one sentence the visitor reads. Kept in step with the limit above. */
 export function acceptLabel(maxBytes = uploadMaxBytes()) {
-  return `PDF, DWG, DXF, XLSX, DOCX, ZIP or images — up to ${Math.round(maxBytes / (1024 * 1024))} MB each`;
+  return `PDF, DWG, DXF, XLSX, DOCX, ZIP or images, up to ${Math.round(maxBytes / (1024 * 1024))} MB each`;
 }
 
 export function extensionOf(filename: string) {
@@ -123,7 +123,7 @@ const SIGNATURES: Record<string, number[][]> = {
   docx: [[0x50, 0x4b, 0x03, 0x04]],
   doc: [[0xd0, 0xcf, 0x11, 0xe0]], // OLE2 compound document
   xls: [[0xd0, 0xcf, 0x11, 0xe0]],
-  dwg: [[0x41, 0x43, 0x31, 0x30]], // "AC10" — every AutoCAD release since R13
+  dwg: [[0x41, 0x43, 0x31, 0x30]], // "AC10", every AutoCAD release since R13
 };
 
 function signatureMatches(extension: string, head: Uint8Array) {

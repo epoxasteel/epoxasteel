@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { siteConfig } from '@/lib/site';
 
 export const runtime = 'nodejs';
-export const alt = `${siteConfig.legalName} — ${siteConfig.description}`;
+export const alt = `${siteConfig.legalName}, ${siteConfig.description}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -58,7 +58,7 @@ export default async function OpengraphImage() {
         and STEEL in `mist` at a light weight.
 
         It used to draw a white web between blue flanges and set both words in
-        the same colour — a third version of the logo, different from both the
+        the same colour, a third version of the logo, different from both the
         header and the favicon.
       */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, position: 'relative' }}>

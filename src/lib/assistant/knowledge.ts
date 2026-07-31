@@ -41,7 +41,7 @@ function productDigest() {
       // the real rows rather than a summary of them.
       if (product.dimensions.rows.length) {
         lines.push(
-          `${product.dimensions.title} — ${product.dimensions.columns.join(' | ')}`,
+          `${product.dimensions.title}, ${product.dimensions.columns.join(' | ')}`,
           ...product.dimensions.rows.map((row) => row.join(' | ')),
         );
       }

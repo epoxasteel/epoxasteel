@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Careers',
   description:
-    'Open roles at Epoxa Steel across engineering, fabrication, quality, processing and operations — with certification paid in full and genuine stop-work authority.',
+    'Open roles at Epoxa Steel across engineering, fabrication, quality, processing and operations, with certification paid in full and genuine stop-work authority.',
   path: '/careers',
 });
 

@@ -45,13 +45,13 @@ The site is built so that analytics *can* be switched on later. If that happens,
   }
 
   const providers = [
-    gtm && `- **Google Tag Manager** (container \`${gtm}\`) — loads and manages the tags below.`,
+    gtm && `- **Google Tag Manager** (container \`${gtm}\`), loads and manages the tags below.`,
     ga &&
-      `- **Google Analytics 4** (property \`${ga}\`) — which pages are visited, how people arrive, and where they leave. IP addresses are anonymised.`,
+      `- **Google Analytics 4** (property \`${ga}\`), which pages are visited, how people arrive, and where they leave. IP addresses are anonymised.`,
     meta &&
-      `- **Meta Pixel** (ID \`${meta}\`) — measures whether visits from Facebook or Instagram lead to an enquiry.`,
+      `- **Meta Pixel** (ID \`${meta}\`), measures whether visits from Facebook or Instagram lead to an enquiry.`,
     linkedin &&
-      `- **LinkedIn Insight Tag** (partner ID \`${linkedin}\`) — measures whether visits from LinkedIn lead to an enquiry.`,
+      `- **LinkedIn Insight Tag** (partner ID \`${linkedin}\`), measures whether visits from LinkedIn lead to an enquiry.`,
   ].filter(Boolean);
 
   return `## Analytics cookies
@@ -68,7 +68,7 @@ Your choice is remembered in your browser's local storage under \`epoxa:consent\
 const body = `
 ## The short version
 
-This website needs no cookies to work. Nothing you do here — browsing products, requesting a quotation, sending a message — depends on a cookie or on you agreeing to one.
+This website needs no cookies to work. Nothing you do here, browsing products, requesting a quotation, sending a message, depends on a cookie or on you agreeing to one.
 
 What follows is the complete list of what we store in your browser and why.
 
@@ -80,10 +80,10 @@ What follows is the complete list of what we store in your browser and why.
 
 Two things, neither of which is a cookie and neither of which is ever transmitted to us. Both are readable and clearable from your browser's developer tools or by clearing site data.
 
-- **\`epoxa:overture-played\`** (session storage) — remembers that you have already seen the homepage opening animation, so it does not replay every time you return to the homepage in the same visit. Cleared when you close the tab.
-- **\`epoxa:draft:contact\` / \`epoxa:draft:quote\`** (session storage) — keeps what you have typed into a form so a stray click, a back button or an accidental refresh does not lose a half-written enquiry. Cleared when the form is submitted, or when you close the tab.
-- **\`epoxa:assistant\`** (session storage) — the transcript of a conversation with our assistant, so it survives moving between pages. Cleared when you close the tab.
-- **\`epoxa:recently-viewed\`** (session storage) — the products you have looked at, so we can show them again at the foot of a product page. Cleared when you close the tab.
+- **\`epoxa:overture-played\`** (session storage), remembers that you have already seen the homepage opening animation, so it does not replay every time you return to the homepage in the same visit. Cleared when you close the tab.
+- **\`epoxa:draft:contact\` / \`epoxa:draft:quote\`** (session storage), keeps what you have typed into a form so a stray click, a back button or an accidental refresh does not lose a half-written enquiry. Cleared when the form is submitted, or when you close the tab.
+- **\`epoxa:assistant\`** (session storage), the transcript of a conversation with our assistant, so it survives moving between pages. Cleared when you close the tab.
+- **\`epoxa:recently-viewed\`** (session storage), the products you have looked at, so we can show them again at the foot of a product page. Cleared when you close the tab.
 
 Session storage is deliberate in every case above. It lasts exactly as long as your visit, is scoped to this site alone, and is the right lifetime for something nobody was asked to agree to.
 
@@ -95,7 +95,7 @@ To be explicit, because most notices are not:
 
 - No advertising or retargeting cookies
 - No cross-site or third-party tracking cookies
-- No social media cookies — the icons in our footer are plain links, not embedded widgets
+- No social media cookies, the icons in our footer are plain links, not embedded widgets
 - No fingerprinting, and no behavioural profiling
 - No embedded iframes from any third party; our Content Security Policy blocks them outright
 
@@ -155,7 +155,7 @@ export default function CookiesPage() {
                   className="mb-10 max-w-3xl"
                 >
                   The list below is generated from this deployment&rsquo;s actual configuration, so
-                  it cannot describe tracking the site does not do — or omit tracking it does. It is
+                  it cannot describe tracking the site does not do, or omit tracking it does. It is
                   still not legal advice; have it reviewed against the jurisdictions you operate in.
                 </Alert>
               </Reveal>

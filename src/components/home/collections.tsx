@@ -24,7 +24,7 @@ export function FeaturedProducts() {
         <SectionHeading
           eyebrow="Products"
           title="A catalogue built around what specifications actually call for."
-          description="Thirteen product families held in the grades and sizes engineers specify — most orders ship from stock rather than waiting on a mill rolling window."
+          description="Thirteen product families held in the grades and sizes engineers specify, most orders ship from stock rather than waiting on a mill rolling window."
           action={{ label: 'View all products', href: '/products' }}
         />
 
@@ -54,7 +54,7 @@ export function IndustriesServed() {
         <SectionHeading
           eyebrow="Industries"
           title="Twelve sectors. One standard."
-          description="Each sector asks something different of a steel supplier. We have learned what — usually the hard way, on somebody's critical path."
+          description="Each sector asks something different of a steel supplier. We have learned what, usually the hard way, on somebody's critical path."
           action={{ label: 'All industries', href: '/industries' }}
         />
 
@@ -183,7 +183,7 @@ export function LatestNews() {
         <SectionHeading
           eyebrow="Insights"
           title="Written by the people who do the work."
-          description="Technical guidance, market conditions and project stories from our engineers, buyers and shop floor — not a marketing department."
+          description="Technical guidance, market conditions and project stories from our engineers, buyers and shop floor, not a marketing department."
           action={{ label: 'Read the blog', href: '/blog' }}
         />
 

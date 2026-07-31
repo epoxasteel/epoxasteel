@@ -24,14 +24,14 @@ function resolveCategory(slug: string) {
 
 const descriptions: Record<string, string> = {
   Engineering:
-    'Grade selection, connection detail, welding and corrosion protection — written by chartered engineers who work with steel every day.',
+    'Grade selection, connection detail, welding and corrosion protection, written by chartered engineers who work with steel every day.',
   'Market Insight':
     'Pricing, capacity, lead times and procurement strategy, read honestly rather than optimistically.',
   Sustainability:
     'Embodied carbon, production routes, recycled content and what the numbers actually mean when you compare them.',
   'Company News':
     'Investment, capacity, certification and the changes that affect what we can promise you.',
-  'Project Story': 'What happened on real jobs — including the parts that were difficult.',
+  'Project Story': 'What happened on real jobs, including the parts that were difficult.',
 };
 
 export async function generateMetadata({

@@ -9,7 +9,7 @@ export const industries: Industry[] = [
       'General contractors rely on us for predictable delivery, complete documentation and the flexibility to absorb the changes every build produces.',
     overview: [
       'Construction runs on sequence. A frame is only as fast as the material feeding it, and a single late trailer can push a crane hire, a concrete pour and a trade handover in one afternoon. We build our supply commitments around your programme rather than our yard convenience.',
-      'That means delivery windows measured in hours, loads bundled in erection sequence, and a named account manager who knows which package is critical this week. When drawings change — and they do — we re-cut, re-schedule and re-issue documentation without turning it into a procurement event.',
+      'That means delivery windows measured in hours, loads bundled in erection sequence, and a named account manager who knows which package is critical this week. When drawings change, and they do. We re-cut, re-schedule and re-issue documentation without turning it into a procurement event.',
     ],
     challenges: [
       {
@@ -46,7 +46,7 @@ export const industries: Industry[] = [
     name: 'Commercial',
     tagline: 'Office, retail and hospitality structures with no visible compromise.',
     summary:
-      'Long spans, exposed steelwork and finish quality that survives the architect walkthrough — supplied to programmes that cannot slip.',
+      'Long spans, exposed steelwork and finish quality that survives the architect walkthrough, supplied to programmes that cannot slip.',
     overview: [
       'Commercial buildings are judged twice: once by the structural engineer and once by everyone who walks through the lobby. We supply the sections that carry the loads and the architecturally exposed steelwork that people actually touch, with the surface quality and consistency that exposed work demands.',
       'For tenant-driven schedules where the lease start date is fixed, we work backwards from handover: steel released in packages, fabricated in parallel, and delivered to a crane schedule agreed months in advance.',
@@ -168,7 +168,7 @@ export const industries: Industry[] = [
       'High-volume structural packages for distribution centres, cold stores and fulfilment facilities where speed to operation is everything.',
     overview: [
       'A distribution centre is a machine for moving goods, and every week it is not operating is revenue that never arrives. Warehouse steel is high volume, highly repetitive and utterly schedule-driven.',
-      'We supply complete portal frame packages — columns, rafters, purlins, side rails, bracing and cladding rails — batch-fabricated and delivered in erection bays. Repetition is an advantage we pass back as price, and volume is planned months ahead against your programme.',
+      'We supply complete portal frame packages, columns, rafters, purlins, side rails, bracing and cladding rails, batch-fabricated and delivered in erection bays. Repetition is an advantage we pass back as price, and volume is planned months ahead against your programme.',
     ],
     challenges: [
       {
@@ -283,10 +283,10 @@ export const industries: Industry[] = [
     name: 'Transportation',
     tagline: 'Terminals, depots and transit structures.',
     summary:
-      'Steel for airports, stations, ports and transit facilities — long spans, high footfall and phased construction around live operations.',
+      'Steel for airports, stations, ports and transit facilities, long spans, high footfall and phased construction around live operations.',
     overview: [
       'Transport infrastructure is almost always built while it is being used. Airports keep flying, stations keep running, and construction happens in the gaps, often overnight, always under scrutiny.',
-      'We deliver into live operational environments with the security clearance, night-working logistics and pre-assembled solutions that phased construction requires — including modules assembled off-site and lifted in during a single possession.',
+      'We deliver into live operational environments with the security clearance, night-working logistics and pre-assembled solutions that phased construction requires, including modules assembled off-site and lifted in during a single possession.',
     ],
     challenges: [
       {
@@ -325,7 +325,7 @@ export const industries: Industry[] = [
       'Substation steel, turbine foundations, solar mounting and process structures for conventional and renewable energy projects.',
     overview: [
       'Energy infrastructure spans a wider range of steel requirements than almost any other sector: galvanized lattice for transmission, heavy plate for pressure equipment, precision mounting systems for solar, and enormous embedded reinforcement cages for turbine foundations.',
-      'We supply across that range with the certification each application demands, and we understand the grid connection deadlines that drive renewable programmes — where a delayed structure means a missed energisation window and a year of lost generation revenue.',
+      'We supply across that range with the certification each application demands, and we understand the grid connection deadlines that drive renewable programmes, where a delayed structure means a missed energisation window and a year of lost generation revenue.',
     ],
     challenges: [
       {
@@ -403,7 +403,7 @@ export const industries: Industry[] = [
       'Portal frames, grain stores, livestock buildings and handling structures built for weather, chemicals and hard use.',
     overview: [
       'Agricultural buildings face a punishing combination: constant moisture, ammonia from livestock, fertiliser dust and equipment that hits things. Steel that would last thirty years in an office lasts a fraction of that in a cattle shed unless it is specified properly.',
-      'We supply galvanized frames, coated sheet and heavy-duty fittings selected for the actual environment, and we price for the realities of farm construction — seasonal windows, phased budgets and self-build erection.',
+      'We supply galvanized frames, coated sheet and heavy-duty fittings selected for the actual environment, and we price for the realities of farm construction, seasonal windows, phased budgets and self-build erection.',
     ],
     challenges: [
       {
@@ -441,7 +441,7 @@ export const industries: Industry[] = [
     summary:
       'Pre-qualified supply for defence, education, healthcare and civic projects, with the certification and reporting public contracts demand.',
     overview: [
-      'Public sector work rewards suppliers who understand that compliance is not paperwork bolted onto a delivery — it is part of the delivery. Social value commitments, local content reporting, modern slavery declarations and prompt payment obligations are contractual, and failing them is as serious as failing a spec.',
+      'Public sector work rewards suppliers who understand that compliance is not paperwork bolted onto a delivery. It is part of the delivery. Social value commitments, local content reporting, modern slavery declarations and prompt payment obligations are contractual, and failing them is as serious as failing a spec.',
       'We are pre-qualified across public frameworks and maintain the accreditation, insurance and reporting capability that government contracts require. Our project reporting is built around the metrics that public clients actually ask for.',
     ],
     challenges: [

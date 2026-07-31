@@ -269,10 +269,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           <Reveal delay={0.1}>
             {/* This used to read "Datasheets are added to public/downloads/ as
-                they are finalised" — a build path, on a customer-facing page,
+                they are finalised", a build path, on a customer-facing page,
                 and untrue now the sheets are generated. */}
             <Alert tone="info" className="measure-wide mt-8">
-              Need something that is not here — a mill certificate for a specific heat, a welding
+              Need something that is not here, a mill certificate for a specific heat, a welding
               procedure, a bar bending schedule? Email{' '}
               <a
                 href={`mailto:${siteConfig.contact.quotesEmail}`}
@@ -305,7 +305,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <span className="text-ash mt-1 block text-[0.8125rem] leading-relaxed">
                       {download.description}
                     </span>
-                    {/* Measured on disk rather than declared by hand — the
+                    {/* Measured on disk rather than declared by hand, the
                         hand-written hints had drifted by three orders of
                         magnitude. */}
                     <span className="text-steel mt-2 block text-[0.75rem] tracking-[0.1em] uppercase">

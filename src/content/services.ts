@@ -6,7 +6,7 @@ export const services: Service[] = [
     name: 'Steel Supply',
     tagline: 'Certified material, on the date you were promised.',
     summary:
-      'Direct mill relationships and deep local inventory, so your material arrives when the programme says it should — with the certificates to match.',
+      'Direct mill relationships and deep local inventory, so your material arrives when the programme says it should, with the certificates to match.',
     overview: [
       'Supply is a promise about time as much as it is about metal. We hold inventory in the sizes and grades that specifications actually call for, and we buy directly from mills we have audited rather than through layers of traders who add margin and remove accountability.',
       'Every order is assigned to a named account manager who owns it from enquiry to proof of delivery. You are never explaining your project to a call centre, and you always know who to call when something changes.',
@@ -58,11 +58,11 @@ export const services: Service[] = [
     name: 'Fabrication',
     tagline: 'Erection-ready steel from a single accountable source.',
     summary:
-      'CNC processing, qualified welding, blasting and coating under one roof — and one release certificate covering all of it.',
+      'CNC processing, qualified welding, blasting and coating under one roof, and one release certificate covering all of it.',
     overview: [
       'Splitting fabrication across multiple suppliers splits accountability with it. When a connection does not fit, the material supplier, the fabricator and the coater each have a reason it is not their problem. We remove that conversation by doing the work ourselves.',
       'Our shop runs CNC beam lines, plasma and laser profiling, robotic and manual welding to qualified procedures, automated blast cleaning and a climate-controlled coating bay. Certified welding supervision oversees every job, and third-party inspection is available on request.',
-      'The output is steel that arrives marked, sequenced and ready to lift — with a single documentation package covering material, welding and coating.',
+      'The output is steel that arrives marked, sequenced and ready to lift, with a single documentation package covering material, welding and coating.',
     ],
     process: [
       {
@@ -75,7 +75,7 @@ export const services: Service[] = [
       },
       {
         title: 'Cutting and preparation',
-        body: 'CNC sawing, drilling, coping and profiling straight from the approved model — the geometry is never re-keyed by hand.',
+        body: 'CNC sawing, drilling, coping and profiling straight from the approved model, the geometry is never re-keyed by hand.',
       },
       {
         title: 'Welding and assembly',
@@ -115,9 +115,9 @@ export const services: Service[] = [
     name: 'Steel Cutting',
     tagline: 'Precision profiling from your files, not your phone call.',
     summary:
-      'Laser, plasma, oxy-fuel, saw and shear processing driven directly from DXF, DWG and DSTV files — to tolerance, first time.',
+      'Laser, plasma, oxy-fuel, saw and shear processing driven directly from DXF, DWG and DSTV files, to tolerance, first time.',
     overview: [
-      'Cutting is where errors are cheapest to prevent and most expensive to discover. We drive every machine directly from your CAD files, so what you drew is what gets cut — no transcription, no interpretation, no misread dimension.',
+      'Cutting is where errors are cheapest to prevent and most expensive to discover. We drive every machine directly from your CAD files, so what you drew is what gets cut, no transcription, no interpretation, no misread dimension.',
       'Fibre laser handles fine work to ±0.5 mm; CNC plasma covers heavy plate to 60 mm; oxy-fuel takes the very thick sections; and bandsaws, shears and press brakes complete the process. Nesting is optimised across your order to minimise the material you pay for and never use.',
     ],
     process: [
@@ -163,7 +163,7 @@ export const services: Service[] = [
       'Non-standard grades, unusual sizes, special lengths and mill-direct orders sourced and managed end to end.',
     overview: [
       "Some projects need steel that is not sitting in anyone's yard: a grade with specific impact toughness at low temperature, a length nobody stocks, a section rolled to an obsolete standard for a heritage repair.",
-      'We handle mill-direct enquiries as a managed process rather than a hopeful email. We know which mills roll what, when their rolling windows fall, and what minimum tonnage each will accept — so we can tell you quickly whether an order is viable and what it will actually cost.',
+      'We handle mill-direct enquiries as a managed process rather than a hopeful email. We know which mills roll what, when their rolling windows fall, and what minimum tonnage each will accept, so we can tell you quickly whether an order is viable and what it will actually cost.',
       'For repeat non-standard requirements we hold consignment stock against your forecast, converting a twelve-week mill lead time into a two-day call-off.',
     ],
     process: [
@@ -215,7 +215,7 @@ export const services: Service[] = [
     overview: [
       "The most expensive decisions on a steel package are made before anything is ordered. A connection detailed for the designer's convenience rather than the fabricator's can add fifteen percent to a package cost without adding a gram of capacity.",
       'Our in-house engineering team reviews designs for buildability, proposes connection alternatives with calculations attached, and analyses substitutions where a specified section is commercially unattractive or on a long lead time.',
-      'Every recommendation comes with the working shown. We are not asking you to take our word for it — we are giving your engineer something to check and sign.',
+      'Every recommendation comes with the working shown. We are not asking you to take our word for it. We are giving your engineer something to check and sign.',
     ],
     process: [
       {
@@ -259,11 +259,11 @@ export const services: Service[] = [
     name: 'Project Consultation',
     tagline: 'Planning the steel package before it becomes a problem.',
     summary:
-      'Early-stage advice on procurement strategy, packaging, programme and risk — brought in when it can still change the outcome.',
+      'Early-stage advice on procurement strategy, packaging, programme and risk, brought in when it can still change the outcome.',
     overview: [
       'Steel is usually one of the first packages procured and one of the last to be forgiven for slipping. Bringing a supplier in during design rather than at tender lets decisions be made when they are still cheap.',
       'We work with clients, contractors and design teams at feasibility and design stage: advising on procurement route, package boundaries, market conditions, lead times and the risks that most commonly derail steel programmes.',
-      'This is advisory work, offered without obligation to purchase. Clients who use it usually do buy from us — but they buy a better-planned package.',
+      'This is advisory work, offered without obligation to purchase. Clients who use it usually do buy from us, but they buy a better-planned package.',
     ],
     process: [
       {
@@ -400,7 +400,7 @@ export const services: Service[] = [
     summary:
       'Grade selection, standards interpretation, welding guidance and on-site problem solving, available throughout your project.',
     overview: [
-      'Most technical questions on a steel package are not complicated — they are just urgent. Which grade satisfies this clause? Can we weld this to that? What preheat does this thickness need? Waiting three days for an answer is what turns a small question into a delay.',
+      'Most technical questions on a steel package are not complicated. They are just urgent. Which grade satisfies this clause? Can we weld this to that? What preheat does this thickness need? Waiting three days for an answer is what turns a small question into a delay.',
       'Our technical team answers material and welding queries within one working day, and we back that with site visits when a problem needs eyes on it rather than an email thread.',
       'We also run CPD sessions for design teams and toolbox talks for site crews, covering grade selection, corrosion protection, welding and inspection.',
     ],
@@ -415,7 +415,7 @@ export const services: Service[] = [
       },
       {
         title: 'Site attendance',
-        body: 'Where a query cannot be resolved remotely, an engineer attends site — usually within 48 hours.',
+        body: 'Where a query cannot be resolved remotely, an engineer attends site, usually within 48 hours.',
       },
       {
         title: 'Close-out',

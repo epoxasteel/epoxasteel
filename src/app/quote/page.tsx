@@ -50,7 +50,7 @@ export default function QuotePage() {
       <PageHero
         eyebrow="Request a Quote"
         title="Tell us what you are building."
-        description="The more detail you give us, the more useful our first response will be. If you would rather send drawings than fill in a form, attach them below or email them directly — either works."
+        description="The more detail you give us, the more useful our first response will be. If you would rather send drawings than fill in a form, attach them below or email them directly, either works."
         trail={trail}
       />
 

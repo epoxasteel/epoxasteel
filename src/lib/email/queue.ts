@@ -60,14 +60,14 @@ export async function spool(message: EmailMessage, reference?: string) {
 
     await appendFile(FILE, `${JSON.stringify(entry)}\n`, 'utf8');
     console.warn(
-      `[email] spooled for retry${reference ? ` (${reference})` : ''} — ${message.subject}`,
+      `[email] spooled for retry${reference ? ` (${reference})` : ''}, ${message.subject}`,
     );
     return true;
   } catch (error) {
     // The last line of defence has itself failed. Log the whole thing so the
     // enquiry is at least recoverable from the platform's log retention.
     console.error(
-      '[email] SPOOL FAILED — enquiry recorded here only:',
+      '[email] SPOOL FAILED, enquiry recorded here only:',
       JSON.stringify({ reference, subject: message.subject, text: message.text }),
       error,
     );
@@ -133,7 +133,7 @@ export async function drainSpool(send: (message: EmailMessage) => Promise<{ ok: 
 
     for (const entry of entries) {
       const note = entry.message.attachmentNames?.length
-        ? `\n\n[Retried delivery. The original attachment${entry.message.attachmentNames.length === 1 ? '' : 's'} (${entry.message.attachmentNames.join(', ')}) could not be re-sent — ask the customer to resend if needed.]`
+        ? `\n\n[Retried delivery. The original attachment${entry.message.attachmentNames.length === 1 ? '' : 's'} (${entry.message.attachmentNames.join(', ')}) could not be re-sent, ask the customer to resend if needed.]`
         : '';
 
       const result = await send({
@@ -149,7 +149,7 @@ export async function drainSpool(send: (message: EmailMessage) => Promise<{ ok: 
       const attempts = entry.attempts + 1;
       if (attempts >= 5) {
         console.error(
-          `[email] giving up after ${attempts} attempts — enquiry recorded here only:`,
+          `[email] giving up after ${attempts} attempts, enquiry recorded here only:`,
           JSON.stringify({
             reference: entry.reference,
             subject: entry.message.subject,

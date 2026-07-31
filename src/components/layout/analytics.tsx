@@ -38,7 +38,7 @@ j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNo
       ) : null}
 
       {/* GA4 loaded directly only when there is no Tag Manager container. With one,
-          GA belongs inside it — two loaders means duplicated pageviews and
+          GA belongs inside it, two loaders means duplicated pageviews and
           measurement nobody can reconcile. */}
       {ga && !gtm ? (
         <>

@@ -523,7 +523,7 @@ export const lifecycleStages: LifecycleStage[] = [
   {
     title: 'Laser cutting',
     caption:
-      'Geometry flows from the model to the machine — no transcription, no misread dimension.',
+      'Geometry flows from the model to the machine, no transcription, no misread dimension.',
     src: '/media/scenes/04-laser-cutting.svg',
   },
   {

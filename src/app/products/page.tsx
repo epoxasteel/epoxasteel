@@ -12,7 +12,7 @@ import { slugify } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Steel Products',
   description:
-    'Structural sections, plate, sheet, hollow section, bar, reinforcement and stainless steel — supplied to ASTM and EN standards with full mill certification.',
+    'Structural sections, plate, sheet, hollow section, bar, reinforcement and stainless steel, supplied to ASTM and EN standards with full mill certification.',
   path: '/products',
 });
 
@@ -104,7 +104,7 @@ export default function ProductsPage() {
               <p className="text-lead text-ash mt-4 max-w-2xl">
                 Non-standard grades, unusual sizes, special lengths and heritage profiles are
                 sourced mill-direct as a managed process. We will tell you quickly whether an order
-                is viable, what it costs and when it can roll — before you commit to anything.
+                is viable, what it costs and when it can roll, before you commit to anything.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button href="/services/custom-orders" variant="outline">
@@ -127,7 +127,7 @@ export default function ProductsPage() {
 
 const categoryBlurb: Record<string, string> = {
   Structural:
-    'Wide-flange, channel, angle and tee sections in the grades specifications call for — held in depth so most orders ship from stock.',
+    'Wide-flange, channel, angle and tee sections in the grades specifications call for, held in depth so most orders ship from stock.',
   'Flat Products':
     'Plate and sheet from 0.5 mm to 200 mm, profiled to your DXF on laser, plasma or oxy-fuel, and levelled flat before it ships.',
   'Hollow Sections':
@@ -137,5 +137,5 @@ const categoryBlurb: Record<string, string> = {
   'Coated & Stainless':
     'Hot-dip galvanizing to a fifty-year design life, and austenitic and duplex stainless processed in a dedicated, contamination-free area.',
   Fabrication:
-    'Cutting, drilling, coping, welding, blasting and coating under one roof — and one release certificate covering all of it.',
+    'Cutting, drilling, coping, welding, blasting and coating under one roof, and one release certificate covering all of it.',
 };

@@ -169,7 +169,7 @@ export const fulfilment = ['Delivery to site', 'Collection from works'] as const
  * question. A required dropdown with no honest answer for them is how a form
  * teaches visitors to pick something untrue.
  */
-export const enquiryTypes = ['General enquiry — no specific project', ...projectTypes] as const;
+export const enquiryTypes = ['General enquiry, no specific project', ...projectTypes] as const;
 
 export const quoteSchema = z.object({
   fullName: requiredText('Enter your full name', NAME_MAX, NAME_MIN),
@@ -202,7 +202,7 @@ export const quoteSchema = z.object({
     .string({ error: 'Please give us at least a sentence or two about the project' })
     .trim()
     .min(20, 'Please give us at least a sentence or two about the project')
-    .max(5000, 'Description is too long — please attach a document instead'),
+    .max(5000, 'Description is too long, please attach a document instead'),
   consent: z.literal(true, {
     message: 'Please accept the terms to submit your request',
   }),
@@ -238,7 +238,7 @@ export const newsletterSchema = z.object({
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
 
 /* There is no application schema. Job applications go straight to the careers
-   inbox from a prefilled mailto link on each role page — a candidate attaches a CV
+   inbox from a prefilled mailto link on each role page, a candidate attaches a CV
    from their own mail client, where they already have it. A schema nothing
    validates against is a promise the codebase does not keep. */
 

@@ -131,7 +131,7 @@ export function QuoteForm({
 
       if (file.size > upload.maxBytes) {
         setFileError(
-          `“${file.name}” is ${formatBytes(file.size)} — the limit is ${formatBytes(upload.maxBytes)} per file.`,
+          `“${file.name}” is ${formatBytes(file.size)}, the limit is ${formatBytes(upload.maxBytes)} per file.`,
         );
         continue;
       }
@@ -333,7 +333,7 @@ export function QuoteForm({
                   </option>
                 ))}
                 <option value="Multiple products">Multiple products</option>
-                <option value="Not sure — please advise">Not sure — please advise</option>
+                <option value="Not sure, please advise">Not sure, please advise</option>
               </Select>
             )}
           </Field>
@@ -438,7 +438,7 @@ export function QuoteForm({
         <Field
           id="quote-dimensions"
           label="Sections, grades & dimensions"
-          hint="Section sizes, steel grades and lengths — as much as you have. A rough list beats an empty box."
+          hint="Section sizes, steel grades and lengths, as much as you have. A rough list beats an empty box."
           error={errors.dimensions?.message}
           required
           className="mt-6"
@@ -446,7 +446,7 @@ export function QuoteForm({
           {(props) => (
             <Textarea
               rows={3}
-              placeholder="UB 305×165×40 S355JR — 8no. at 6.2 m, 4no. at 4.8 m. Base plates 300×300×20."
+              placeholder="UB 305×165×40 S355JR, 8no. at 6.2 m, 4no. at 4.8 m. Base plates 300×300×20."
               {...props}
               {...register('dimensions')}
             />
@@ -610,7 +610,7 @@ export function QuoteForm({
             onCheckedChange={(checked) => setValue('newsletter', checked === true)}
           />
           <label htmlFor="quote-newsletter" className="text-mist text-[0.875rem] leading-relaxed">
-            Send me the monthly Epoxa Briefing — market conditions and technical guidance.
+            Send me the monthly Epoxa Briefing, market conditions and technical guidance.
           </label>
         </div>
 
@@ -686,7 +686,7 @@ function UploadProgress({
               <p aria-live="polite" className="text-chalk text-[0.875rem]">
                 {phase === 'uploading'
                   ? `Uploading ${fileCount === 1 ? 'your file' : `${fileCount} files`}…`
-                  : 'Upload complete — submitting your request…'}
+                  : 'Upload complete, submitting your request…'}
               </p>
               {phase === 'uploading' ? (
                 <span className="text-steel font-mono text-[0.8125rem] tabular-nums">

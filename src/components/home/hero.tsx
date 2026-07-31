@@ -54,7 +54,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
   return (
     <section
       ref={containerRef}
-      aria-label="EPOXA STEEL — Reinforce Your Dream"
+      aria-label="EPOXA STEEL, Reinforce Your Dream"
       /*
        * `min-h-dvh`, not `h-dvh`. A fixed viewport height clipped the proof bar
        * on a 667px phone — the hero simply cut two of the four figures off,
@@ -66,7 +66,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
     >
       <HeroBackdrop scrollYProgress={scrollYProgress} layers={layers} video={video} />
 
-      {/* Legibility scrim — a single gradient rather than a flat overlay, so
+      {/* Legibility scrim, a single gradient rather than a flat overlay, so
           the sky stays clean while the text sits on enough contrast. */}
       <div
         aria-hidden
@@ -86,7 +86,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         The opening.
 
         A plate of the page's own background, laid over the hero and animated
-        away in CSS — see `globals.css`. The site used to open on a scripted
+        away in CSS, see `globals.css`. The site used to open on a scripted
         intro instead: "Reinforce Your Dream." resolving into the wordmark over
         two beats, with a Skip button. It was a title card in front of the door,
         and the visitor had to wait through it or dismiss it before the site
@@ -97,7 +97,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         there underneath. It is CSS rather than JavaScript so it runs before
         hydration, cannot get stuck part-way if a script fails, and costs
         nothing on the main thread. The inline bootstrap in the head decides
-        whether it is due at all — once per session, never under reduced motion.
+        whether it is due at all, once per session, never under reduced motion.
       */}
       <div
         data-overture-cover
@@ -108,7 +108,7 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
       {/*
         Anchored from the top, not centred.
 
-        Centring the content — whether with `items-center` or auto margins —
+        Centring the content, whether with `items-center` or auto margins ,
         makes its position a function of its own height. When the web font
         replaces the fallback and the lead paragraph relands on a different
         number of lines, the block re-centres and everything in the hero moves:
@@ -252,7 +252,7 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
 
         Weighted towards the top of the frame rather than even across it. The
         band above the headline is where a generator watermark tends to sit, and
-        it is also the emptiest part of the composition — darkening it costs the
+        it is also the emptiest part of the composition, darkening it costs the
         least and hides the most. The middle stays the lightest point so the
         footage still reads as footage behind the copy, and the foot of the
         gradient carries on into the statistics strip.
@@ -298,7 +298,7 @@ function HeroContent() {
         The tagline leads, quietly, and the promise carries the size.
 
         "Reinforce Your Dream." was set at display-xl and was the first and
-        largest thing on the page. It is the brand line, not the proposition —
+        largest thing on the page. It is the brand line, not the proposition ,
         a contractor deciding whether to send us a drawing is looking for what
         they get, and that is the three words below it.
 
@@ -313,7 +313,7 @@ function HeroContent() {
 
       <h1 className="font-display text-display-xl text-bright mt-5 font-extrabold sm:mt-7">
         {/* The trailing spaces are load-bearing. Without them `textContent`
-            reads "Trust,Quality,Service." — which is what a crawler indexes and
+            reads "Trust,Quality,Service.", which is what a crawler indexes and
             what a copy-paste produces, even though it renders correctly. */}
         Trust, <br />
         Quality, <br />
@@ -321,13 +321,13 @@ function HeroContent() {
       </h1>
 
       <p className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
-        Premium structural steel for commercial, industrial and residential construction — supplied
-        with mill-traceable certification, in-house fabrication, and delivery sequenced to your
-        erection programme.
+        Premium reinforcing steel for commercial, industrial and residential construction, supplied
+        with mill-traceable certification, cut and bent to schedule, and delivered sequenced to your
+        pour programme.
       </p>
 
       {/* Full width on a phone. Side by side they are within three pixels of
-          each other's width, which reads as a mistake rather than a rhythm —
+          each other's width, which reads as a mistake rather than a rhythm ,
           and edge-to-edge targets are easier to hit anyway. */}
       <div className="mt-8 flex flex-col items-stretch gap-3 sm:mt-11 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
         <Magnetic className="max-sm:w-full">
@@ -345,8 +345,8 @@ function HeroContent() {
       {/*
         No proof bar.
 
-        Four figures sat here — tonnes supplied, projects delivered, on-time
-        percentage, countries served — and not one of them could be stood
+        Four figures sat here, tonnes supplied, projects delivered, on-time
+        percentage, countries served, and not one of them could be stood
         behind. A supplier's homepage is the wrong place to publish a number
         nobody can produce a record for, and a claim a client cannot verify is
         worth less than no claim at all. When there are audited figures they

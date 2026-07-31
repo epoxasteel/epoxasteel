@@ -23,7 +23,7 @@ export function Footer() {
         {/* Brand + newsletter */}
         <div className="container-page border-hairline grid gap-12 border-b py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-20 lg:py-16">
           <div>
-            <Link href="/" aria-label={`${siteConfig.name} — home`} className="inline-block">
+            <Link href="/" aria-label={`${siteConfig.name}, home`} className="inline-block">
               <Wordmark size="lg" />
             </Link>
             <p className="text-ash mt-6 max-w-md text-[0.9375rem] leading-relaxed">
@@ -96,14 +96,14 @@ export function Footer() {
               Market conditions, technical guidance, project news.
             </h2>
             <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
-              Roughly once a month. Written by our engineers and supply chain team — no
-              announcements dressed up as insight, and one-click unsubscribe on every issue.
+              Roughly once a month. Written by our engineers and supply chain team, no announcements
+              dressed up as insight, and one-click unsubscribe on every issue.
             </p>
             <NewsletterForm className="mt-6" />
 
             {/* All of them. `slice(0, 2)` quietly dropped the last row, and the
                 last row is the one that says whether the yard opens at the
-                weekend — exactly the line a site manager needs to see.
+                weekend, exactly the line a site manager needs to see.
 
                 Two columns, because the panel is a hairline grid: every cell
                 without a child shows as a lighter block, so an odd number of rows
@@ -125,7 +125,7 @@ export function Footer() {
         {/*
           No link columns.
 
-          Four lists — products, industries, services, company — repeated the
+          Four lists, products, industries, services, company, repeated the
           navigation a second time at the bottom of every page. With the header
           down to three entries there is not enough site left for a sitemap in
           the footer to be doing work; it was just the longest thing on the page.
@@ -138,7 +138,7 @@ export function Footer() {
 
         {/* Legal bar */}
         <div className="container-page text-steel flex flex-col gap-4 py-7 text-[0.8125rem] md:flex-row md:items-center md:justify-between">
-          {/* The year is the current one, not a literal — a copyright notice that
+          {/* The year is the current one, not a literal, a copyright notice that
               silently goes stale on 1 January is the classic version of this bug. */}
           <p>
             © {year} {siteConfig.legalEntity} All rights reserved.

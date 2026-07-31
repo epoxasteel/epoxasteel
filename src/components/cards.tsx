@@ -24,7 +24,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
   return (
     <LinkCard
       href={`/products/${product.slug}`}
-      ariaLabel={`${product.name} — ${product.tagline}`}
+      ariaLabel={`${product.name}, ${product.tagline}`}
       className={cn('flex h-full flex-col', className)}
     >
       <CardEdgeGlow />
@@ -81,7 +81,7 @@ export function IndustryCard({ industry, className }: { industry: Industry; clas
   return (
     <LinkCard
       href={`/industries/${industry.slug}`}
-      ariaLabel={`${industry.name} — ${industry.tagline}`}
+      ariaLabel={`${industry.name}, ${industry.tagline}`}
       className={cn('flex h-full flex-col p-6 sm:p-7', className)}
     >
       <CardEdgeGlow />
@@ -121,7 +121,7 @@ export function ServiceCard({
   return (
     <LinkCard
       href={`/services/${service.slug}`}
-      ariaLabel={`${service.name} — ${service.tagline}`}
+      ariaLabel={`${service.name}, ${service.tagline}`}
       className={cn('flex h-full flex-col p-6 sm:p-7', className)}
     >
       <CardEdgeGlow />
@@ -167,7 +167,7 @@ export function ProjectCard({
   return (
     <LinkCard
       href={`/projects/${project.slug}`}
-      ariaLabel={`${project.name} — ${project.summary}`}
+      ariaLabel={`${project.name}, ${project.summary}`}
       className={cn('flex h-full flex-col', className)}
     >
       <CardEdgeGlow />
@@ -309,7 +309,7 @@ export function JobCard({ job, className }: { job: Job; className?: string }) {
   return (
     <LinkCard
       href={`/careers/${job.slug}`}
-      ariaLabel={`${job.title} — ${job.location}`}
+      ariaLabel={`${job.title}, ${job.location}`}
       className={cn('flex h-full flex-col p-6 sm:p-7', className)}
     >
       <CardEdgeGlow />
@@ -366,7 +366,7 @@ export function RelatedLink({
             {title}
           </span>
           {/* Two lines, not one with an ellipsis. At every width we tested,
-              single-line truncation cut these taglines mid-word — so the copy
+              single-line truncation cut these taglines mid-word, so the copy
               was written, shipped and never once read to the end. */}
           {meta ? (
             <span className="text-steel mt-0.5 line-clamp-2 block text-[0.8125rem] leading-snug">

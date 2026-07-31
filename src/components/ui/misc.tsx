@@ -102,7 +102,7 @@ export function Breadcrumbs({ trail, className }: { trail: Crumb[]; className?: 
                 <Link
                   href={crumb.href}
                   /* `min-h-6` matches the 24px floor every other standalone link
-                     on the site uses. The breadcrumb sat at 20px — conformant,
+                     on the site uses. The breadcrumb sat at 20px, conformant,
                      because WCAG 2.5.8's spacing exception covers it, but the
                      smallest thing on the page to hit with a thumb. */
                   className="hover:text-chalk inline-flex min-h-6 items-center transition-colors duration-200"

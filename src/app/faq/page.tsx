@@ -32,7 +32,7 @@ export default function FaqPage() {
       <PageHero
         eyebrow="FAQ"
         title="The questions we are asked most."
-        description="Ordering, delivery, certification, payment and technical support. If your question is not here, our team answers enquiries within one business day — and we would rather you asked than guessed."
+        description="Ordering, delivery, certification, payment and technical support. If your question is not here, our team answers enquiries within one business day, and we would rather you asked than guessed."
         trail={trail}
       />
 
@@ -95,7 +95,7 @@ export default function FaqPage() {
 
       <CallToAction
         title="Still have a question?"
-        description="Technical or commercial, we answer within one business day — and if a query needs eyes on it rather than an email thread, an engineer attends site, usually within 48 hours."
+        description="Technical or commercial, we answer within one business day, and if a query needs eyes on it rather than an email thread, an engineer attends site, usually within 48 hours."
         primary={{ label: 'Ask our team', href: '/contact' }}
         secondary={{ label: 'Request a Quote', href: '/quote' }}
       />

@@ -11,7 +11,7 @@ export const faqs: Faq[] = [
     category: 'Ordering',
     question: 'What information do you need to prepare a quote?',
     answer:
-      'A bill of quantities, drawings or even a simple list of sizes and quantities is enough to begin. Grade, quantity, required lengths, delivery location and target date let us quote accurately. If you have a model or DXF files for fabrication or profiling work, send those too — we can quote from them directly.',
+      'A bill of quantities, drawings or even a simple list of sizes and quantities is enough to begin. Grade, quantity, required lengths, delivery location and target date let us quote accurately. If you have a model or DXF files for fabrication or profiling work, send those too. We can quote from them directly.',
   },
   {
     category: 'Ordering',
@@ -53,7 +53,7 @@ export const faqs: Faq[] = [
     category: 'Delivery',
     question: 'How fast can you deliver?',
     answer:
-      'Stocked items ordered before 14:00 can dispatch the same day for regional delivery. Standard supply from stock is typically five to fifteen working days depending on processing. Fabricated packages depend on scope and drawing approval — we commit to a date at order confirmation and hold it.',
+      'Stocked items ordered before 14:00 can dispatch the same day for regional delivery. Standard supply from stock is typically five to fifteen working days depending on processing. Fabricated packages depend on scope and drawing approval. We commit to a date at order confirmation and hold it.',
   },
   {
     category: 'Delivery',
@@ -125,7 +125,7 @@ export const faqs: Faq[] = [
     category: 'Support',
     question: 'Can you attend site if there is a problem?',
     answer:
-      'Yes. Where a technical query cannot be resolved remotely, an engineer attends site — usually within 48 hours. Site attendance for material or fabrication issues on our supply is not charged.',
+      'Yes. Where a technical query cannot be resolved remotely, an engineer attends site, usually within 48 hours. Site attendance for material or fabrication issues on our supply is not charged.',
   },
 ];
 

@@ -12,7 +12,7 @@ import { pad } from '@/lib/utils';
 export const metadata: Metadata = buildMetadata({
   title: 'Services',
   description:
-    'Steel supply, fabrication, cutting, engineering support, logistics and delivery — from one accountable supplier, under one certificate.',
+    'Steel supply, fabrication, cutting, engineering support, logistics and delivery, from one accountable supplier, under one certificate.',
   path: '/services',
 });
 
@@ -28,7 +28,7 @@ const process = [
   },
   {
     title: 'Quotation',
-    body: 'Line by line within 48 hours for standard enquiries — grade, size, quantity, processing and delivery all priced separately.',
+    body: 'Line by line within 48 hours for standard enquiries, grade, size, quantity, processing and delivery all priced separately.',
   },
   {
     title: 'Order',
@@ -52,7 +52,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="Everything between the mill and your crane hook."
-        description="Splitting a steel package across several suppliers splits accountability with it. We do supply, processing, fabrication, finishing and delivery ourselves — so when something needs resolving, there is nobody to point at."
+        description="Splitting a steel package across several suppliers splits accountability with it. We do supply, processing, fabrication, finishing and delivery ourselves, so when something needs resolving, there is nobody to point at."
         trail={trail}
       >
         <div className="flex flex-wrap gap-3">
@@ -115,7 +115,7 @@ export default function ServicesPage() {
 
       <CallToAction
         title="One supplier. One certificate. One phone call."
-        description="Tell us the scope — material only, fabricated package, or something in between — and we will scope it honestly, including the parts we would not recommend."
+        description="Tell us the scope, material only, fabricated package, or something in between, and we will scope it honestly, including the parts we would not recommend."
       />
     </>
   );

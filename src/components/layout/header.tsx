@@ -80,7 +80,7 @@ export function Header() {
             <Link
               href="/"
               className="shrink-0 rounded-sm transition-opacity duration-300 hover:opacity-85"
-              aria-label={`${siteConfig.name} — home`}
+              aria-label={`${siteConfig.name}, home`}
             >
               <Wordmark size="md" />
             </Link>
@@ -92,7 +92,7 @@ export function Header() {
                 Contact and Request a Quote, in that order.
 
                 The search button lived here and is gone. Search is still on the
-                site — ⌘K opens it and /search is indexed — but a magnifying
+                site, ⌘K opens it and /search is indexed, but a magnifying
                 glass was taking the most valuable space in the header from the
                 second thing every visitor to a supplier's site wants, which is
                 a way to reach a person.
@@ -177,7 +177,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
       {/*
         The viewport is the animated container the panels render into.
 
-        Opaque, not glass — and that is a decision, not an oversight. The panel
+        Opaque, not glass, and that is a decision, not an oversight. The panel
         used to be `bg-graphite/85` with a `backdrop-blur`, which rendered as a
         dimmed sheet with the page's display headings legible straight through
         the menu items. The blur never applied: an element carrying a
@@ -232,7 +232,7 @@ function MegaPanel({ item, pathname }: { item: (typeof mainNav)[number]; pathnam
     <div className="p-8">
       {/*
         One track now. The panel used to be `lg:grid-cols-[1fr_auto]` with a
-        featured card in the second column — the card is gone, and leaving the
+        featured card in the second column, the card is gone, and leaving the
         track behind would have held a column of empty space open at every width.
 
         Five columns is the widest panel; three is the rest.

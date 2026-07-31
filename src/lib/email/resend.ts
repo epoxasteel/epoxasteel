@@ -93,18 +93,17 @@ function paced<T>(task: () => Promise<T>): Promise<T> {
  */
 const PERMANENT: Partial<Record<string, string>> = {
   missing_api_key: 'RESEND_API_KEY is not set',
-  invalid_api_key: 'RESEND_API_KEY is not valid — regenerate it in the Resend dashboard',
-  restricted_api_key: 'RESEND_API_KEY lacks send permission — it may be a read-only key',
-  invalid_from_address:
-    'the FROM_EMAIL domain is not verified in Resend — verify it before sending',
+  invalid_api_key: 'RESEND_API_KEY is not valid, regenerate it in the Resend dashboard',
+  restricted_api_key: 'RESEND_API_KEY lacks send permission. It may be a read-only key',
+  invalid_from_address: 'the FROM_EMAIL domain is not verified in Resend, verify it before sending',
   validation_error: 'Resend rejected the payload as malformed',
   missing_required_field: 'Resend reported a required field missing',
   invalid_parameter: 'Resend rejected one of the parameters',
   invalid_attachment: 'Resend rejected an attachment',
   invalid_access: 'this Resend key cannot send from that address',
   security_error: 'Resend flagged the request as a security problem',
-  monthly_quota_exceeded: 'the Resend monthly quota is exhausted — upgrade the plan',
-  daily_quota_exceeded: 'the Resend daily quota is exhausted — it resets tomorrow',
+  monthly_quota_exceeded: 'the Resend monthly quota is exhausted, upgrade the plan',
+  daily_quota_exceeded: 'the Resend daily quota is exhausted. It resets tomorrow',
 };
 
 export async function sendWithResend(message: EmailMessage): Promise<SendResult> {

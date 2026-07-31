@@ -108,8 +108,8 @@ export function ContactForm({ className }: { className?: string }) {
           <h3 className="font-display text-title text-bright font-semibold">Message sent</h3>
           <p className="text-ash mt-2 max-w-md text-[0.9375rem] leading-relaxed">
             {notice
-              ? 'Thank you — your message is with the right team and we will respond within one business day.'
-              : 'Thank you — your message is with the right team and we will respond within one business day. A confirmation has been sent to your email address.'}
+              ? 'Thank you, your message is with the right team and we will respond within one business day.'
+              : 'Thank you, your message is with the right team and we will respond within one business day. A confirmation has been sent to your email address.'}
           </p>
           {notice ? (
             <p className="text-ash mt-3 max-w-md text-[0.875rem] leading-relaxed">{notice}</p>
@@ -171,7 +171,7 @@ export function ContactForm({ className }: { className?: string }) {
         <Field
           id="contact-phone"
           label="Phone"
-          hint="Optional — helpful if your enquiry is urgent."
+          hint="Optional, helpful if your enquiry is urgent."
           error={errors.phone?.message}
         >
           {(props) => (
@@ -206,7 +206,7 @@ export function ContactForm({ className }: { className?: string }) {
       <Field id="contact-subject" label="Subject" error={errors.subject?.message} required>
         {(props) => (
           <Input
-            placeholder="Structural steel enquiry — Brooklyn project"
+            placeholder="Structural steel enquiry, Brooklyn project"
             {...props}
             {...register('subject')}
           />

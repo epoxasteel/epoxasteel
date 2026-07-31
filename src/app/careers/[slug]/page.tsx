@@ -31,7 +31,7 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: `${job.title} — ${job.location}`,
+    title: `${job.title}, ${job.location}`,
     description: job.summary,
     path: `/careers/${job.slug}`,
   });
@@ -151,7 +151,7 @@ export default async function JobPage({ params }: { params: Promise<{ slug: stri
                   <p className="text-eyebrow text-steel uppercase">Apply</p>
                   <p className="text-ash mt-4 text-[0.9375rem] leading-relaxed">
                     Send your CV and a short note about why this role interests you. We read every
-                    application and reply to all of them — including the unsuccessful ones.
+                    application and reply to all of them, including the unsuccessful ones.
                   </p>
                   <Button href={applyHref} full className="mt-6">
                     Email your application
@@ -162,7 +162,7 @@ export default async function JobPage({ params }: { params: Promise<{ slug: stri
                       Underlined, not just a lighter grey.
 
                       This link sits inside a sentence, and its colour was only
-                      1.88:1 against the text around it — WCAG 1.4.1 wants a link
+                      1.88:1 against the text around it, WCAG 1.4.1 wants a link
                       in a text block to be distinguishable by something other
                       than colour unless it clears 3:1. Anyone who cannot separate
                       those two greys had no way to tell there was a number to tap.

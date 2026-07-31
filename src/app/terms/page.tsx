@@ -85,7 +85,7 @@ Report shortages, damage or incorrect material **within 48 hours of delivery**, 
 
 Claims notified after 48 hours may be difficult to substantiate once material has been handled, moved or partially installed, and we may be unable to accept them.
 
-Goods must not be processed, cut or installed if you believe they are non-conforming — doing so is taken as acceptance.
+Goods must not be processed, cut or installed if you believe they are non-conforming, doing so is taken as acceptance.
 
 ## 7. Specifications and certification
 
@@ -101,7 +101,7 @@ Standard stock items in original, unprocessed condition may be returned within 1
 
 ## 9. Website content
 
-Content on this site — including technical data, dimension tables, grade information and guidance articles — is provided for general information. It is prepared carefully but:
+Content on this site, including technical data, dimension tables, grade information and guidance articles, is provided for general information. It is prepared carefully but:
 
 - Standards and specifications are revised; always verify against the current published standard
 - Stock ranges, lead times and capabilities change
@@ -112,7 +112,7 @@ Do not rely on website content for a design decision without confirming it with 
 
 ## 10. Intellectual property
 
-All content on this website — text, design, artwork, code, layout and marks — is owned by ${siteConfig.legalName} or licensed to us, and is protected by intellectual property law.
+All content on this website, text, design, artwork, code, layout and marks, is owned by ${siteConfig.legalName} or licensed to us, and is protected by intellectual property law.
 
 You may view, download and print pages for your own internal business use. You may not republish, redistribute, or use our content commercially without our written permission.
 
@@ -192,7 +192,7 @@ export default function TermsPage() {
                   terms were "a starting point" and "not legal advice". That is
                   true, and telling a prospective customer that the company's own
                   trading terms are provisional does more damage than the warning
-                  prevents — it is the one page where a buyer's lawyer looks.
+                  prevents. It is the one page where a buyer's lawyer looks.
 
                   The warning belongs where the site's owner will see it, so it
                   now lives in README.md's pre-launch checklist and in

@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               `tabIndex={-1}` so the skip link actually moves focus here.
               Without it the browser scrolls to this element and leaves focus on
               the body, which means the next Tab press goes back to the top of the
-              header navigation — the exact thing the visitor just skipped. The
+              header navigation, the exact thing the visitor just skipped. The
               link looked like it worked, and for a sighted mouse user it did.
               Negative index: programmatically focusable, never a tab stop of its
               own, and `outline-none` because this is a landmark receiving focus
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Earlier this hid the button entirely when there was no key, on the
               reasoning that offering to answer and then apologising is worse than
               not offering. That reasoning was right about the apology and wrong
-              about the button — somebody who reaches for it has a question, and
+              about the button, somebody who reaches for it has a question, and
               the routes that answer it exist today. See coming-soon-panel.tsx.
             */}
             <FloatingContact />
@@ -111,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SearchDialog />
             {/*
               Both hang off whether any analytics provider has an ID in the
-              environment. With none — the default — there is nothing to load and
+              environment. With none, the default. There is nothing to load and
               nothing to consent to, so neither renders anything and the site sets
               no analytics cookies at all. See lib/analytics.ts.
             */}

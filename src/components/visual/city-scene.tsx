@@ -356,7 +356,7 @@ export function SteelFrameForeground({ className }: { className?: string }) {
         <rect x={0} y={100} width={1200} height={5} opacity={0.85} />
       </g>
 
-      {/* A single warm edge light catching the top flange — the one point of
+      {/* A single warm edge light catching the top flange, the one point of
           warmth in the whole composition. */}
       <g opacity={0.5}>
         {floors.map((y) => (

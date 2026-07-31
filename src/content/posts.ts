@@ -17,7 +17,7 @@ export const posts: Post[] = [
     author: { name: 'Dr. Helena Vasquez', role: 'Technical Director' },
     tags: ['hollow sections', 'EN 10210', 'EN 10219', 'specification'],
     featured: true,
-    body: `Hollow sections are specified more often than they are understood. A designer selects an SHS from a capacity table, the drawing goes out, and the procurement decision between EN 10210 hot-finished and EN 10219 cold-formed gets made by whoever is buying — usually on price. Most of the time that works out. Occasionally it produces a connection that cracks.
+    body: `Hollow sections are specified more often than they are understood. A designer selects an SHS from a capacity table, the drawing goes out, and the procurement decision between EN 10210 hot-finished and EN 10219 cold-formed gets made by whoever is buying, usually on price. Most of the time that works out. Occasionally it produces a connection that cracks.
 
 ## What actually differs
 
@@ -63,7 +63,7 @@ That conversation costs us nothing and occasionally costs us the cheaper sale. I
     title: 'Why mill certificates matter more than the price on the quote',
     category: 'Engineering',
     excerpt:
-      'The cheapest tonne of steel is the one you cannot certify — right up until an inspector asks you to.',
+      'The cheapest tonne of steel is the one you cannot certify, right up until an inspector asks you to.',
     published: '2026-06-26',
     author: { name: 'Priya Raghunathan', role: 'Quality & Compliance Director' },
     tags: ['certification', 'traceability', 'EN 10204', 'quality'],
@@ -74,7 +74,7 @@ Occasionally that quote reflects a supplier with better mill terms or surplus st
 
 ## What a mill certificate actually asserts
 
-An EN 10204 3.1 certificate is a statement by the manufacturer, validated by an authorised representative independent of the production department, that a specific batch of steel — identified by heat number — meets the specified chemistry and mechanical properties, evidenced by tests performed on that batch.
+An EN 10204 3.1 certificate is a statement by the manufacturer, validated by an authorised representative independent of the production department, that a specific batch of steel, identified by heat number, meets the specified chemistry and mechanical properties, evidenced by tests performed on that batch.
 
 Three parts of that sentence carry the weight:
 
@@ -93,7 +93,7 @@ It rarely surfaces at delivery. It surfaces later, and always at the least conve
 - A defect emerges in year three, and the insurer requires the material file.
 - A public client audits the project two years after completion.
 
-At that point the material is buried in a structure. The remedy is testing in place, opening up, or replacing — and the eight per cent saved becomes a number too small to see.
+At that point the material is buried in a structure. The remedy is testing in place, opening up, or replacing, and the eight per cent saved becomes a number too small to see.
 
 ## The reconciliation that should be routine
 
@@ -198,7 +198,7 @@ We will also tell you when a lower-carbon option is available and when it is not
 
 ## Where prices sit
 
-Structural section prices have moved within a comparatively narrow band through the first half of the year — welcome after the swings of the preceding period, though the stability is more balanced weakness than genuine strength. Demand is soft in some segments and capacity is ample.
+Structural section prices have moved within a comparatively narrow band through the first half of the year, welcome after the swings of the preceding period, though the stability is more balanced weakness than genuine strength. Demand is soft in some segments and capacity is ample.
 
 Plate has behaved differently. Energy infrastructure and defence demand have kept heavy plate tighter than sections, and lead times on thicker gauges have extended. Buyers treating plate and section as one market are being surprised.
 
@@ -246,7 +246,7 @@ That is less comfortable than the alternative. It is considerably more useful.`,
     published: '2026-05-15',
     author: { name: 'Anders Lindqvist', role: 'Operations Director' },
     tags: ['galvanizing', 'corrosion protection', 'fabrication', 'design'],
-    body: `Hot-dip galvanizing is the most reliable corrosion protection available for structural steel, and one of the least forgiving of poor detailing. A fabrication that would weld and erect perfectly can distort, trap zinc or trap air in the kettle — and by the time anyone notices, the part is coated.
+    body: `Hot-dip galvanizing is the most reliable corrosion protection available for structural steel, and one of the least forgiving of poor detailing. A fabrication that would weld and erect perfectly can distort, trap zinc or trap air in the kettle, and by the time anyone notices, the part is coated.
 
 Almost all of it is preventable at drawing stage. Here is what we look for when we review a job before it is galvanized.
 
@@ -288,7 +288,7 @@ Our kettle takes 15.5 metres in a single dip. If your assembly exceeds that, we 
 
 ## 6. Faying surfaces in slip-critical connections
 
-Galvanized surfaces have a different slip coefficient from blast-cleaned steel. If the connection is slip-critical, the design must account for it — usually by roughening the faying surface after galvanizing, and always by using the correct coefficient in the design.
+Galvanized surfaces have a different slip coefficient from blast-cleaned steel. If the connection is slip-critical, the design must account for it, usually by roughening the faying surface after galvanizing, and always by using the correct coefficient in the design.
 
 > Every one of these is a five-minute conversation at drawing stage and a five-figure conversation afterwards.
 
@@ -327,7 +327,7 @@ In practice it means:
 
 This is where it usually breaks down, and it is worth being direct about it.
 
-Sequenced delivery requires an **erection sequence that exists before the steel is loaded**. Not a general intention — an actual sequence, by piece mark, with dates.
+Sequenced delivery requires an **erection sequence that exists before the steel is loaded**. Not a general intention, an actual sequence, by piece mark, with dates.
 
 It requires that sequence to be **shared early enough** to influence loading, which means weeks rather than the afternoon before.
 
@@ -421,7 +421,7 @@ Here is what to check before comparing two of them.
 
 ## 1. What is the price actually for?
 
-Steel is quoted per tonne, per metre or per piece, and the three are not interchangeable. A per-tonne rate that looks competitive can conceal a heavier section being offered against a lighter specification — more steel, more cost, same rate.
+Steel is quoted per tonne, per metre or per piece, and the three are not interchangeable. A per-tonne rate that looks competitive can conceal a heavier section being offered against a lighter specification, more steel, more cost, same rate.
 
 Check that the **section sizes quoted match the sizes specified**, line by line. A substitution to a heavier available section is often perfectly reasonable and occasionally the only option. It should be visible, not buried.
 
@@ -460,7 +460,7 @@ The exclusions list is the most informative part of most quotations and the leas
 
 ## 7. Lead time versus delivery date
 
-"Ten week lead time" and "delivered by 14 October" are different commitments. A lead time starts from something — order, drawing approval, deposit — and the start point is frequently unstated.
+"Ten week lead time" and "delivered by 14 October" are different commitments. A lead time starts from something, order, drawing approval, deposit, and the start point is frequently unstated.
 
 Ask for **a date, and the conditions attached to it**.
 

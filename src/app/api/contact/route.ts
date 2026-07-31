@@ -176,7 +176,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message:
-          'We could not deliver your message. Please email us directly or call — we do not want to lose your enquiry.',
+          'We could not deliver your message. Please email us directly or call. We do not want to lose your enquiry.',
       },
       { status: 502 },
     );

@@ -11,7 +11,7 @@ export const projects: Project[] = [
   {
     slug: 'meridian-tower',
     name: 'Meridian Tower',
-    client: 'Confidential — commercial developer',
+    client: 'Confidential, commercial developer',
     location: 'Newark, New Jersey',
     country: 'United States',
     industry: 'commercial',
@@ -23,7 +23,7 @@ export const projects: Project[] = [
     overview: [
       "Meridian Tower replaced a surface car park in Newark's central business district with 41 storeys of office, retail and amenity space. The developer had pre-let six floors before ground was broken, which fixed the handover date twenty-two months out and made the steel programme the single largest schedule risk on the job.",
       'We were appointed at design stage rather than at tender, which gave the engineering team room to revisit the floor framing before it was frozen. Cellular beams with designed-in service penetrations replaced the original solid-web scheme, removing 180 mm from every floor-to-floor dimension and returning almost a full storey of height within the same planning envelope.',
-      'Steel was released in eight packages tracking the erection sequence. Every trailer arrived inside a two-hour window agreed the previous afternoon, on a site with no laydown area whatsoever — material went from trailer to crane hook.',
+      'Steel was released in eight packages tracking the erection sequence. Every trailer arrived inside a two-hour window agreed the previous afternoon, on a site with no laydown area whatsoever, material went from trailer to crane hook.',
     ],
     challenge:
       'A fixed pre-let handover date, a city-centre site with no storage, and a floor-to-floor dimension that would not accommodate the originally specified framing depth alongside the services zone.',
@@ -62,7 +62,7 @@ export const projects: Project[] = [
     overview: [
       'Harbour Crossing carries four lanes and a segregated cycleway over a working shipping channel, with a 120-year design life and a fracture-critical designation on the main girders. The specification left no room for interpretation: every tension weld ultrasonically tested, every welder individually qualified, every plate traceable to a heat with through-thickness properties.',
       'We supplied and fabricated the plate girders under a dedicated fracture-critical quality plan, with an independent inspection agency present throughout. Weathering steel was selected after a whole-life cost comparison showed it saving 38% against a painted alternative once maintenance access over a shipping channel was priced honestly.',
-      'The girders were shipped in sections determined by a transport study rather than by convenience — splices were placed where the road network allowed rather than where the drawing office preferred, and the resulting welds were designed to suit site conditions.',
+      'The girders were shipped in sections determined by a transport study rather than by convenience, splices were placed where the road network allowed rather than where the drawing office preferred, and the resulting welds were designed to suit site conditions.',
     ],
     challenge:
       'Fracture-critical fabrication over a live shipping channel, with a 120-year design life, a maintenance access constraint that made repainting prohibitively expensive, and abnormal load transport through a dense urban network.',
@@ -100,7 +100,7 @@ export const projects: Project[] = [
       "A 1.2 million square foot fulfilment facility framed, clad and operational eleven weeks faster than the operator's previous build of comparable size.",
     overview: [
       "Northgate is a single-storey fulfilment centre of 1.2 million square feet under one roof, with 40-metre clear spans and a 14-metre haunch height. The operator's business case depended on the building accepting inventory before the peak season, which meant the frame had to be complete in a window that left no contingency.",
-      'Repetition was the opportunity. With 96 near-identical frames, we batch-fabricated columns and rafters in production runs rather than as individual pieces, cutting shop hours per tonne by 31% against a one-off approach — a saving reflected directly in the package price.',
+      'Repetition was the opportunity. With 96 near-identical frames, we batch-fabricated columns and rafters in production runs rather than as individual pieces, cutting shop hours per tonne by 31% against a one-off approach, a saving reflected directly in the package price.',
       'Delivery ran bay by bay. Erection began on frame one while frame twenty was still in the shop, and the two processes ran in parallel for the whole programme.',
     ],
     challenge:
@@ -138,7 +138,7 @@ export const projects: Project[] = [
     summary:
       'Three residential towers totalling 780 apartments, supplied with pour-sequenced cut-and-bent reinforcement on a five-day floor cycle.',
     overview: [
-      'Cedar Park comprises three post-tensioned concrete towers of 22, 26 and 31 storeys sharing a common podium and basement. The contractor targeted a five-day floor cycle — aggressive for the region — and reinforcement delivery was the constraint that would decide whether it held.',
+      'Cedar Park comprises three post-tensioned concrete towers of 22, 26 and 31 storeys sharing a common podium and basement. The contractor targeted a five-day floor cycle, aggressive for the region, and reinforcement delivery was the constraint that would decide whether it held.',
       'We supplied all reinforcement cut and bent to schedule, tagged by pour and bundled by location within the pour. A fixing gang arriving on a fresh deck found bundles positioned where the steel was going, labelled to match the drawing they were holding.',
       'Across 79 floor pours the five-day cycle was maintained on all but two, neither delayed by reinforcement supply.',
     ],
@@ -176,7 +176,7 @@ export const projects: Project[] = [
     summary:
       'Pipe racks, equipment supports and access structures for a coastal energy terminal, installed across two shutdown windows with zero overrun.',
     overview: [
-      'Atlas is a coastal terminal handling refined product, expanded while continuing to operate. The steel scope covered pipe racks, equipment support structures, access platforms and stair towers — all installed within two planned shutdown windows totalling nineteen days.',
+      'Atlas is a coastal terminal handling refined product, expanded while continuing to operate. The steel scope covered pipe racks, equipment support structures, access platforms and stair towers, all installed within two planned shutdown windows totalling nineteen days.',
       'A shutdown is unforgiving: every hour of overrun costs more than the steel package. We trial-assembled every structure in the shop before it shipped, proving fit against surveyed as-built dimensions rather than design dimensions, which is where this kind of work usually goes wrong.',
       'The coastal environment drove a C5-M coating specification. Hot-dip galvanizing plus a duplex epoxy system was selected after a whole-life comparison, targeting 25 years before first maintenance.',
     ],
@@ -185,7 +185,7 @@ export const projects: Project[] = [
     solution:
       'Full shop trial assembly against laser-surveyed as-built dimensions confirmed fit before dispatch. Structures were delivered pre-assembled to the largest module the site crane could lift, with a duplex galvanized-plus-epoxy coating system for the coastal exposure.',
     outcome:
-      'Both shutdowns completed inside their windows, with the second finishing a day early. No site modification was required on any structure — every module fitted the survey it was built to.',
+      'Both shutdowns completed inside their windows, with the second finishing a day early. No site modification was required on any structure, every module fitted the survey it was built to.',
     productsUsed: ['structural-steel', 'steel-pipes', 'steel-plates', 'galvanized-steel'],
     servicesUsed: ['fabrication', 'engineering-support', 'logistics', 'technical-assistance'],
     metrics: [
@@ -214,7 +214,7 @@ export const projects: Project[] = [
     summary:
       'A 96-metre clear-span station roof erected over live platforms during weekend possessions, with no service disruption across the entire programme.',
     overview: [
-      'Westfield serves 140,000 passengers a day and could not close. The new concourse roof — a 96-metre clear span of tubular trusses — had to be built above operating platforms, with erection confined to weekend possessions of roughly thirty hours each.',
+      'Westfield serves 140,000 passengers a day and could not close. The new concourse roof, a 96-metre clear span of tubular trusses, had to be built above operating platforms, with erection confined to weekend possessions of roughly thirty hours each.',
       'The steel was architecturally exposed throughout, visible to every passenger, which set a finish standard far above ordinary structural work. We supplied matched heat numbers across each truss so surface texture stayed consistent after blasting and coating, and controlled weld profiles to AESS category 4.',
       'Trusses were assembled at ground level in a compound beside the station and lifted complete during possessions. Each lift was rehearsed against a 3D model of the crane envelope before the possession began.',
     ],
@@ -252,7 +252,7 @@ export const projects: Project[] = [
     summary:
       'Mounting structure and pile steel for a 320 MW solar array, delivered to a remote desert site against a fixed grid energisation date.',
     overview: [
-      'Ridgeline is a 320 MW single-axis tracking array across 1,900 acres of desert. The grid connection agreement fixed the energisation date, and missing it would have deferred revenue by a full year — the kind of deadline that reframes every other decision on a project.',
+      'Ridgeline is a 320 MW single-axis tracking array across 1,900 acres of desert. The grid connection agreement fixed the energisation date, and missing it would have deferred revenue by a full year, the kind of deadline that reframes every other decision on a project.',
       'The scope was galvanized pile and torque tube steel, supplied in eleven weekly deliveries to a site with no hard standing, no permanent crane and a single unpaved access road. We staged material at a regional yard and ran daily shuttle deliveries into the array as installation advanced across the site.',
       'All steel was hot-dip galvanized to a 40-year design life against the desert exposure category, with coating thickness verified per batch.',
     ],

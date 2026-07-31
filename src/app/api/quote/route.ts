@@ -145,7 +145,7 @@ export async function POST(request: Request) {
   }
 
   /* A repeat of the same enquiry inside ten minutes is answered with the
-     original reference and not sent again — the visitor sees success either way,
+     original reference and not sent again, the visitor sees success either way,
      and the desk sees one project rather than two. */
   const print = fingerprint(identifier, 'quote', [
     data.email,
@@ -251,7 +251,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message:
-          'We could not submit your request. Please email or call us directly — we do not want to lose your enquiry.',
+          'We could not submit your request. Please email or call us directly. We do not want to lose your enquiry.',
       },
       { status: 502 },
     );

@@ -362,7 +362,7 @@ export function AssistantPanel() {
               />
 
               {/* Always one click from a human. The assistant is deliberately not
-                  the only route — a visitor who wants a person should never have
+                  the only route, a visitor who wants a person should never have
                   to negotiate with software to reach one. */}
               <div className="text-steel mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.75rem]">
                 <Link

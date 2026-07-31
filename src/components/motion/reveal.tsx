@@ -175,7 +175,7 @@ export function MaskedLines({
             {/*
               A trailing space on every line but the last.
 
-              These are block elements, so it renders as nothing — but without it
+              These are block elements, so it renders as nothing, but without it
               `textContent` concatenates the lines into one word: the homepage's
               second heading read "Steel is a commodityuntil it is late." That is
               what a crawler indexes and what a copy-paste produces, on every
@@ -246,7 +246,7 @@ function scan(){
  for(var i=0;i<n.length;i++){
   var el=n[i];
   /* A group laid out with \`display: contents\` — the usual way to let items
-     participate in a parent grid — generates no box at all, so an observer
+     participate in a parent grid, generates no box at all, so an observer
      watching it would wait forever. Watch its items instead and let whichever
      arrives first stand in for the group. */
   if(el.hasAttribute('data-reveal-group')){

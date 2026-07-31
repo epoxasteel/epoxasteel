@@ -48,7 +48,7 @@ export default async function SearchPage({
         description={
           query
             ? `${results.length} result${results.length === 1 ? '' : 's'} across products, services, industries, projects and articles.`
-            : 'Search the full catalogue — products, grades, services, industries, case studies and technical articles.'
+            : 'Search the full catalogue, products, grades, services, industries, case studies and technical articles.'
         }
         trail={[
           { name: 'Home', href: '/' },
@@ -67,7 +67,7 @@ export default async function SearchPage({
               </h2>
               <p className="text-lead text-ash mt-5">
                 Try a product name, a grade designation, or the sector you are building in. If it is
-                something we should stock and do not, tell us —{' '}
+                something we should stock and do not, tell us ,{' '}
                 <Link href="/contact" className="text-arc-glow underline underline-offset-4">
                   we source non-standard material mill-direct
                 </Link>
@@ -151,7 +151,7 @@ export default async function SearchPage({
 
       <CallToAction
         title="Cannot find what you need?"
-        description="If it is steel, we can usually source it — including non-standard grades, unusual sizes and obsolete profiles for heritage work."
+        description="If it is steel, we can usually source it, including non-standard grades, unusual sizes and obsolete profiles for heritage work."
         primary={{ label: 'Ask our team', href: '/contact' }}
         secondary={{ label: 'Request a Quote', href: '/quote' }}
       />

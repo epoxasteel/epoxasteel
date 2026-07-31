@@ -91,7 +91,7 @@ export function Testimonials() {
 
           {/*
             The quotes cross-fade, so one has to be able to sit on top of
-            another — which means the container cannot simply size to whichever
+            another, which means the container cannot simply size to whichever
             is showing, or the page would jump every eight seconds.
 
             It used to be a hand-set `min-h-72`. That is a number that is wrong
@@ -124,7 +124,7 @@ export function Testimonials() {
               animating in.
 
               Without it the opening slide is server-rendered at `opacity: 0` and
-              only becomes visible once JavaScript runs — so the entire
+              only becomes visible once JavaScript runs, so the entire
               testimonial section was blank for anyone without it, and blank in
               the pre-hydration paint. The cross-fade is only meaningful *between*
               quotes; there is nothing to transition from on the first one.
@@ -185,7 +185,7 @@ export function Testimonials() {
                 <li key={testimonial.name}>
                   {/* The visible mark stays a hairline dash; the button around it
                       is 24px square. As a bare 8×4px element it was well under
-                      the WCAG 2.2 minimum target size — and it only showed up in
+                      the WCAG 2.2 minimum target size, and it only showed up in
                       testing once the caption stopped covering it. */}
                   <button
                     type="button"

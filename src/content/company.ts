@@ -5,7 +5,7 @@
 
 export const mission = {
   statement:
-    'To supply the structural steel that turns ambitious drawings into standing buildings — certified, on schedule, and backed by people who answer the phone.',
+    'To supply the structural steel that turns ambitious drawings into standing buildings, certified, on schedule, and backed by people who answer the phone.',
   body: 'Steel is a commodity right up until the moment it is late, wrong, or undocumented. Then it is the most important thing on the project. EPOXA STEEL exists to make sure that moment never arrives: predictable supply, complete traceability, and engineering judgement applied before problems reach site.',
 };
 
@@ -30,7 +30,7 @@ export const values = [
   },
   {
     title: 'Judgement',
-    body: 'We tell clients when a specification is costing them money for no benefit — including when the answer means a smaller order for us.',
+    body: 'We tell clients when a specification is costing them money for no benefit, including when the answer means a smaller order for us.',
   },
   {
     title: 'Safety',
@@ -193,7 +193,7 @@ export const qualityCommitments = [
 export const whyChooseUs = [
   {
     title: 'Dates we actually hold',
-    body: 'A 99.4% on-time delivery record across the last 24 months, measured against the date we confirmed at order — not a date we quietly revised later.',
+    body: 'A 99.4% on-time delivery record across the last 24 months, measured against the date we confirmed at order, not a date we quietly revised later.',
   },
   {
     title: 'One accountable supplier',
@@ -213,7 +213,7 @@ export const whyChooseUs = [
   },
   {
     title: 'Logistics as part of supply',
-    body: 'Route surveys, permits, escorts and offload planning handled at order stage — so delivery day is a formality, not a negotiation.',
+    body: 'Route surveys, permits, escorts and offload planning handled at order stage, so delivery day is a formality, not a negotiation.',
   },
 ] as const;
 

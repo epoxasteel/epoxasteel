@@ -32,7 +32,7 @@ export default function NotFound() {
         aria-hidden
       />
 
-      {/* A structural frame with one member missing — the joke is load-bearing. */}
+      {/* A structural frame with one member missing, the joke is load-bearing. */}
       <svg
         aria-hidden
         viewBox="0 0 1200 400"
@@ -70,7 +70,7 @@ export default function NotFound() {
           <Reveal delay={0.12}>
             <p className="text-lead text-ash mt-7 max-w-lg">
               The page you asked for does not exist, or it has moved. Nothing structural has been
-              lost — let us point you at what you were probably looking for.
+              lost, let us point you at what you were probably looking for.
             </p>
           </Reveal>
 

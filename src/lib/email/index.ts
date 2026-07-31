@@ -68,11 +68,11 @@ function logToConsole(message: EmailMessage): SendResult {
     [
       '',
       banner,
-      '  EMAIL (not sent — no transport configured)',
+      '  EMAIL (not sent, no transport configured)',
       banner,
       `  To:       ${Array.isArray(message.to) ? message.to.join(', ') : message.to}`,
       `  From:     ${fromAddress()}`,
-      `  Reply-To: ${message.replyTo ?? '—'}`,
+      `  Reply-To: ${message.replyTo ?? ','}`,
       `  Subject:  ${message.subject}`,
       message.attachments?.length
         ? `  Files:    ${message.attachments.map((a) => a.filename).join(', ')}`
@@ -167,7 +167,7 @@ export async function sendEmail(message: EmailMessage): Promise<SendResult> {
 
     const delay = RETRY_DELAYS_MS[attempt];
     if (delay !== undefined) {
-      console.warn(`[email] ${provider} attempt ${attempt + 1} failed (${lastError}) — retrying`);
+      console.warn(`[email] ${provider} attempt ${attempt + 1} failed (${lastError}), retrying`);
       await wait(delay);
     }
   }

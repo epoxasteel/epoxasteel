@@ -31,13 +31,13 @@ export type SubmissionContext = {
  * anywhere; it is `steel` now.
  */
 const BRAND = {
-  bg: '#060709', // void — the page background
-  panel: '#101317', // charcoal — cards and panels
+  bg: '#060709', // void, the page background
+  panel: '#101317', // charcoal, cards and panels
   line: '#232a33', // hairline
-  text: '#a8b2be', // mist — body copy
-  bright: '#f2f5f9', // bright — headings and the EPOXA half of the wordmark
-  accent: '#3a8ae0', // arc-bright — the mark, links, buttons
-  muted: '#767f8d', // steel — captions and metadata
+  text: '#a8b2be', // mist, body copy
+  bright: '#f2f5f9', // bright, headings and the EPOXA half of the wordmark
+  accent: '#3a8ae0', // arc-bright, the mark, links, buttons
+  muted: '#767f8d', // steel, captions and metadata
 };
 
 /**
@@ -113,8 +113,8 @@ function shell(title: string, preheader: string, content: string) {
             <!--
               The full street address, both lines.
 
-              This printed line2 only, which read as "Building C, Newark, NJ"
-              — half an address, and the half that cannot be posted to.
+              This printed line2 only, which read as "Building C, Newark, NJ" —
+              half an address, and the half that cannot be posted to.
 
               It stays in the email footer even though the site footer no longer
               shows it: CAN-SPAM requires a valid physical postal address in
@@ -255,7 +255,7 @@ export function quoteInternalEmail(data: QuoteEmailData) {
     : 'None';
 
   const content = `
-    ${heading(`New quote request — ${data.reference}`)}
+    ${heading(`New quote request, ${data.reference}`)}
     ${paragraph(`${data.fullName} at ${data.company} has requested a quotation.`)}
     ${detailTable([
       ['Reference', data.reference],
@@ -283,10 +283,10 @@ export function quoteInternalEmail(data: QuoteEmailData) {
   `;
 
   return {
-    subject: `Quote request ${data.reference} — ${data.company} (${data.product})`,
-    html: shell(`Quote request ${data.reference}`, `${data.company} — ${data.product}`, content),
+    subject: `Quote request ${data.reference}, ${data.company} (${data.product})`,
+    html: shell(`Quote request ${data.reference}`, `${data.company}, ${data.product}`, content),
     text: [
-      `NEW QUOTE REQUEST — ${data.reference}`,
+      `NEW QUOTE REQUEST, ${data.reference}`,
       '',
       `Contact:      ${data.fullName}`,
       `Company:      ${data.company}`,
@@ -338,15 +338,15 @@ export function quoteConfirmationEmail(data: QuoteEmailData) {
           : null,
       ].filter((row): row is [string, string] => row !== null),
     )}
-    ${paragraph('If anything changes in the meantime — quantities, dates or specification — reply to this email with your reference and we will update the enquiry.')}
+    ${paragraph('If anything changes in the meantime, quantities, dates or specification, reply to this email with your reference and we will update the enquiry.')}
     ${button('Explore our products', `${siteConfig.url}/products`)}
   `;
 
   return {
-    subject: `Your ${siteConfig.legalName} quote request — ${data.reference}`,
+    subject: `Your ${siteConfig.legalName} quote request, ${data.reference}`,
     html: shell(
       'Quote request received',
-      `Reference ${data.reference} — we will respond within one business day.`,
+      `Reference ${data.reference}. We will respond within one business day.`,
       content,
     ),
     text: [
@@ -384,7 +384,7 @@ export type ContactEmailData = {
 
 export function contactInternalEmail(data: ContactEmailData) {
   const content = `
-    ${heading(`New enquiry — ${data.subject}`)}
+    ${heading(`New enquiry, ${data.subject}`)}
     ${detailTable([
       ['Reference', data.reference],
       ['Name', data.name],
@@ -400,15 +400,15 @@ export function contactInternalEmail(data: ContactEmailData) {
   `;
 
   return {
-    subject: `Website enquiry: ${data.subject} — ${data.name}`,
+    subject: `Website enquiry: ${data.subject}, ${data.name}`,
     html: shell(`Enquiry from ${data.name}`, data.subject, content),
     text: [
-      `NEW ENQUIRY — ${data.reference}`,
+      `NEW ENQUIRY, ${data.reference}`,
       '',
       `Name:     ${data.name}`,
       `Email:    ${data.email}`,
-      `Phone:    ${data.phone ?? '—'}`,
-      `Company:  ${data.company ?? '—'}`,
+      `Phone:    ${data.phone ?? ','}`,
+      `Company:  ${data.company ?? ','}`,
       `About:    ${data.projectType}`,
       `Subject:  ${data.subject}`,
       '',
@@ -422,7 +422,7 @@ export function contactConfirmationEmail(data: ContactEmailData) {
   const content = `
     ${heading('Message received')}
     ${paragraph(`Thank you, ${data.name.split(' ')[0]}. We have your message and it is with the right team.`)}
-    ${paragraph('We respond to enquiries within one business day. If your message is urgent — a delivery in progress or a site issue — please call us directly rather than waiting for a reply.')}
+    ${paragraph('We respond to enquiries within one business day. If your message is urgent, a delivery in progress or a site issue, please call us directly rather than waiting for a reply.')}
     ${detailTable([
       ['Reference', data.reference],
       ['Subject', data.subject],
@@ -431,7 +431,7 @@ export function contactConfirmationEmail(data: ContactEmailData) {
   `;
 
   return {
-    subject: `We received your message — ${data.reference}`,
+    subject: `We received your message, ${data.reference}`,
     html: shell('Message received', 'We respond within one business day.', content),
     text: [
       `Thank you, ${data.name.split(' ')[0]}.`,
@@ -451,7 +451,7 @@ export function contactConfirmationEmail(data: ContactEmailData) {
 export function newsletterConfirmationEmail(email: string) {
   const content = `
     ${heading('You are subscribed')}
-    ${paragraph(`Thank you for subscribing to the ${siteConfig.legalName} briefing. You will receive market conditions, technical guidance and project news — roughly once a month, and never more than twice.`)}
+    ${paragraph(`Thank you for subscribing to the ${siteConfig.legalName} briefing. You will receive market conditions, technical guidance and project news, roughly once a month, and never more than twice.`)}
     ${paragraph('We do not share your address with anyone, and every email includes a one-click unsubscribe link.')}
     ${button('Read the latest insights', `${siteConfig.url}/blog`)}
   `;
@@ -466,7 +466,7 @@ export function newsletterConfirmationEmail(email: string) {
     text: [
       `You are subscribed to the ${siteConfig.legalName} briefing.`,
       '',
-      'Market conditions, technical guidance and project news — roughly monthly.',
+      'Market conditions, technical guidance and project news, roughly monthly.',
       `Read the latest at ${siteConfig.url}/blog`,
     ].join('\n'),
     to: email,
@@ -524,10 +524,10 @@ export function assistantLeadEmail(data: AssistantLeadEmailData) {
   `;
 
   return {
-    subject: `Assistant enquiry ${data.reference} — ${data.name}${data.company ? ` (${data.company})` : ''}`,
+    subject: `Assistant enquiry ${data.reference}, ${data.name}${data.company ? ` (${data.company})` : ''}`,
     html: shell('Assistant enquiry', data.summary ?? `${data.name} left contact details.`, content),
     text: [
-      `Enquiry from the site assistant — ${data.reference}`,
+      `Enquiry from the site assistant, ${data.reference}`,
       '',
       `Name: ${data.name}`,
       `Email: ${data.email}`,

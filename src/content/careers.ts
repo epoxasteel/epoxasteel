@@ -4,7 +4,7 @@ export const cultureStatement = {
   title: 'Build something that stays built',
   body: [
     "Most of what we make outlives the people who made it. A bridge girder welded this year will still be carrying traffic when the welder's grandchildren are driving over it. That perspective changes how a workplace feels.",
-    'We hire for judgement and train for everything else. Our welders are coded and kept current at our cost, our engineers are supported through chartership, and our apprentices are given real work with real consequences from their first month — supervised, but not sheltered.',
+    'We hire for judgement and train for everything else. Our welders are coded and kept current at our cost, our engineers are supported through chartership, and our apprentices are given real work with real consequences from their first month, supervised, but not sheltered.',
   ],
 };
 

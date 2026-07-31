@@ -36,7 +36,7 @@ export default function RouteError({
           </h1>
 
           <p className="text-lead text-ash mt-7 max-w-lg">
-            This is our fault, not yours. Try again — and if it keeps happening, call us on{' '}
+            This is our fault, not yours. Try again, and if it keeps happening, call us on{' '}
             <a
               href={`tel:${siteConfig.contact.phoneHref}`}
               className="text-arc-glow underline underline-offset-4"
