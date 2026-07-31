@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 import { buildMetadata, breadcrumbSchema, localBusinessSchema } from '@/lib/seo';
 import { PageHero, Section, JsonLd, Eyebrow } from '@/components/layout/section';
@@ -186,92 +186,15 @@ export default function ContactPage() {
         </div>
       </Section>
 
-      {/* Map */}
-      <Section tone="graphite" id="location" className="border-hairline border-t" size="sm">
-        <div className="container-page">
-          <Reveal direction="none">
-            <Eyebrow>Find us</Eyebrow>
-          </Reveal>
-          <Reveal delay={0.06}>
-            <h2 className="font-display text-headline text-bright mt-6 font-semibold">
-              {address.city}, {address.region}
-            </h2>
-          </Reveal>
+      {/*
+        No map section.
 
-          <Reveal delay={0.12}>
-            {/*
-              A static map placeholder rather than an embedded iframe: an embed
-              would load third-party scripts and cookies on every page view, and
-              the CSP here is deliberately strict. Swapping in a real embed is a
-              one-line change, see docs/DEPLOYMENT.md.
-            */}
-            {/* The letterbox ratio only works once there is width to spend on
-                it. At 390px a 21:9 box is 167px tall and the address card
-                inside is 232px. It was being cut off at "Get directions". */}
-            <div className="border-hairline bg-void relative mt-10 aspect-4/3 overflow-hidden rounded-lg border sm:aspect-16/9 lg:aspect-21/9">
-              <MapArtwork />
-
-              <div className="absolute inset-0 grid place-items-center p-4">
-                <div className="border-hairline bg-graphite/90 rounded-lg border p-6 text-center backdrop-blur-md sm:p-7">
-                  <MapPin aria-hidden className="text-arc-bright mx-auto size-6" />
-                  <p className="font-display text-title text-bright mt-4 font-semibold">
-                    {siteConfig.address.line1}
-                  </p>
-                  <p className="text-ash mt-1.5 text-[0.875rem]">
-                    {address.line2}, {address.city}, {address.region} {address.postalCode}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
+        A full-width panel of drawn streets with the address floated in the
+        middle of it, under "Find us". The artwork was never a map of anywhere,
+        the Google Maps link came out earlier, and the address it framed is
+        already on the card above. It was a screen and a half of page spent
+        repeating one line.
+      */}
     </>
-  );
-}
-
-/** A drawn street grid — placeholder artwork, not a representation of a real map. */
-function MapArtwork() {
-  return (
-    <svg
-      viewBox="0 0 1200 500"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden
-      focusable="false"
-      className="size-full"
-    >
-      <rect width="1200" height="500" fill="#080b10" />
-      <g stroke="rgba(168,178,190,0.09)" strokeWidth="1">
-        {Array.from({ length: 25 }).map((_, i) => (
-          <line key={`v${i}`} x1={i * 50} y1="0" x2={i * 50} y2="500" />
-        ))}
-        {Array.from({ length: 11 }).map((_, i) => (
-          <line key={`h${i}`} x1="0" y1={i * 50} x2="1200" y2={i * 50} />
-        ))}
-      </g>
-      <g stroke="rgba(168,178,190,0.18)" strokeWidth="6">
-        <line x1="0" y1="250" x2="1200" y2="250" />
-        <line x1="600" y1="0" x2="600" y2="500" />
-        <line x1="0" y1="120" x2="1200" y2="120" strokeWidth="3" />
-        <line x1="250" y1="0" x2="250" y2="500" strokeWidth="3" />
-        <line x1="950" y1="0" x2="950" y2="500" strokeWidth="3" />
-      </g>
-      <g fill="rgba(168,178,190,0.05)">
-        {[
-          [60, 160, 150, 60],
-          [300, 160, 240, 60],
-          [660, 160, 220, 60],
-          [1000, 160, 150, 60],
-          [60, 300, 150, 140],
-          [300, 300, 240, 140],
-          [660, 300, 220, 140],
-          [1000, 300, 150, 140],
-        ].map(([x, y, w, h], index) => (
-          <rect key={index} x={x} y={y} width={w} height={h} />
-        ))}
-      </g>
-      <circle cx="600" cy="250" r="70" fill="rgba(28,98,174,0.12)" />
-      <circle cx="600" cy="250" r="30" fill="rgba(58,138,224,0.18)" />
-    </svg>
   );
 }

@@ -337,7 +337,7 @@ export function ContactStrip() {
       icon: MapPin,
       label: 'Visit us',
       value: `${siteConfig.address.city}, ${siteConfig.address.region}`,
-      href: '/contact#location',
+      href: '/contact',
       hint: `${siteConfig.address.line1} ${siteConfig.address.line2}`,
     },
   ];
