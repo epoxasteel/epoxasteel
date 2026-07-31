@@ -140,36 +140,53 @@ export function Footer() {
         <div className="container-page text-steel flex flex-col gap-4 py-7 text-[0.8125rem] md:flex-row md:items-center md:justify-between">
           {/* The year is the current one, not a literal, a copyright notice that
               silently goes stale on 1 January is the classic version of this bug. */}
-          <div className="flex flex-col gap-1.5">
-            <p>
-              © {year} {siteConfig.legalEntity} All rights reserved.
-            </p>
+          <p>
+            © {year} {siteConfig.legalEntity} All rights reserved.
+          </p>
+
+          {/*
+            Legal links and the design credit share the right-hand side, but they
+            are not the same kind of thing, so the gap between them is 64px
+            against the 24px inside the list. Far enough apart that the credit
+            reads as its own item rather than a fourth policy page, which is what
+            it looked like sitting under the copyright at list weight.
+
+            The credit takes the outer edge and pushes the list left, rather than
+            the other way round: it is the quietest thing in the bar, and the
+            outer edge is where the eye stops last.
+          */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-16">
+            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              {legalNav.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-mist transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
             {/*
-              The design credit. Smaller and quieter than the copyright above it,
-              which is the intent, but still `text-steel` rather than something
-              darker: this is a link, and at #767f8d it clears AA against the
-              footer at 4.4:1. A few steps darker would read as intended and fail
-              the contrast checks that have been clean across every page.
+              Darker than anything else on the site, deliberately, and a literal
+              rather than a token because nothing else should reach for it.
+              #5a626e is 3.18:1 on the footer, so it is below the 4.5:1 AA
+              threshold for a link this size — asked for and understood. It stops
+              here rather than going further: 3:1 is the floor WCAG uses for
+              large text and UI components, and past it the words start to
+              disappear against the background rather than just recede.
+
+              `self-start` because a flex child stretches by default, which gave
+              the anchor a hit area far wider than its text.
             */}
             <a
               href="https://yiddiweller.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-steel hover:text-mist inline-flex min-h-6 items-center self-start text-[0.6875rem] transition-colors"
+              className="hover:text-mist inline-flex min-h-6 items-center self-start text-[0.6875rem] text-[#5a626e] transition-colors"
             >
               Designed by yiddiweller.com
             </a>
           </div>
-
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {legalNav.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="hover:text-mist transition-colors">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </footer>
