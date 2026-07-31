@@ -284,6 +284,7 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
     >
       <video
         ref={videoRef}
+        data-hero-video
         muted
         loop
         playsInline

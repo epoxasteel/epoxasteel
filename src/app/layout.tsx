@@ -74,6 +74,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             hidden-until-revealed state for every scroll reveal, the other the
             hero's opening blackout. Each is a few hundred bytes and each
             degrades to "show everything" if it never runs. */}
+        {/*
+          iOS Safari draws its own large play button over any video it declines
+          to autoplay, and it is not the `controls` attribute: it is a shadow-DOM
+          part, so `controls={false}`, `disablePictureInPicture` and
+          `pointer-events-none` all leave it on screen. Low Power Mode is the
+          usual way to end up there and Safari cannot be talked out of it.
+
+          Inline rather than in `globals.css` because Tailwind v4 compiles that
+          through Lightning CSS, which drops `::-webkit-media-controls-*`
+          selectors on the floor: the rule was in the source and absent from the
+          built stylesheet, verified. A few hundred bytes in the head is the one
+          place it survives.
+
+          Scoped to `[data-hero-video]`, so a real video elsewhere keeps its
+          controls.
+        */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html:
+              '[data-hero-video]::-webkit-media-controls,' +
+              '[data-hero-video]::-webkit-media-controls-enclosure,' +
+              '[data-hero-video]::-webkit-media-controls-panel,' +
+              '[data-hero-video]::-webkit-media-controls-start-playback-button,' +
+              '[data-hero-video]::-webkit-media-controls-play-button,' +
+              '[data-hero-video]::-webkit-media-controls-overlay-play-button' +
+              '{display:none!important;-webkit-appearance:none;appearance:none;opacity:0}',
+          }}
+        />
         <RevealEngineScript />
         <OvertureScript />
       </head>
