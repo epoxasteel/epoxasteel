@@ -97,8 +97,8 @@ export default async function OpengraphImage() {
             maxWidth: 880,
           }}
         >
-          Certified structural steel supply, fabrication and delivery for commercial, residential
-          and infrastructure construction.
+          Certified reinforcing steel, cut and bent to schedule and delivered for commercial,
+          industrial and infrastructure construction.
         </div>
       </div>
 

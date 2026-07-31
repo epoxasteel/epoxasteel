@@ -10,7 +10,7 @@ import { QuoteFormShell } from '@/components/forms/quote-form-shell';
 export const metadata: Metadata = buildMetadata({
   title: 'Request a Quote',
   description:
-    'Request a quotation for structural steel, plate, tube, bar, reinforcement or fabrication. Line-by-line pricing within 48 hours for standard inquiries.',
+    'Request a quotation for reinforcing steel: bar, mesh, couplers and accessories, cut and bent to schedule. Line-by-line pricing within 48 hours.',
   path: '/quote',
 });
 

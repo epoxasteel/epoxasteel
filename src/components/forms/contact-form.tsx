@@ -206,7 +206,7 @@ export function ContactForm({ className }: { className?: string }) {
       <Field id="contact-subject" label="Subject" error={errors.subject?.message} required>
         {(props) => (
           <Input
-            placeholder="Structural steel inquiry, Brooklyn project"
+            placeholder="Rebar inquiry, Brooklyn project"
             {...props}
             {...register('subject')}
           />

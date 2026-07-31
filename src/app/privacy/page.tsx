@@ -65,7 +65,7 @@ function cookieParagraph() {
 const body = `
 ## Who we are
 
-${siteConfig.legalName} ("EPOXA STEEL", "we", "us") supplies structural steel, fabrication and related services. This policy explains what personal information we collect through ${siteConfig.domain}, why we collect it, how long we keep it and what rights you have over it.
+${siteConfig.legalName} ("EPOXA STEEL", "we", "us") supplies reinforcing steel and related services. This policy explains what personal information we collect through ${siteConfig.domain}, why we collect it, how long we keep it and what rights you have over it.
 
 If you have any question about this policy, contact us at **${siteConfig.contact.email}** or write to us at the postal address at the end of this page.
 

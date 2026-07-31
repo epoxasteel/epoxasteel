@@ -173,7 +173,7 @@ export const siteConfig = {
    * nodes, and repeating it a fourth time is the padding it looks like.
    */
   description:
-    'Structural steel supply, fabrication, and delivery for commercial, industrial, and infrastructure projects.',
+    'Reinforcing steel supply, cut and bent to schedule, and delivered for commercial, industrial, and infrastructure projects.',
   /**
    * Longer prose, for the footer paragraph only.
    *

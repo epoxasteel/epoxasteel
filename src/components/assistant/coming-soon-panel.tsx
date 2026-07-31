@@ -119,7 +119,7 @@ export function AssistantComingSoonPanel() {
 
               <p className="text-ash mt-3 text-[0.9375rem] leading-relaxed">
                 Our assistant is currently being prepared to provide instant guidance regarding
-                fabrication services, structural steel, custom projects, and engineering solutions.
+                reinforcing steel, cutting and bending, scheduling, and delivery.
               </p>
 
               <p className="text-eyebrow text-arc-glow border-arc-bright/30 bg-arc/8 mt-6 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 uppercase">
