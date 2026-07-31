@@ -9,14 +9,24 @@ import { cn } from '@/lib/utils';
  * here, so nothing else needs touching. See docs/BRANDING.md.
  */
 
-/** The mark: an I-beam cross-section, drawn to the same weight as the type. */
+/**
+ * The mark: an I-beam cross-section, drawn to the same weight as the type.
+ *
+ * The viewBox is cropped to the beam itself — `4 5 24 22`, the exact bounds of
+ * the three bars — rather than the 32×32 square it used to sit inside. That
+ * square was five units of empty space above the top flange and five below, so
+ * a `size-6` mark rendered a beam only 16.5px tall and the icon read as smaller
+ * than the letters beside it at every size. With the padding gone the element's
+ * height *is* the beam's height, which is what makes matching it to cap height
+ * possible.
+ */
 export function BeamMark({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="4 5 24 22"
       fill="none"
       aria-hidden
-      className={cn('size-8', className)}
+      className={cn('h-[0.72em] w-auto', className)}
       focusable="false"
     >
       {/* Top flange */}
@@ -46,20 +56,27 @@ export function Wordmark({
   /** Fills the type with the brushed-metal gradient. */
   metal?: boolean;
 }) {
+  /*
+    One step larger across the board, and the mark is no longer sized here.
+
+    It carries `h-[0.72em]` — roughly the cap height of the display face — and
+    `em` resolves against the font size on the container below, so the beam is
+    the height of the letters beside it at every size by construction rather
+    than by a table of pixel values that had to be kept in agreement.
+  */
   const sizes = {
-    sm: { text: 'text-[0.9375rem]', mark: 'size-5', gap: 'gap-2' },
-    md: { text: 'text-[1.0625rem]', mark: 'size-6', gap: 'gap-2.5' },
-    lg: { text: 'text-2xl', mark: 'size-8', gap: 'gap-3' },
-    xl: { text: 'text-display', mark: 'size-14', gap: 'gap-5' },
+    sm: { text: 'text-[1.0625rem]', gap: 'gap-2.5' },
+    md: { text: 'text-[1.1875rem]', gap: 'gap-3' },
+    lg: { text: 'text-[1.75rem]', gap: 'gap-3.5' },
+    xl: { text: 'text-display-lg', gap: 'gap-[0.42em]' },
   }[size];
 
   return (
-    <span className={cn('inline-flex items-center', sizes.gap, className)}>
-      {showMark ? <BeamMark className={cn(sizes.mark, 'text-arc-bright')} /> : null}
+    <span className={cn('inline-flex items-center', sizes.gap, sizes.text, className)}>
+      {showMark ? <BeamMark className="text-arc-bright" /> : null}
       <span
         className={cn(
           'font-display leading-none font-extrabold tracking-[0.16em] whitespace-nowrap uppercase',
-          sizes.text,
           metal ? 'text-metal' : 'text-bright',
         )}
       >

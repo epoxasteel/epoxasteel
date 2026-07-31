@@ -520,34 +520,15 @@ function HeroContent({ entrance, active }: { entrance: boolean; active: boolean 
       </motion.div>
 
       {/*
-        The proof bar has to survive a 667px-tall phone as well as a 27-inch
-        display. At the tight end the margins close up and it runs as two
-        columns; anything below that and it was being clipped by the hero's own
-        `h-dvh` bound, which quietly cost two of the four figures.
+        No proof bar.
+
+        Four figures sat here — tonnes supplied, projects delivered, on-time
+        percentage, countries served — and not one of them could be stood
+        behind. A supplier's homepage is the wrong place to publish a number
+        nobody can produce a record for, and a claim a client cannot verify is
+        worth less than no claim at all. When there are audited figures they
+        belong here; until then the page says what it can prove.
       */}
-      <motion.dl
-        {...line}
-        className="border-hairline/70 mt-9 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 sm:mt-12 sm:grid-cols-4 sm:gap-y-6 sm:pt-8"
-      >
-        {[
-          { value: '1.4M+', label: 'Tonnes supplied' },
-          { value: '2,600+', label: 'Projects delivered' },
-          { value: '99.4%', label: 'On-time delivery' },
-          { value: '34', label: 'Countries served' },
-        ].map((stat) => (
-          <div key={stat.label}>
-            <dt className="sr-only">{stat.label}</dt>
-            <dd>
-              <span className="font-display text-bright block text-2xl font-semibold tabular-nums">
-                {stat.value}
-              </span>
-              <span className="text-steel mt-1 block text-[0.75rem] tracking-[0.1em] uppercase">
-                {stat.label}
-              </span>
-            </dd>
-          </div>
-        ))}
-      </motion.dl>
     </motion.div>
   );
 }
