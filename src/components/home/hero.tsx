@@ -120,12 +120,17 @@ export function Hero({ layers, video = [] }: { layers: HeroLayers; video?: HeroV
         that already exists rather than dragging the headline upward. The
         `min-h-dvh` floor still lets the section open up on a screen too short to
         hold it, which is what stopped the proof bar being clipped.
+
+        The offset was tuned when the headline was 128px and the block reached
+        most of the way down the hero. At 108px it sits shorter, so the same
+        offset left it high; the offset grew instead of switching to
+        `items-center`, which would have brought the layout shift back with it.
       */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         className="relative flex min-h-dvh w-full items-start"
       >
-        <div className="container-page w-full pt-[calc(var(--header-h)+5vh)] pb-12 sm:pt-[calc(var(--header-h)+6vh)] sm:pb-8">
+        <div className="container-page w-full pt-[calc(var(--header-h)+6vh)] pb-12 sm:pt-[calc(var(--header-h)+11vh)] sm:pb-8">
           <HeroContent />
         </div>
       </motion.div>
@@ -315,7 +320,7 @@ function HeroContent() {
           "Service." running most of the way across a laptop. The clamp keeps the
           same fluid behaviour; `leading` and `tracking` are carried over by hand
           because an arbitrary size does not inherit the token's pair. */}
-      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[0.94] font-extrabold tracking-[-0.04em] sm:mt-7">
+      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[1.08] font-extrabold tracking-[-0.04em] sm:mt-7">
         {/* The trailing spaces are load-bearing. Without them `textContent`
             reads "Trust,Quality,Service.", which is what a crawler indexes and
             what a copy-paste produces, even though it renders correctly. */}
