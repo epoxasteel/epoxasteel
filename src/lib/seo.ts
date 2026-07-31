@@ -29,6 +29,41 @@ type SeoInput = {
 };
 
 /**
+ * Sections held back from search until their copy is rewritten.
+ *
+ * These pages were written for a structural steel supplier. The business sells
+ * reinforcing steel, and the rest of the site now says so — which left roughly
+ * three dozen pages describing work Epoxa Steel does not do, reachable by
+ * search even though nothing on the site links to them any more. A visitor who
+ * arrives on one from Google never sees the homepage; they see the wrong
+ * company. Worse, a crawler weighing thirty-five structural pages against three
+ * reinforcing ones draws the obvious conclusion about what this business is.
+ *
+ * Held back rather than deleted. The pages still resolve, still render and
+ * still work from a direct link, so nothing breaks for anyone holding a URL —
+ * they are simply not offered to strangers. Emptying this array puts every one
+ * of them back in the index, which is the whole point of it being one list:
+ * the rewrite is a content job, and this is the switch it flips.
+ *
+ * Consumed here and by `app/sitemap.ts`, so the two can never disagree about
+ * which pages are public.
+ */
+export const deferredSections = [
+  '/products',
+  '/services',
+  '/industries',
+  '/projects',
+  '/blog',
+  '/careers',
+  '/faq',
+] as const;
+
+/** True for a deferred section's landing page and everything beneath it. */
+export function isDeferred(path: string): boolean {
+  return deferredSections.some((section) => path === section || path.startsWith(`${section}/`));
+}
+
+/**
  * Builds a complete Metadata object: canonical URL, Open Graph, Twitter card
  * and robots directives. Every page in the app uses this so no page can
  * silently ship without a canonical or a social preview.
@@ -79,19 +114,34 @@ export function buildMetadata({
      * and its schema, all of which are read.
      */
     alternates: { canonical: url },
+    /*
+     * Two ways a page stays out of the index, and they ask different things of
+     * the crawler.
+     *
+     * `noIndex` from the caller means the page is not a destination — search
+     * results, in practice. Nothing on it is worth following either.
+     *
+     * A deferred section is not that. The page is real and its links are real;
+     * it just describes the wrong business today. `follow: true` so a crawler
+     * that lands on one still reaches /quote and /contact through it, and so
+     * whatever internal weight these pages carry survives until they are
+     * rewritten rather than being thrown away now and rebuilt later.
+     */
     robots: noIndex
       ? { index: false, follow: false }
-      : {
-          index: true,
-          follow: true,
-          googleBot: {
+      : isDeferred(path)
+        ? { index: false, follow: true }
+        : {
             index: true,
             follow: true,
-            'max-video-preview': -1,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
+            googleBot: {
+              index: true,
+              follow: true,
+              'max-video-preview': -1,
+              'max-image-preview': 'large',
+              'max-snippet': -1,
+            },
           },
-        },
     openGraph: {
       type,
       url,

@@ -6,6 +6,7 @@ import { serviceSlugs } from '@/content/services';
 import { projectSlugs } from '@/content/projects';
 import { posts, postCategories } from '@/content/posts';
 import { jobSlugs } from '@/content/careers';
+import { isDeferred } from '@/lib/seo';
 import { slugify } from '@/lib/utils';
 
 const BASE = siteConfig.url;
@@ -29,7 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/blog`, changeFrequency: 'weekly', priority: 0.75, lastModified: now },
     { url: `${BASE}/careers`, changeFrequency: 'weekly', priority: 0.6, lastModified: now },
     { url: `${BASE}/faq`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
-    { url: `${BASE}/search`, changeFrequency: 'yearly', priority: 0.2, lastModified: now },
+    /*
+     * No `/search`. The page declares `noIndex` in its own metadata, so listing
+     * it here asked Google to crawl a URL that then told it to go away — the
+     * contradiction Search Console flags as "submitted URL marked noindex".
+     * `robots.ts` already disallows `/search?` for the same reason.
+     */
     { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
     { url: `${BASE}/cookies`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
     { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
@@ -84,6 +90,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
   }));
 
+  /*
+   * The section lists above are left whole rather than commented out, and the
+   * deferred ones are filtered at the end. A sitemap that offers a page the page
+   * itself answers `noindex` to is a contradiction Search Console reports as an
+   * error, so both sides read `isDeferred` and neither can drift.
+   *
+   * Built and then filtered, not skipped: when the copy is rewritten, emptying
+   * `deferredSections` restores every one of these entries with no work here.
+   */
   return [
     ...staticRoutes,
     ...productRoutes,
@@ -93,5 +108,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...postRoutes,
     ...categoryRoutes,
     ...jobRoutes,
-  ];
+  ].filter((entry) => !isDeferred(entry.url.slice(BASE.length) || '/'));
 }
