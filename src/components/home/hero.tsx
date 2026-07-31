@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Magnetic } from '@/components/motion/magnetic';
-import { EASE_OUT_EXPO } from '@/lib/motion';
 
 /**
  * The hero.
@@ -207,7 +206,6 @@ function HeroBackdrop({
  * scene with no flash of empty space.
  */
 function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
-  const [ready, setReady] = React.useState(false);
   const reduce = useReducedMotion();
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
@@ -235,10 +233,7 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
       if (video.paused) void video.play().catch(() => undefined);
     };
 
-    const onReady = () => {
-      setReady(true);
-      play();
-    };
+    const onReady = () => play();
 
     // Already buffered by the time React got here.
     if (video.readyState >= 2) onReady();
@@ -276,12 +271,20 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
   if (reduce || sources.length === 0) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: ready ? 1 : 0 }}
-      transition={{ duration: 1.6, ease: EASE_OUT_EXPO }}
-      className="absolute inset-0"
-    >
+    /*
+      Always visible, never gated on readiness.
+
+      This used to sit at `opacity: 0` until `canplay` fired. On iOS that is a
+      deadlock: Safari will not autoplay a video it considers invisible, and
+      opacity zero counts, so `canplay` never fired, so the opacity never went
+      up, so it never played. The video only started when the visitor tapped,
+      which is the gesture fallback doing a job autoplay should have done.
+
+      Nothing flashes as a result. A video element with no decoded frame paints
+      nothing, so the vector city scene behind it simply shows through until the
+      first frame arrives and takes over.
+    */
+    <div className="absolute inset-0">
       <video
         ref={videoRef}
         data-hero-video
@@ -301,7 +304,6 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
         controls={false}
         disablePictureInPicture
         disableRemotePlayback
-        onError={() => setReady(false)}
         className="pointer-events-none size-full object-cover"
       >
         {sources.map((source) => (
@@ -335,7 +337,7 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
             'linear-gradient(to right, rgba(6,7,9,0.72) 0%, rgba(6,7,9,0.4) 42%, rgba(6,7,9,0.12) 72%, rgba(6,7,9,0) 100%)',
         }}
       />
-    </motion.div>
+    </div>
   );
 }
 
