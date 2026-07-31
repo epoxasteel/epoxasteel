@@ -211,16 +211,63 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
   const reduce = useReducedMotion();
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
+  /*
+   * Keep asking to play, rather than asking once.
+   *
+   * `autoPlay` is a request, not a guarantee, and on a phone it is refused more
+   * often than it is granted: Low Power Mode on iOS blocks it outright, Data
+   * Saver on Android does the same, and Safari will decline if the element is
+   * not yet muted at the moment the attribute is evaluated. This used to call
+   * `play()` once, on mount, and only if the video was already buffered, so on
+   * mobile it almost never fired. The footage faded in on its first frame and
+   * sat there, which is exactly what a paused video looks like.
+   *
+   * So playback is attempted on every event that means "there is now something
+   * to play", and again on the first touch or scroll, which counts as the user
+   * gesture the stricter policies are waiting for. Every call is guarded: a
+   * rejected `play()` is an expected outcome here, not an error.
+   */
   React.useEffect(() => {
     const video = videoRef.current;
     if (!video || reduce) return;
 
-    // Some browsers restore a paused state on back-navigation.
-    const play = () => video.play().catch(() => undefined);
-    if (video.readyState >= 3) {
+    const play = () => {
+      if (video.paused) void video.play().catch(() => undefined);
+    };
+
+    const onReady = () => {
       setReady(true);
       play();
+    };
+
+    // Already buffered by the time React got here.
+    if (video.readyState >= 2) onReady();
+
+    for (const event of ['loadeddata', 'canplay', 'canplaythrough', 'playing'] as const) {
+      video.addEventListener(event, onReady);
     }
+
+    // The gesture fallback. `once` on each, and passive so it never delays a scroll.
+    const opts = { once: true, passive: true } as const;
+    for (const event of ['touchstart', 'pointerdown', 'scroll'] as const) {
+      window.addEventListener(event, play, opts);
+    }
+
+    // Returning from another tab or app leaves it paused on some browsers.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') play();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      for (const event of ['loadeddata', 'canplay', 'canplaythrough', 'playing'] as const) {
+        video.removeEventListener(event, onReady);
+      }
+      for (const event of ['touchstart', 'pointerdown', 'scroll'] as const) {
+        window.removeEventListener(event, play);
+      }
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [reduce]);
 
   // No footage available: render nothing rather than a <video> whose sources
@@ -241,12 +288,20 @@ function HeroVideo({ sources }: { sources: HeroVideoSource[] }) {
         loop
         playsInline
         autoPlay
-        preload="metadata"
+        /*
+          `auto`, not `metadata`. Metadata fetches the header and stops, so on a
+          phone the element knew its dimensions and had nothing to play; the
+          first frame is not enough to start from.
+        */
+        preload="auto"
         aria-hidden
         tabIndex={-1}
-        onCanPlayThrough={() => setReady(true)}
+        /* No controls, and no picture-in-picture button over the hero. */
+        controls={false}
+        disablePictureInPicture
+        disableRemotePlayback
         onError={() => setReady(false)}
-        className="size-full object-cover"
+        className="pointer-events-none size-full object-cover"
       >
         {sources.map((source) => (
           <source key={source.src} src={source.src} type={source.type} />
