@@ -375,7 +375,7 @@ function HeroContent() {
           "Service." running most of the way across a laptop. The clamp keeps the
           same fluid behaviour; `leading` and `tracking` are carried over by hand
           because an arbitrary size does not inherit the token's pair. */}
-      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[1.08] font-bold tracking-[-0.04em] sm:mt-7">
+      <h1 className="font-display text-bright mt-5 text-[clamp(2.75rem,1.25rem+6.1vw,7rem)] leading-[1.14] font-bold tracking-[-0.005em] sm:mt-7">
         {/* No punctuation. Three words stacked on their own lines are already
             three statements; the commas and the full stop were doing the work
             the line breaks do, at display size where a comma is a heavy mark.
@@ -385,7 +385,13 @@ function HeroContent() {
             a copy-paste produces, even though it renders correctly on screen. */}
         Trust <br />
         Quality <br />
-        <span className="text-metal">Service</span>
+        {/* `text-metal` paints the type with `background-clip: text`, so the
+            glyphs are only visible where the element's background box reaches.
+            At a tight line-height the box stopped at the baseline and the
+            overshoot on the round letters had nothing to paint with, which read
+            as the word being shaved off along the bottom. The padding extends
+            the box; the negative margin gives the space back to the layout. */}
+        <span className="text-metal mb-[-0.14em] inline-block pb-[0.14em]">Service</span>
       </h1>
 
       <p className="text-lead text-mist mt-6 max-w-xl sm:mt-8">
