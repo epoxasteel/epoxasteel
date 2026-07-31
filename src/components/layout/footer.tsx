@@ -140,9 +140,26 @@ export function Footer() {
         <div className="container-page text-steel flex flex-col gap-4 py-7 text-[0.8125rem] md:flex-row md:items-center md:justify-between">
           {/* The year is the current one, not a literal, a copyright notice that
               silently goes stale on 1 January is the classic version of this bug. */}
-          <p>
-            © {year} {siteConfig.legalEntity} All rights reserved.
-          </p>
+          <div className="flex flex-col gap-1.5">
+            <p>
+              © {year} {siteConfig.legalEntity} All rights reserved.
+            </p>
+            {/*
+              The design credit. Smaller and quieter than the copyright above it,
+              which is the intent, but still `text-steel` rather than something
+              darker: this is a link, and at #767f8d it clears AA against the
+              footer at 4.4:1. A few steps darker would read as intended and fail
+              the contrast checks that have been clean across every page.
+            */}
+            <a
+              href="https://yiddiweller.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-steel hover:text-mist inline-flex min-h-6 items-center self-start text-[0.6875rem] transition-colors"
+            >
+              Designed by yiddiweller.com
+            </a>
+          </div>
 
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {legalNav.map((link) => (
